@@ -3,15 +3,23 @@ import 'package:flutter/material.dart';
 class RaisedButtonWidget extends StatelessWidget {
   final String routeName;
   final String btnLabel;
-  final Color btnColor;
-  final Color btnTextColor;
+  Color btnColor;
+  Color btnTextColor;
 
-  RaisedButtonWidget(this.routeName, this.btnLabel, this.btnColor, this.btnTextColor);
+  bool isBtnColorPrimary;
 
-
+  RaisedButtonWidget(this.routeName, this.btnLabel, this.isBtnColorPrimary);
 
   @override
   Widget build(BuildContext context) {
+    if (isBtnColorPrimary) {
+      btnColor = Theme.of(context).primaryColor;
+      btnTextColor = Colors.white;
+    } else {
+      btnColor = Colors.white;
+      btnTextColor = Theme.of(context).primaryColor;
+    }
+
     return Container(
       width: double.infinity,
       child: RaisedButton(

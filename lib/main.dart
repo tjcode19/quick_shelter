@@ -20,12 +20,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // primarySwatch: Colors.green,
-        hintColor: Colors.teal[200],
+        hintColor: Color.fromRGBO(226, 208, 195, 1),
         primaryColor: Colors.orange,
-        highlightColor: Colors.teal[500],
+        highlightColor: Color.fromRGBO(226, 208, 195, 1),
         fontFamily: "Product-Sans",
-        accentColor: Colors.teal[100],
-        cursorColor: Colors.teal[500],
+        accentColor: Color.fromRGBO(226, 208, 195, 1),
+        cursorColor: Color.fromRGBO(226, 208, 195, 1),
         textTheme: TextTheme(
           
           button: TextStyle(
