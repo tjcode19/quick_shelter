@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'get_started.dart';
-import 'login.dart';
-import 'signup.dart';
-import 'welcome.dart';
+import 'package:quick_shelter/screens/identity_card.dart';
+import 'screens/dashboard/dashboard.dart';
+import 'screens/reg_complete.dart';
+import 'screens/verify_phone.dart';
+import 'screens/get_started.dart';
+import 'screens/login.dart';
+import 'screens/signup.dart';
+import 'screens/welcome.dart';
 import 'constants.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -11,17 +15,19 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case welcomeRoute:
       return MaterialPageRoute(builder: (context) => WelcomePage());
     case getStartedRoute:
-      return MaterialPageRoute(builder: (context) => GetStarted() );
+      return MaterialPageRoute(builder: (context) => GetStarted());
     case loginRoute:
       return MaterialPageRoute(builder: (context) => Login());
     case signUpRoute:
       return MaterialPageRoute(builder: (context) => SignUp());
-    // case basicInfoRoute:
-    //   return MaterialPageRoute(builder: (context) => BasicInfo());
-    // case updateKYCRoute:
-    //   return MaterialPageRoute(builder: (context) => UpdateKYC());
-    // case addBVNRoute:
-    //   return MaterialPageRoute(builder: (context) => AddBVN());
+    case verifyPhoneRoute:
+      return MaterialPageRoute(builder: (context) => VerifyPhone());
+    case identityCardRoute:
+      return MaterialPageRoute(builder: (context) => IdentityCard());
+    case regCompletedRoute:
+      return MaterialPageRoute(builder: (context) => RegCompleted());
+    case dashboardRoute:
+      return MaterialPageRoute(builder: (context) => Dashboard());
     // case passwordRoute:
     //   return MaterialPageRoute(builder: (context) => PasswordSettings());
     // case cardSettingsRoute:

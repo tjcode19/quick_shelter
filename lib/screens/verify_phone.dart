@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:quick_shelter/widgets/input_field.dart';
-import 'package:quick_shelter/widgets/raised_button.dart';
 
-import 'constants.dart';
+import '../constants.dart';
+import '../widgets/input_field.dart';
+import '../widgets/raised_button.dart';
 
-class Login extends StatefulWidget {
+class VerifyPhone extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _VerifyPhoneState createState() => _VerifyPhoneState();
 }
 
-class _LoginState extends State<Login> {
+class _VerifyPhoneState extends State<VerifyPhone> {
   @override
   Widget build(BuildContext context) {
+    final screeSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-              child: Stack(children: [
-          Container(
+        child: Stack(
+          children: [
+          Container(            
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage("assets/images/welcome.png"),
@@ -38,6 +40,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 Container(
+                  height: screeSize.height - 100,
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(129, 92, 67, 1),
@@ -52,40 +55,54 @@ class _LoginState extends State<Login> {
                       Container(
                           margin: EdgeInsets.only(top: 60),
                           child: Text(
-                            'Welcome Back',
-                            style: TextStyle(color: Colors.white, fontSize: 20.0),
+                            'Verify Phone Number',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 20.0),
                           )),
                       const SizedBox(height: 20),
                       Container(
                         child: Text(
-                          'Please provide correct email address and password to login.',
+                          'We sent a code to verify your phone number.',
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ),
-                      const SizedBox(height: 60),
-                      InputFieldWidget('Enter email'),
                       const SizedBox(height: 20),
-                      InputFieldWidget('Enter password'),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            'Forgot Password',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
+                      Container(
+                        child: Text(
+                          '+2348 000 000 0000',
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
                       ),
-                      const SizedBox(height: 10),
-                      RaisedButtonWidget(loginRoute, 'Log In', true),
                       const SizedBox(height: 80),
+                      InputFieldWidget('Firstname'),
+                      const SizedBox(height: 40),
                       Container(
                         alignment: Alignment.center,
                         child: Text(
-                          'Don’t have an account? Register',
+                          'Didn’t receive OTP?',
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 30),
+                      Container(
+                        alignment: Alignment.center,
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Resend | ',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 15.0),
+                            children: [
+                              WidgetSpan(
+                                child: Icon(Icons.call, size: 14, color: Colors.white,),
+                              ),
+                              TextSpan(text: ' Call me'),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 70),
+                      RaisedButtonWidget(identityCardRoute, 'Continue', true),
+                      const SizedBox(height: 35),
                     ],
                   ),
                 ),

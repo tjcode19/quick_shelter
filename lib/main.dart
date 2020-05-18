@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'constants.dart';
 import 'router.dart' as router;
 
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(

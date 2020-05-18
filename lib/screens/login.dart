@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:quick_shelter/widgets/input_field.dart';
+import 'package:quick_shelter/widgets/raised_button.dart';
 
-import 'constants.dart';
-import 'widgets/input_field.dart';
-import 'widgets/raised_button.dart';
+import '../constants.dart';
 
-
-class SignUp extends StatefulWidget {
+class Login extends StatefulWidget {
   @override
-  _SignUpState createState() => _SignUpState();
+  _LoginState createState() => _LoginState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +52,7 @@ class _SignUpState extends State<SignUp> {
                       Container(
                           margin: EdgeInsets.only(top: 60),
                           child: Text(
-                            'Sign Up',
+                            'Welcome Back',
                             style: TextStyle(color: Colors.white, fontSize: 20.0),
                           )),
                       const SizedBox(height: 20),
@@ -63,28 +62,30 @@ class _SignUpState extends State<SignUp> {
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ),
-                      const SizedBox(height: 40),
-                      InputFieldWidget('Firstname'),
-                      const SizedBox(height: 10),
-                      InputFieldWidget('Lastname'),
-                      const SizedBox(height: 10),
-                      InputFieldWidget('ex. email@email.com'),
-                      const SizedBox(height: 10),
-                      InputFieldWidget('Phone Number'),
-                      const SizedBox(height: 10),
-                      InputFieldWidget('Password'),
-                      
+                      const SizedBox(height: 60),
+                      InputFieldWidget('Enter email'),
                       const SizedBox(height: 20),
-                      RaisedButtonWidget(loginRoute, 'Continue', true),
-                      const SizedBox(height: 25),
+                      InputFieldWidget('Enter password'),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'Forgot Password',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      RaisedButtonWidget(dashboardRoute, 'Log In', true),
+                      const SizedBox(height: 80),
                       Container(
                         alignment: Alignment.center,
                         child: Text(
-                          'Already a member? Log in',
+                          'Don’t have an account? Register',
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 10),
                     ],
                   ),
                 ),
