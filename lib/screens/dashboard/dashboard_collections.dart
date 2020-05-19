@@ -3,12 +3,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../colors.dart';
 
-class DashboardHome extends StatefulWidget {
+class DashboardCollections extends StatefulWidget {
   @override
-  _DashboardHomeState createState() => _DashboardHomeState();
+  _DashboardCollectionsState createState() => _DashboardCollectionsState();
 }
 
-class _DashboardHomeState extends State<DashboardHome> {
+class _DashboardCollectionsState extends State<DashboardCollections> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -27,6 +27,10 @@ class _DashboardHomeState extends State<DashboardHome> {
             onPressed: () {},
           ),
         ),
+        actions: <Widget>[Container(
+          margin: EdgeInsets.symmetric(horizontal:5),
+          alignment: Alignment.center,
+          child: Text('Edit'))],
         title: RichText(
           text: TextSpan(
             text: 'Hi, ',
@@ -50,37 +54,18 @@ class _DashboardHomeState extends State<DashboardHome> {
           padding: EdgeInsets.all(5),
           child: Column(
             children: <Widget>[
-              const SizedBox(height: 20),
-              Container(
-                  margin: EdgeInsets.only(left: 10),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Featured Properties',
-                    style: TextStyle(color: appSecondaryColor, fontSize: 15.0),
-                  )),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10.0),
-                height: 280.0,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    _propertItem,
-                    _propertItem,
-                    _propertItem,
-                  ],
-                ),
-              ),
+              const SizedBox(height: 20),              
               Container(
                 alignment: Alignment.topLeft,
                 margin: EdgeInsets.only(left: 10.0),
                 child: Text(
-                  'Available Properties',
-                  style: TextStyle(color: appSecondaryColor, fontSize: 15.0),
+                  'My Collections',
+                  style: TextStyle(color: appSecondaryColor, fontSize: 18.0),
                 ),
               ),
               const SizedBox(height: 10),
               Container(
-                height: 280.0,
+                height: 580.0,
                 child: CustomScrollView(
                   primary: false,
                   slivers: <Widget>[
@@ -108,6 +93,7 @@ class _DashboardHomeState extends State<DashboardHome> {
     );
   }
 
+  
   Widget _propertItem = Card(
     elevation: 2.0,
     child: InkWell(

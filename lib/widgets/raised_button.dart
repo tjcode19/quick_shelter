@@ -26,8 +26,8 @@ class RaisedButtonWidget extends StatelessWidget {
         padding: EdgeInsets.all(16),
         highlightElevation: 5.0,
         elevation: 3.0,
-        splashColor: Colors.teal[300],
-        highlightColor: Colors.teal[300],
+        splashColor: Colors.orange[100],
+        highlightColor: Colors.orange[100],
         color: btnColor,
         shape: RoundedRectangleBorder(
             //borderRadius: new BorderRadius.circular(10.0),

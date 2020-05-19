@@ -79,8 +79,43 @@ class _IdentityCardState extends State<IdentityCard> {
                       Container(
                         height: 150.0,
                         width: double.infinity,
-                        color: appPrimary,
-                        child: Icon(Icons.camera_alt),
+                        //color: appPrimary,
+                        decoration: BoxDecoration(
+                          color: appPrimary,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          border: Border.all(color: appTextColorPrimary2)
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.camera_alt, color: Colors.white,),
+                            Center(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(30.0, 10, 30, 0),
+                                child: Text(
+                                  'Upload valid ID Image',
+                                  style: TextStyle(color: appTextColorPrimary2),
+                                  textAlign: TextAlign.center,
+                                  softWrap: true,
+                                ),
+                              ),
+                            ),
+                            Center(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(10.0, 0, 10, 10),
+                                child: Text(
+                                  '(Intl. passport, NIN, drivers license, voters card)',
+                                  style: TextStyle(color: appTextColorPrimary2),
+                                  textAlign: TextAlign.center,
+                                  softWrap: true,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 50),
                       RaisedButtonWidget(

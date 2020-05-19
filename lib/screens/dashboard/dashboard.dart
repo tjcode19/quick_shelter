@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quick_shelter/screens/dashboard/dashboard_add_property.dart';
+import 'package:quick_shelter/screens/dashboard/dashboard_collections.dart';
+import 'package:quick_shelter/screens/login.dart';
 
 import 'dashboard_home.dart';
 
@@ -15,8 +18,8 @@ class _DashboardState extends State<Dashboard> {
 
   static List<Widget> _widgetOptions = <Widget>[
      DashboardHome(),
-    // DashboardLoan(),
-    // DashboardStore(),
+     DashboardAddProp(),
+     DashboardCollections(),
     // DashboardLoanHistory(),
     // DashboardAccount(),
   ];
@@ -43,7 +46,7 @@ class _DashboardState extends State<Dashboard> {
                 new GestureDetector(
                   onTap: () => {
                     //SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop'),
-                   // Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Login())),
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Login())),
                   },
                   child: Text("YES"),
                 ),

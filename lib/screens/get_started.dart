@@ -20,7 +20,7 @@ class _GetStartedState extends State<GetStarted> {
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("assets/images/welcome.png"),
+              image: AssetImage("assets/images/welcome1.png"),
               fit: BoxFit.cover)),
       child: Scaffold(
         backgroundColor: Colors.transparent,

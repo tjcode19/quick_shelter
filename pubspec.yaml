@@ -50,6 +50,9 @@ flutter:
     - assets/images/welcome.png
     - assets/images/welcome_x2.png
     - assets/images/welcome_x3.png
+    - assets/images/welcome1.png
+    - assets/images/welcome1x2.png
+    - assets/images/welcome1x3.png
     - assets/images/prop.png
     - assets/icons/bath.svg
     - assets/icons/bed.svg

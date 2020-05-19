@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
-class InputFieldWidget extends StatelessWidget {
+class InputFieldMultiLineWidget extends StatelessWidget {
   final String label;
-  final TextInputType keyType;
-  final bool isPasswordField;
+  final int lines;
 
-  InputFieldWidget(this.label, this.keyType, this.isPasswordField);
+  InputFieldMultiLineWidget(this.label, this.lines);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: TextFormField(
-        obscureText: isPasswordField,
+        maxLines: lines,
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,
           border: new OutlineInputBorder(
@@ -34,7 +33,7 @@ class InputFieldWidget extends StatelessWidget {
             return null;
           }
         },
-        keyboardType: keyType,
+        keyboardType: TextInputType.number,
       ),
     );
   }
