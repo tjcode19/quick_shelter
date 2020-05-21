@@ -23,7 +23,7 @@ class RaisedButtonWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       child: RaisedButton(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(12),
         highlightElevation: 5.0,
         elevation: 3.0,
         splashColor: Colors.orange[100],

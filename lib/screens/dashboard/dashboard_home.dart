@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:quick_shelter/constants.dart';
 
 import '../../colors.dart';
 
@@ -9,6 +10,32 @@ class DashboardHome extends StatefulWidget {
 }
 
 class _DashboardHomeState extends State<DashboardHome> {
+  ScrollController _controller;
+  String message = "";
+  bool _isVisible = true;
+
+  _scrollListener() {
+    if (_controller.offset >= _controller.position.maxScrollExtent &&
+        !_controller.position.outOfRange) {
+      setState(() {
+        _isVisible = false;
+      });
+    }
+    if (_controller.offset <= _controller.position.minScrollExtent &&
+        !_controller.position.outOfRange) {
+      setState(() {
+        _isVisible = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    _controller = ScrollController();
+    _controller.addListener(_scrollListener);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -18,26 +45,31 @@ class _DashboardHomeState extends State<DashboardHome> {
     final double itemWidth = size.width / 2;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
-        leading: Container(
-          child: IconButton(
-            icon: Icon(
-              Icons.person,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, profileRoute);
+          },
+          child: Container(
+            child: Image.asset(
+              'assets/images/person.png',
+              color: Colors.amber,
+              height: 24.0,
+              width: 24.0,
             ),
-            onPressed: () {},
           ),
         ),
         title: RichText(
           text: TextSpan(
             text: 'Hi, ',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16, color: appTextColorPrimary),
             children: <TextSpan>[
               TextSpan(
                 text: 'Tolulope',
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 16,
-                  color: Colors.teal[100],
                 ),
               ),
             ],
@@ -45,6 +77,7 @@ class _DashboardHomeState extends State<DashboardHome> {
         ),
       ),
       body: SingleChildScrollView(
+        controller: _controller,
         scrollDirection: Axis.vertical,
         child: Container(
           padding: EdgeInsets.all(5),
@@ -103,6 +136,24 @@ class _DashboardHomeState extends State<DashboardHome> {
               ),
             ],
           ),
+        ),
+      ),
+      floatingActionButton: AnimatedOpacity(
+        opacity: _isVisible ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 500),
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.pushNamed(context, addPropertyRoute);
+          },
+          // child: Icon(
+          //   Icons.add,
+          //   color: Colors.white,
+          // ),
+          // backgroundColor: Theme.of(context).primaryColor,
+          label: Text('New Product', style: TextStyle(fontSize: 14.0, color: Colors.white),),
+          icon: Icon(Icons.add, color: Colors.white,),
+          backgroundColor: Theme.of(context).primaryColor,
+          tooltip: 'Hello',
         ),
       ),
     );

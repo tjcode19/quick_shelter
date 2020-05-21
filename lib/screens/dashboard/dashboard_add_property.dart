@@ -23,7 +23,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
           color: Colors.white,
           iconSize: 30.0,
           onPressed: () {
-            //Navigator.pop(context);
+            Navigator.pop(context);
           },
           icon: Icon(Icons.close),
         ),

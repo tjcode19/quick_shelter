@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/widgets/input_field.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
@@ -12,16 +10,23 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
- 
-  
+  bool rememberMe = false;
+
   @override
   Widget build(BuildContext context) {
+
+    Future<bool> _onBackPressed() {
+      Navigator.popAndPushNamed(context, getStartedRoute);
+    }
+
     final screeSize = MediaQuery.of(context).size;
-    return  Scaffold(
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-                child: Stack(children: [
+          child: Stack(children: [
             Container(
               decoration: BoxDecoration(
                   image: DecorationImage(
@@ -43,7 +48,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   Container(
-                    height: screeSize.height-80,
+                    height: screeSize.height - 80,
                     padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(129, 92, 67, 1),
@@ -59,7 +64,10 @@ class _LoginState extends State<Login> {
                             margin: EdgeInsets.only(top: 60),
                             child: Text(
                               'Welcome Back',
-                              style: TextStyle(color: Colors.white, fontSize: 20.0),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold),
                             )),
                         const SizedBox(height: 20),
                         Container(
@@ -69,26 +77,76 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                         const SizedBox(height: 60),
-                        InputFieldWidget('Enter email', TextInputType.emailAddress, false),
+                        InputFieldWidget(
+                            'Enter email', TextInputType.emailAddress, false),
                         const SizedBox(height: 20),
-                        InputFieldWidget('Enter password', TextInputType.text, true),
+                        InputFieldWidget(
+                            'Enter password', TextInputType.text, true),
                         const SizedBox(height: 20),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 24.0,
+                                  height: 24.0,
+                                  child: Theme(
+                                    data: ThemeData(
+                                        unselectedWidgetColor: Colors.white,
+                                        selectedRowColor: Colors.amber),
+                                    child: Checkbox(
+                                      value: rememberMe,
+                                      activeColor:
+                                          Theme.of(context).primaryColor,
+                                      onChanged: (bool value) {
+                                        setState(() {
+                                          rememberMe = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Text(
+                                  'Remember Me',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
                             Text(
                               'Forgot Password',
                               style: TextStyle(color: Colors.white),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 20),
                         RaisedButtonWidget(dashboardRoute, 'Log In', true),
                         const SizedBox(height: 80),
-                        Container(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Don’t have an account? Register',
-                            style: Theme.of(context).textTheme.bodyText1,
+                        GestureDetector(
+                          onTap: () {
+                            //Navigator.pushNamed(context, signUpRoute);
+                            Navigator.popAndPushNamed(context, signUpRoute);
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'Don’t have an account? ',
+                                style: TextStyle(fontSize: 15),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: 'Register',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -100,6 +158,7 @@ class _LoginState extends State<Login> {
             ),
           ]),
         ),
+      ),
     );
   }
 }

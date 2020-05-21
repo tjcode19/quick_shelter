@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quick_shelter/screens/dashboard/dashboard_add_property.dart';
+import 'package:quick_shelter/screens/dashboard/profile.dart';
 import 'package:quick_shelter/screens/identity_card.dart';
 import 'screens/dashboard/dashboard.dart';
 import 'screens/reg_complete.dart';
@@ -28,10 +30,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => RegCompleted());
     case dashboardRoute:
       return MaterialPageRoute(builder: (context) => Dashboard());
-    // case passwordRoute:
-    //   return MaterialPageRoute(builder: (context) => PasswordSettings());
-    // case cardSettingsRoute:
-    //   return MaterialPageRoute(builder: (context) => CardSettings());
+    case addPropertyRoute:
+      return MaterialPageRoute(builder: (context) => DashboardAddProp());
+    case profileRoute:
+      return MaterialPageRoute(builder: (context) => Profile());
     // case availableCardsRoute:
     //   return MaterialPageRoute(builder: (context) => AvailableCards());
     // case loanRequestOneRoute:

@@ -46,11 +46,11 @@ class WelcomePage extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   child: RaisedButton(
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(12),
                     highlightElevation: 5.0,
                     elevation: 3.0,
-                    splashColor: Colors.teal[300],
-                    highlightColor: Colors.teal[300],
+                    splashColor: Colors.orange[50],
+                    highlightColor: Colors.orange[100],
                     color: Theme.of(context).primaryColor,
                     shape: RoundedRectangleBorder(
                         //borderRadius: new BorderRadius.circular(10.0),

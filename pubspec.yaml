@@ -54,6 +54,7 @@ flutter:
     - assets/images/welcome1x2.png
     - assets/images/welcome1x3.png
     - assets/images/prop.png
+    - assets/images/person.png
     - assets/icons/bath.svg
     - assets/icons/bed.svg
     - assets/icons/home.svg

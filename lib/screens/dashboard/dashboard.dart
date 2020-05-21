@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quick_shelter/screens/dashboard/dashboard_add_property.dart';
 import 'package:quick_shelter/screens/dashboard/dashboard_collections.dart';
-import 'package:quick_shelter/screens/login.dart';
+import 'package:quick_shelter/screens/get_started.dart';
 
 import 'dashboard_home.dart';
 
@@ -18,7 +17,6 @@ class _DashboardState extends State<Dashboard> {
 
   static List<Widget> _widgetOptions = <Widget>[
      DashboardHome(),
-     DashboardAddProp(),
      DashboardCollections(),
     // DashboardLoanHistory(),
     // DashboardAccount(),
@@ -46,7 +44,7 @@ class _DashboardState extends State<Dashboard> {
                 new GestureDetector(
                   onTap: () => {
                     //SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop'),
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Login())),
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => GetStarted())),
                   },
                   child: Text("YES"),
                 ),
@@ -68,6 +66,7 @@ class _DashboardState extends State<Dashboard> {
             index: _selectedIndex,
             children: _widgetOptions,
           ),
+          
         
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
@@ -75,10 +74,10 @@ class _DashboardState extends State<Dashboard> {
               icon: Icon(Icons.home),
               title: Text('Home'),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_balance_wallet),
-              title: Text('Add Property'),
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.account_balance_wallet),
+            //   title: Text('Add Property'),
+            // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.shopping_cart),
               title: Text('Collections'),
