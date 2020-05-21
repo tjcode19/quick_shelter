@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/colors.dart';
+//import 'package:camera/camera.dart';
 
 import '../constants.dart';
 import '../widgets/raised_button.dart';
@@ -9,7 +10,10 @@ class IdentityCard extends StatefulWidget {
   _IdentityCardState createState() => _IdentityCardState();
 }
 
+
 class _IdentityCardState extends State<IdentityCard> {
+ 
+
   @override
   Widget build(BuildContext context) {
     final screeSize = MediaQuery.of(context).size;

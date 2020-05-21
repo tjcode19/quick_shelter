@@ -11,17 +11,11 @@ class Profile extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Card(
+              
               child: ListTile(
                 contentPadding: EdgeInsets.all(10),
-                leading: Container(
-                    child: SvgPicture.asset(
-                  'assets/images/svg_payment_card.svg',
-                  color: Colors.amber,
-                  height: 24.0,
-                  width: 24.0,
-                )),
                 title: Text(
-                  'My Card & Setting',
+                  'Personal Information',
                   style: TextStyle(),
                 ),
                 trailing: Icon(Icons.keyboard_arrow_right),

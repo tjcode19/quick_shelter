@@ -74,7 +74,7 @@ class _SignUpState extends State<SignUp> {
                         const SizedBox(height: 10),
                         InputFieldWidget('Lastname', TextInputType.text, false),
                         const SizedBox(height: 10),
-                        InputFieldWidget('ex. email@email.com', TextInputType.emailAddress, false),
+                        InputFieldWidget('ex. email@email.com', TextInputType.emailAddress, false, capitalizationType: TextCapitalization.none,),
                         const SizedBox(height: 10),
                         InputFieldWidget('Phone Number', TextInputType.phone, false),
                         const SizedBox(height: 10),

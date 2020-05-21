@@ -4,13 +4,16 @@ class InputFieldWidget extends StatelessWidget {
   final String label;
   final TextInputType keyType;
   final bool isPasswordField;
+  final TextCapitalization capitalizationType;
 
-  InputFieldWidget(this.label, this.keyType, this.isPasswordField);
+  InputFieldWidget(this.label, this.keyType, this.isPasswordField, {this.capitalizationType:TextCapitalization.words});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: TextFormField(
+      child: TextFormField(  
+        textCapitalization: TextCapitalization.words,  
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),    
         obscureText: isPasswordField,
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,

@@ -78,10 +78,10 @@ class _LoginState extends State<Login> {
                         ),
                         const SizedBox(height: 60),
                         InputFieldWidget(
-                            'Enter email', TextInputType.emailAddress, false),
+                            'Enter email', TextInputType.emailAddress, false, capitalizationType: TextCapitalization.none,),
                         const SizedBox(height: 20),
                         InputFieldWidget(
-                            'Enter password', TextInputType.text, true),
+                            'Enter password', TextInputType.text, true, capitalizationType: TextCapitalization.none,),
                         const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

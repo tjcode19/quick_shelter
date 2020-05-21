@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+// import 'package:pin_entry_text_field/pin_entry_text_field.dart';
+// import 'package:otp_text_field/otp_field.dart';
+// import 'package:otp_text_field/style.dart';
 
 import '../constants.dart';
-import '../widgets/input_field.dart';
+import '../pin_entry_text_field.dart';
 import '../widgets/raised_button.dart';
 
 class VerifyPhone extends StatefulWidget {
@@ -17,9 +20,8 @@ class _VerifyPhoneState extends State<VerifyPhone> {
       backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Stack(
-          children: [
-          Container(            
+        child: Stack(children: [
+          Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage("assets/images/welcome.png"),
@@ -40,7 +42,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                   ),
                 ),
                 Container(
-                  height: screeSize.height - 90,
+                  height: screeSize.height - 100,
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(129, 92, 67, 1),
@@ -49,15 +51,15 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                         topRight: Radius.circular(20)),
                   ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Container(
-                          margin: EdgeInsets.only(top: 60),
+                          margin: EdgeInsets.only(top: 20),
                           child: Text(
                             'Verify Phone Number',
                             style:
-                                TextStyle(color: Colors.white, fontSize: 20.0),
+                                TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
                           )),
                       const SizedBox(height: 20),
                       Container(
@@ -70,11 +72,24 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                       Container(
                         child: Text(
                           '+2348 000 000 0000',
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
                         ),
                       ),
                       const SizedBox(height: 80),
-                      InputFieldWidget('Firstname', TextInputType.text, false),
+                      PinEntryTextField(
+                        showFieldAsBox: false,
+                        fields: 6,                        
+                        onSubmit: (String pin) {
+                          // showDialog(
+                          //     context: context,
+                          //     builder: (context) {
+                          //       return AlertDialog(
+                          //         title: Text("Pin"),
+                          //         content: Text('Pin entered is $pin'),
+                          //       );
+                          //     }); //end showDialog()
+                        }, // end onSubmit
+                      ),
                       const SizedBox(height: 40),
                       Container(
                         alignment: Alignment.center,
@@ -88,12 +103,16 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                         alignment: Alignment.center,
                         child: RichText(
                           text: TextSpan(
-                            text: 'Resend | ',
+                            text: 'Resend  | ',
                             style:
                                 TextStyle(color: Colors.white, fontSize: 15.0),
                             children: [
                               WidgetSpan(
-                                child: Icon(Icons.call, size: 14, color: Colors.white,),
+                                child: Icon(
+                                  Icons.call,
+                                  size: 15,
+                                  color: Colors.white,
+                                ),
                               ),
                               TextSpan(text: ' Call me'),
                             ],

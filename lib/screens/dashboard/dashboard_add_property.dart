@@ -156,7 +156,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
               const SizedBox(height: 8),
               InputFieldWidget('30 May, 2020', TextInputType.text, false),
               const SizedBox(height: 40),
-              RaisedButtonWidget(dashboardRoute, 'Continue', true),
+              RaisedButtonWidget(addPropertyStep2Route, 'Continue', true),
               const SizedBox(height: 20),
             ],
           ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quick_shelter/screens/dashboard/add_property_step_2.dart';
+import 'package:quick_shelter/screens/dashboard/add_property_step_3.dart';
 import 'package:quick_shelter/screens/dashboard/dashboard_add_property.dart';
 import 'package:quick_shelter/screens/dashboard/profile.dart';
 import 'package:quick_shelter/screens/identity_card.dart';
@@ -32,6 +34,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => Dashboard());
     case addPropertyRoute:
       return MaterialPageRoute(builder: (context) => DashboardAddProp());
+    case addPropertyStep2Route:
+      return MaterialPageRoute(builder: (context) => AddPropStep2());
+    case addPropertyStep3Route:
+      return MaterialPageRoute(builder: (context) => AddPropStep3());
     case profileRoute:
       return MaterialPageRoute(builder: (context) => Profile());
     // case availableCardsRoute:
