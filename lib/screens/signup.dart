@@ -53,11 +53,11 @@ class _SignUpState extends State<SignUp> {
                           topRight: Radius.circular(20)),
                     ),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
-                            margin: EdgeInsets.only(top: 60),
+                            margin: EdgeInsets.only(top: 30),
                             child: Text(
                               'Sign Up',
                               style: TextStyle(color: Colors.white, fontSize: 20.0),
@@ -71,16 +71,16 @@ class _SignUpState extends State<SignUp> {
                         ),
                         const SizedBox(height: 40),
                         InputFieldWidget('Firstname', TextInputType.text, false),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 20),
                         InputFieldWidget('Lastname', TextInputType.text, false),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 20),
                         InputFieldWidget('ex. email@email.com', TextInputType.emailAddress, false, capitalizationType: TextCapitalization.none,),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 20),
                         InputFieldWidget('Phone Number', TextInputType.phone, false),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 20),
                         InputFieldWidget('Password', TextInputType.text, true),
                         
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 30),
                         RaisedButtonWidget(verifyPhoneRoute, 'Continue', true),
                         const SizedBox(height: 25),
                         GestureDetector(

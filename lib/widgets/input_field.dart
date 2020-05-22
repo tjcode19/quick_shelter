@@ -12,7 +12,7 @@ class InputFieldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: TextFormField(  
-        textCapitalization: TextCapitalization.words,  
+        textCapitalization: capitalizationType,  
         style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),    
         obscureText: isPasswordField,
         decoration: InputDecoration(

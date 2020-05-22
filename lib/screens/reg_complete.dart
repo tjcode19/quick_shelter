@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
-import '../widgets/input_field.dart';
 import '../widgets/raised_button.dart';
 
 class RegCompleted extends StatefulWidget {
@@ -13,7 +10,7 @@ class RegCompleted extends StatefulWidget {
 
 class _RegCompletedState extends State<RegCompleted> {
   Future<bool> _onBackPressed() {
-    exit(0);
+    return Navigator.pushNamedAndRemoveUntil(context, getStartedRoute, (route) => false);
   }
 
   @override
