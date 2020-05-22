@@ -22,7 +22,7 @@ class InputFieldMultiLineWidget extends StatelessWidget {
             borderSide: new BorderSide(
                 color: Color.fromRGBO(226, 208, 195, 1), width: 2.0),
           ),
-          fillColor: Color.fromRGBO(226, 208, 195, 0.3),
+          fillColor: Colors.transparent,
           filled: true,
           labelText: label,
         ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/screens/dashboard/add_property_step_2.dart';
 import 'package:quick_shelter/screens/dashboard/add_property_step_3.dart';
+import 'package:quick_shelter/screens/dashboard/basic_info.dart';
 import 'package:quick_shelter/screens/dashboard/dashboard_add_property.dart';
 import 'package:quick_shelter/screens/dashboard/profile.dart';
+import 'package:quick_shelter/screens/dashboard/property_details.dart';
 import 'package:quick_shelter/screens/identity_card.dart';
 import 'screens/dashboard/dashboard.dart';
 import 'screens/reg_complete.dart';
@@ -40,10 +42,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => AddPropStep3());
     case profileRoute:
       return MaterialPageRoute(builder: (context) => Profile());
-    // case availableCardsRoute:
-    //   return MaterialPageRoute(builder: (context) => AvailableCards());
-    // case loanRequestOneRoute:
-    //   return MaterialPageRoute(builder: (context) => LoanRequestOne());
+    case propDetailsRoute:
+      return MaterialPageRoute(builder: (context) => PropertyDetails());
+    case personalInfoRoute:
+      return MaterialPageRoute(builder: (context) => BasicInfo());
     // case loanRequestTwoRoute:
     //   return MaterialPageRoute(builder: (context) => LoanRequestTwo());
     // case loanRequestThreeRoute:

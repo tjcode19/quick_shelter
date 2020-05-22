@@ -47,16 +47,23 @@ class _DashboardHomeState extends State<DashboardHome> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, profileRoute);
-          },
-          child: Container(
-            child: Image.asset(
-              'assets/images/person.png',
-              color: Colors.amber,
-              height: 24.0,
-              width: 24.0,
+        leading: Container(
+          padding: EdgeInsets.all(8),
+          child: ClipOval(
+            child: Material(
+              color: appTextColorPrimary2, // button color
+              child: InkWell(
+                splashColor: Colors.orange[100], // inkwell color
+                child: Image.asset(
+                  'assets/images/person.png',
+                  color: appSecondaryColor,
+                  height: 24.0,
+                  width: 24.0,
+                ),
+                onTap: () {
+                  Navigator.pushNamed(context, profileRoute);
+                },
+              ),
             ),
           ),
         ),
@@ -75,6 +82,29 @@ class _DashboardHomeState extends State<DashboardHome> {
             ],
           ),
         ),
+        actions: <Widget>[
+          Container(
+            child: ClipOval(
+              child: Material(
+                color: appTextColorPrimary2, // button color
+                child: InkWell(
+                  splashColor: Colors.orange[100], // inkwell color
+                  child: Image.asset(
+                    'assets/images/person.png',
+                    color: appSecondaryColor,
+                    height: 24.0,
+                    width: 24.0,
+                  ),
+                  onTap: () {
+                    Navigator.pushNamed(context, profileRoute);
+                  },
+                ),
+              ),
+            ),
+          ),
+        
+
+        ],
       ),
       body: SingleChildScrollView(
         controller: _controller,
@@ -97,9 +127,9 @@ class _DashboardHomeState extends State<DashboardHome> {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: <Widget>[
-                    _propertItem,
-                    _propertItem,
-                    _propertItem,
+                    _propertItem(),
+                    _propertItem(),
+                    _propertItem(),
                   ],
                 ),
               ),
@@ -125,9 +155,9 @@ class _DashboardHomeState extends State<DashboardHome> {
                         mainAxisSpacing: 1,
                         crossAxisCount: 2,
                         children: <Widget>[
-                          _propertItem,
-                          _propertItem,
-                          _propertItem,
+                          _propertItem(),
+                          _propertItem(),
+                          _propertItem(),
                         ],
                       ),
                     ),
@@ -150,8 +180,14 @@ class _DashboardHomeState extends State<DashboardHome> {
           //   color: Colors.white,
           // ),
           // backgroundColor: Theme.of(context).primaryColor,
-          label: Text('New Product', style: TextStyle(fontSize: 14.0, color: Colors.white),),
-          icon: Icon(Icons.add, color: Colors.white,),
+          label: Text(
+            'New Product',
+            style: TextStyle(fontSize: 14.0, color: Colors.white),
+          ),
+          icon: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
           backgroundColor: Theme.of(context).primaryColor,
           tooltip: 'Hello',
         ),
@@ -159,92 +195,95 @@ class _DashboardHomeState extends State<DashboardHome> {
     );
   }
 
-  Widget _propertItem = Card(
-    elevation: 2.0,
-    child: InkWell(
-      splashColor: Colors.orange.withAlpha(30),
-      onTap: () {
-        print('Card tapped.');
-      },
-      child: Container(
-        margin: EdgeInsets.all(2),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Image.asset(
-              'assets/images/prop.png',
-              width: 175,
-              height: 123,
-              fit: BoxFit.cover,
-            ),
-            Container(
-              width: 172,
-              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const SizedBox(height: 10),
-                  Text(
-                    'N55,000,000',
-                    style: TextStyle(fontSize: 15, color: appTextColorPrimary),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    'Studio Apartment',
-                    style: TextStyle(fontSize: 13, color: appTextColorPrimary),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
+  Widget _propertItem() => Card(
+        elevation: 2.0,
+        child: InkWell(
+          splashColor: Colors.orange.withAlpha(30),
+          onTap: () {
+            print('Card tapped.');
+            Navigator.pushNamed(context, propDetailsRoute);
+          },
+          child: Container(
+            margin: EdgeInsets.all(2),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Image.asset(
+                  'assets/images/prop.png',
+                  width: 175,
+                  height: 123,
+                  fit: BoxFit.cover,
+                ),
+                Container(
+                  width: 172,
+                  padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(right: 2.0),
-                        child: Icon(
-                          Icons.location_on,
-                          size: 10,
-                          color: Colors.orange,
-                        ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'N55,000,000',
+                        style:
+                            TextStyle(fontSize: 15, color: appTextColorPrimary),
                       ),
-                      Container(
-                        child: Expanded(
-                          child: Text(
-                            '23 Cross, HRBR layout, bangalore',
-                            softWrap: true,
-                            style:
-                                TextStyle(fontSize: 10, color: Colors.black87),
+                      const SizedBox(height: 5),
+                      Text(
+                        'Studio Apartment',
+                        style:
+                            TextStyle(fontSize: 13, color: appTextColorPrimary),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(right: 2.0),
+                            child: Icon(
+                              Icons.location_on,
+                              size: 10,
+                              color: Colors.orange,
+                            ),
                           ),
-                        ),
+                          Container(
+                            child: Expanded(
+                              child: Text(
+                                '23 Cross, HRBR layout, bangalore',
+                                softWrap: true,
+                                style: TextStyle(
+                                    fontSize: 10, color: Colors.black87),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 25),
+                      Row(
+                        children: <Widget>[
+                          SvgPicture.asset(
+                            'assets/icons/bed.svg',
+                            color: Colors.orange,
+                          ),
+                          const SizedBox(width: 5),
+                          Text('3 Bed',
+                              style: TextStyle(
+                                  color: Colors.black87, fontSize: 12.0)),
+                          const SizedBox(width: 15),
+                          SvgPicture.asset(
+                            'assets/icons/bath.svg',
+                            color: Colors.orange,
+                          ),
+                          const SizedBox(width: 5),
+                          Text('2 Bath',
+                              style: TextStyle(
+                                  color: Colors.black87, fontSize: 12.0)),
+                        ],
+                      )
                     ],
                   ),
-                  const SizedBox(height: 25),
-                  Row(
-                    children: <Widget>[
-                      SvgPicture.asset(
-                        'assets/icons/bed.svg',
-                        color: Colors.orange,
-                      ),
-                      const SizedBox(width: 5),
-                      Text('3 Bed',
-                          style:
-                              TextStyle(color: Colors.black87, fontSize: 12.0)),
-                      const SizedBox(width: 15),
-                      SvgPicture.asset(
-                        'assets/icons/bath.svg',
-                        color: Colors.orange,
-                      ),
-                      const SizedBox(width: 5),
-                      Text('2 Bath',
-                          style:
-                              TextStyle(color: Colors.black87, fontSize: 12.0)),
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
+                )
+              ],
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }

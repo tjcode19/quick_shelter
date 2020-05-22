@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../colors.dart';
+import '../../constants.dart';
 
 class DashboardCollections extends StatefulWidget {
   @override
@@ -18,30 +19,44 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
     final double itemWidth = size.width / 2;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         leading: Container(
-          child: IconButton(
-            icon: Icon(
-              Icons.person,
+          padding: EdgeInsets.all(8),
+          child: ClipOval(
+            child: Material(
+              color: appTextColorPrimary2, // button color
+              child: InkWell(
+                splashColor: Colors.orange[100], // inkwell color
+                child: Image.asset(
+                  'assets/images/person.png',
+                  color: appSecondaryColor,
+                  height: 24.0,
+                  width: 24.0,
+                ),
+                onTap: () {
+                  Navigator.pushNamed(context, profileRoute);
+                },
+              ),
             ),
-            onPressed: () {},
           ),
         ),
-        actions: <Widget>[Container(
-          margin: EdgeInsets.symmetric(horizontal:5),
-          alignment: Alignment.center,
-          child: Text('Edit'))],
+        actions: <Widget>[
+          Container(
+              margin: EdgeInsets.symmetric(horizontal: 5),
+              alignment: Alignment.center,
+              child: Text('Edit'))
+        ],
         title: RichText(
           text: TextSpan(
             text: 'Hi, ',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16, color: appTextColorPrimary),
             children: <TextSpan>[
               TextSpan(
                 text: 'Tolulope',
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 16,
-                  color: Colors.teal[100],
                 ),
               ),
             ],
@@ -54,7 +69,7 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
           padding: EdgeInsets.all(5),
           child: Column(
             children: <Widget>[
-              const SizedBox(height: 20),              
+              const SizedBox(height: 20),
               Container(
                 alignment: Alignment.topLeft,
                 margin: EdgeInsets.only(left: 10.0),
@@ -93,7 +108,6 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
     );
   }
 
-  
   Widget _propertItem = Card(
     elevation: 2.0,
     child: InkWell(

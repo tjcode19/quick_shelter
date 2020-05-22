@@ -69,7 +69,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 ],
               ),
               const SizedBox(height: 20),
-              RaisedButtonWidget('routeName',' btnLabel', false),
+              RaisedButtonWidget('routeName','For Sale', false),
               const SizedBox(height: 20),
               Row(
                 children: [
