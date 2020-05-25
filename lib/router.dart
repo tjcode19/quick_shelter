@@ -5,6 +5,7 @@ import 'package:quick_shelter/screens/dashboard/basic_info.dart';
 import 'package:quick_shelter/screens/dashboard/dashboard_add_property.dart';
 import 'package:quick_shelter/screens/dashboard/profile.dart';
 import 'package:quick_shelter/screens/dashboard/property_details.dart';
+import 'package:quick_shelter/screens/dashboard/search_property.dart';
 import 'package:quick_shelter/screens/identity_card.dart';
 import 'screens/dashboard/dashboard.dart';
 import 'screens/reg_complete.dart';
@@ -46,6 +47,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => PropertyDetails());
     case personalInfoRoute:
       return MaterialPageRoute(builder: (context) => BasicInfo());
+    case searchPropRoute:
+      return MaterialPageRoute(builder: (context) => SearchProp());
     // case loanRequestTwoRoute:
     //   return MaterialPageRoute(builder: (context) => LoanRequestTwo());
     // case loanRequestThreeRoute:

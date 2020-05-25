@@ -79,17 +79,83 @@ class _AddPropStep3State extends State<AddPropStep3> {
               Divider(color: Colors.white54, thickness: 1.0),
               _rowCont('Deed of lease', 'Approved', Icons.check),
               Divider(color: Colors.white54, thickness: 1.0),
-              _rowCont('Deed of Sublease', 'Approved', Icons.check),
+              _rowCont('Deed of Sublease', 'Approved', Icons.clear),
               Divider(color: Colors.white54, thickness: 1.0),
-              _rowCont('Land Certificate', 'Approved', Icons.check),
+              _rowCont('Land Certificate', 'Approved', Icons.remove),
               Divider(color: Colors.white54, thickness: 1.0),
-              _rowCont('Deed of Mortgate', 'Approved', Icons.check),
+              _rowCont('Deed of Mortgate', 'Approved', Icons.remove),
               Divider(color: Colors.white54, thickness: 1.0),
-              _rowCont('Survey Plan', 'Approved', Icons.check),
+              _rowCont('Survey Plan', 'Approved', Icons.remove),
               Divider(color: Colors.white54, thickness: 1.0),
               const SizedBox(height: 40),
-              RaisedButtonWidget(dashboardRoute, 'Continue', true),
               
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2-40,
+                    margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: OutlineButton(
+                      padding: EdgeInsets.all(10),
+                      color: Colors.white,
+                      highlightedBorderColor: Colors.white,
+                      borderSide: BorderSide(color: appTextColorPrimary2),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.only(topRight: Radius.circular(15))),
+                      child:  Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                              child: Text(
+                                'Skip',
+                                style: TextStyle(
+                                    color: appTextColorPrimary2, fontSize: 15),
+                              ),
+                            ),
+                          ],
+                        ),
+                      
+                      onPressed: () {
+                        _settingModalBottomSheet(context);
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2-30,
+                    margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: RaisedButton(
+                      padding: EdgeInsets.all(10),
+                      highlightElevation: 5.0,
+                      elevation: 3.0,
+                      splashColor: Colors.orange[100],
+                      highlightColor: Colors.orange[100],
+                      color: appColorSecondary,
+                      shape: RoundedRectangleBorder(
+                          //borderRadius: new BorderRadius.circular(10.0),
+                          borderRadius:
+                              BorderRadius.only(topRight: Radius.circular(20))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                            child: Text(
+                              'Add Property',
+                              style: TextStyle(
+                                  color: appTextColorPrimary2, fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      ),
+                      onPressed: () {
+                         _settingModalBottomSheet(context);
+                      },
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 20),
             ],
           ),
@@ -120,6 +186,127 @@ class _AddPropStep3State extends State<AddPropStep3> {
           )
         ],
       ),
+    );
+  }
+
+  void _settingModalBottomSheet(context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: appSecondaryColor,
+      builder: (BuildContext bc) {
+        return Container(
+          height: MediaQuery.of(context).size.height / 2,
+          margin: EdgeInsets.only(right: 5, left: 5),
+          decoration: BoxDecoration(
+              color: appSecondaryColor,
+              //borderRadius: BorderRadius.all(Radius.circular(15)),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15),
+                topRight: Radius.circular(15),
+              ),
+              boxShadow: [
+                BoxShadow(blurRadius: 5, color: Colors.white, spreadRadius: 1)
+              ]),
+          padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                Icons.check_circle_outline,
+                size: 100,
+                color: appTextColorPrimary2,
+              ),
+              const SizedBox(height: 10), //You have successfully added a new property to your collections.
+              Container(
+                  margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                  child: Text(
+                    'Yay! New property Added',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    softWrap: true,
+                    textAlign: TextAlign.center,
+                  )),
+                  const SizedBox(height: 10),
+                  Container(
+                  margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: Text(
+                    'You have successfully added a new property to your collections.',
+                    style: TextStyle(fontSize: 14, color: Colors.white),
+                    softWrap: true,
+                    textAlign: TextAlign.center,
+                  )),
+                  const SizedBox(height: 40),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2-40,
+                    margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
+                    child: OutlineButton(
+                      padding: EdgeInsets.all(10),
+                      color: Colors.white,
+                      highlightedBorderColor: Colors.white,
+                      borderSide: BorderSide(color: appTextColorPrimary2),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.only(topRight: Radius.circular(15))),
+                      child:  Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                              child: Text(
+                                'Dismiss',
+                                style: TextStyle(
+                                    color: appTextColorPrimary2, fontSize: 15),
+                              ),
+                            ),
+                          ],
+                        ),
+                      
+                      onPressed: () {
+                        Navigator.pushNamed(context, dashboardRoute);
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2-30,
+                    margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
+                    child: RaisedButton(
+                      padding: EdgeInsets.all(10),
+                      highlightElevation: 5.0,
+                      elevation: 3.0,
+                      splashColor: Colors.orange[100],
+                      highlightColor: Colors.orange[100],
+                      color: appColorSecondary,
+                      shape: RoundedRectangleBorder(
+                          //borderRadius: new BorderRadius.circular(10.0),
+                          borderRadius:
+                              BorderRadius.only(topRight: Radius.circular(20))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                            child: Text(
+                              'View property',
+                              style: TextStyle(
+                                  color: appTextColorPrimary2, fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      ),
+                      onPressed: () {
+                        // _settingModalBottomSheet(context);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

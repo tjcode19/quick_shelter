@@ -12,5 +12,6 @@ const String addPropertyStep3Route = '/addPropertyStep3';
 const String profileRoute = '/profile';
 const String propDetailsRoute = '/propertyDetails';
 const String personalInfoRoute = '/personalInfo';
+const String searchPropRoute = '/searchProp';
 
 

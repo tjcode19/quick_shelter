@@ -83,25 +83,18 @@ class _DashboardHomeState extends State<DashboardHome> {
           ),
         ),
         actions: <Widget>[
-          Container(
-            child: ClipOval(
-              child: Material(
-                color: appTextColorPrimary2, // button color
-                child: InkWell(
-                  splashColor: Colors.orange[100], // inkwell color
-                  child: Image.asset(
-                    'assets/images/person.png',
-                    color: appSecondaryColor,
-                    height: 24.0,
-                    width: 24.0,
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(context, profileRoute);
+         Padding(
+           padding: const EdgeInsets.only(right:8.0),
+           child: CircleAvatar(
+             backgroundColor: appTextColorPrimary,
+                      child: IconButton(
+                  icon: Icon(Icons.search, color: Colors.white,),
+                  onPressed: () {
+                    Navigator.pushNamed(context, searchPropRoute);
                   },
                 ),
-              ),
-            ),
-          ),
+           ),
+         ),
         
 
         ],

@@ -5,10 +5,11 @@ class RaisedButtonWidget extends StatelessWidget {
   final String btnLabel;
   Color btnColor;
   Color btnTextColor;
+  double fnSize;
 
   bool isBtnColorPrimary;
 
-  RaisedButtonWidget(this.routeName, this.btnLabel, this.isBtnColorPrimary);
+  RaisedButtonWidget(this.routeName, this.btnLabel, this.isBtnColorPrimary , {this.fnSize:17});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class RaisedButtonWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       child: RaisedButton(
-        padding: EdgeInsets.all(12),
+        padding: EdgeInsets.all(8),
         highlightElevation: 5.0,
         elevation: 3.0,
         splashColor: Colors.orange[100],
@@ -39,7 +40,7 @@ class RaisedButtonWidget extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
               child: Text(
                 btnLabel,
-                style: TextStyle(color: btnTextColor),
+                style: TextStyle(color: btnTextColor, fontSize: fnSize),
               ),
             ),
           ],

@@ -14,6 +14,8 @@ class DashboardAddProp extends StatefulWidget {
 class _DashboardAddPropState extends State<DashboardAddProp> {
   @override
   Widget build(BuildContext context) {
+    final screeSize = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: appSecondaryColor,
       appBar: AppBar(
@@ -69,71 +71,165 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 ],
               ),
               const SizedBox(height: 20),
-              RaisedButtonWidget('routeName','For Sale', false),
+              Stack(
+                children: <Widget>[
+                  Container(
+                    height: 70,
+                  ),
+                  Positioned(
+                    right: 0.0,
+                    top: 0,
+                    child: Container(
+                      width: screeSize.width / 2,
+                      child: OutlineButton(
+                        padding: EdgeInsets.all(11),
+                        color: Colors.white,
+                        highlightedBorderColor: Colors.white,
+                        borderSide: BorderSide(color: appTextColorPrimary2),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(15))),
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(10, 3, 4, 4),
+                          child: Text(
+                            'For Rent',
+                            style: TextStyle(
+                                color: appTextColorPrimary2, fontSize: 13),
+                          ),
+                        ),
+                        onPressed: () {
+                          //showSnackBar("OutlineButton with Shape");
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                      width: screeSize.width / 2,
+                      child:
+                          RaisedButtonWidget('routeName', 'For Sale', false)),
+                ],
+              ),
               const SizedBox(height: 20),
               Row(
                 children: [
-                    Container(
-                      child: Text(
-                        'Selling Price',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
+                  Container(
+                    child: Text(
+                      'Selling Price',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
                       ),
+                      textAlign: TextAlign.left,
                     ),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
               InputFieldWidget('Selling Price', TextInputType.number, false),
               const SizedBox(height: 20),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                    Container(
-                      child: Text(
-                        'Property Type',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
+                  Container(
+                    width: screeSize.width / 2 - 30,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          child: Text(
+                            'Bedrooms',
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
                         ),
-                        textAlign: TextAlign.left,
-                      ),
+                        InputFieldWidget('ex. 3', TextInputType.text, false),
+                      ],
                     ),
+                  ),
+                  Container(
+                    width: screeSize.width / 2 - 30,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          child: Text(
+                            'Bathroom',
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        InputFieldWidget('ex. 2', TextInputType.text, false),
+                      ],
+                    ),
+                  )
                 ],
               ),
-              const SizedBox(height: 8),
-              InputFieldMultiLineWidget('Property Description', 3),
               const SizedBox(height: 20),
               Row(
                 children: [
-                    Container(
-                      child: Text(
-                        'Property State & Location',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
+                  Container(
+                    child: Text(
+                      'Property Type',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
                       ),
+                      textAlign: TextAlign.left,
                     ),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
-              InputFieldWidget('State', TextInputType.text, false),
+              InputFieldMultiLineWidget('Property description', 3),
               const SizedBox(height: 20),
               Row(
                 children: [
-                    Container(
-                      child: Text(
-                        'Land Area',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
+                  Container(
+                    child: Text(
+                      'Property State & Location',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
                       ),
+                      textAlign: TextAlign.left,
                     ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                      width: screeSize.width / 2 - 30,
+                      child:
+                          InputFieldWidget('ex. Lagos state', TextInputType.text, false)),
+                  Container(
+                      width: screeSize.width / 2 - 30,
+                      child:
+                          InputFieldWidget('ex. Lekki Phase 1', TextInputType.text, false)),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Container(
+                    child: Text(
+                      'Land Area',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -141,16 +237,16 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
               const SizedBox(height: 20),
               Row(
                 children: [
-                    Container(
-                      child: Text(
-                        'Available Date',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
+                  Container(
+                    child: Text(
+                      'Available Date',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
                       ),
+                      textAlign: TextAlign.left,
                     ),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),

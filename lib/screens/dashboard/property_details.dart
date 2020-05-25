@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/widgets/input_field.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
 
@@ -33,10 +34,6 @@ class _PropertyDetailsState extends State<PropertyDetails> {
     ImageList('assets/images/2_thumbnail.png', 'assets/images/2_big.png'),
     ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
     ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
-    ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
-    ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
-    ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
-    ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
   ];
 
   int imageNum = 0;
@@ -64,21 +61,26 @@ class _PropertyDetailsState extends State<PropertyDetails> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
-        fit: StackFit.passthrough,
         children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/1_big.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
           IndexedStack(
             index: _currentPosition,
             children:
-                // ls.map((item) => new Text(item.bigPix)).toList(),
-
                 ls
                     .map(
                       (e) => Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(e.bigPix),
-                            fit: BoxFit.cover,
-                          ),
+                        height: screeSize.height / 2 + 50,
+                        constraints: BoxConstraints.loose(Size.infinite),
+                        child: Image.asset(
+                          e.bigPix,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     )
@@ -127,7 +129,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Icon(
-                            Icons.arrow_back,
+                            Icons.keyboard_arrow_left,
                             color: appColorSecondary,
                           ),
                         ),
@@ -149,7 +151,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Icon(
-                            Icons.arrow_forward,
+                            Icons.keyboard_arrow_right,
                             color: appColorSecondary,
                           ),
                         ),
@@ -173,7 +175,6 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                 children: ls.map((e) {
                   int indexL = ls.indexOf(e);
                   return GestureDetector(
-                    
                     onTap: () {
                       print(indexL);
                       _toggleFavorite(indexL, 'click', 'clicking');
@@ -183,7 +184,12 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                       decoration: (indexL == _currentPosition)
                           ? BoxDecoration(
                               border: Border.all(
-                                  width: 2, color: appColorSecondary),
+                                width: 2,
+                                color: appColorSecondary,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5.0),
+                              ),
                             )
                           : null,
                       child: Image.asset(e.thumbnail),
@@ -194,89 +200,175 @@ class _PropertyDetailsState extends State<PropertyDetails> {
             ),
           ),
           Positioned(
-            bottom: 0.0,
-            top: screeSize.height / 2,
-            left: 0.0,
             right: 0.0,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(129, 92, 67, 1),
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20)),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                            margin: EdgeInsets.only(top: 10),
-                            child: Text(
-                              'Studio Apartment, Fully Furnished',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18.0,
-                              ),
-                            )),
-                        const SizedBox(height: 10),
-                        Container(
-                          child: Text(
-                            'N55,000,000',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 21.0,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        const SizedBox(height: 120),
-                        Container(
-                          child: Text(
-                            'Property Details',
-                            style: TextStyle(
+            bottom: 0.0,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(129, 92, 67, 1),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20)),
+              ),
+              width: screeSize.width,
+              height: screeSize.height / 2,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                        margin: EdgeInsets.only(top: 10),
+                        child: Text(
+                          'Studio Apartment, Fully Furnished',
+                          style: TextStyle(
                               color: Colors.white,
-                              fontSize: 18.0,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold),
+                        )),
+                    const SizedBox(height: 10),
+                    Container(
+                      child: RichText(
+                        text: TextSpan(
+                          text: '₦',
+                          style: TextStyle(
+                              fontSize: 22, color: appTextColorPrimary2),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: '55,000,000.',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
+                            TextSpan(
+                              text: '00',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 22,
+                                color: appTextColorPrimary2,
+                              ),
+                            )
+                          ],
                         ),
-                        const SizedBox(height: 20),
-                        Divider(color: Colors.white38, thickness: 1.0),
-                        _rowCont('Location', 'Lagos State', Icons.check),
-                        Divider(color: Colors.white38, thickness: 1.0),
-                        _rowCont('State', 'Lagos State', Icons.check),
-                        Divider(color: Colors.white38, thickness: 1.0),
-                        _rowCont('Land Area', '77km', Icons.check),
-                        Divider(color: Colors.white54, thickness: 1.0),
-                        const SizedBox(height: 20),
-                        Divider(color: Colors.white38, thickness: 1.0),
-                        _rowCont('Location', 'Lagos State', Icons.check),
-                        Divider(color: Colors.white38, thickness: 1.0),
-                        _rowCont('State', 'Lagos State', Icons.check),
-                        Divider(color: Colors.white38, thickness: 1.0),
-                        _rowCont('Land Area', '77km', Icons.check),
-                        Divider(color: Colors.white54, thickness: 1.0),
-                        const SizedBox(height: 20),
-                        Divider(color: Colors.white38, thickness: 1.0),
-                        _rowCont('Location', 'Lagos State', Icons.check),
-                        Divider(color: Colors.white38, thickness: 1.0),
-                        _rowCont('State', 'Lagos State', Icons.check),
-                        Divider(color: Colors.white38, thickness: 1.0),
-                        _rowCont('Land Area', '77km', Icons.check),
-                        Divider(color: Colors.white54, thickness: 1.0),
-                        _rowCont('Available Date', '20 May, 2020', Icons.check),
-                        const SizedBox(height: 20),
-                        RaisedButtonWidget(
-                            dashboardRoute, 'Buy Property', true),
-                        const SizedBox(height: 80),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              '3',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                            SizedBox(
+                              height: 5.0,
+                            ),
+                            Row(
+                              children: <Widget>[
+                                SvgPicture.asset(
+                                  'assets/icons/bed.svg',
+                                  color: Colors.white,
+                                  width: 25,
+                                ),
+                                SizedBox(
+                                  width: 5.0,
+                                ),
+                                Text(
+                                  'Bedrooms',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 13),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        // SizedBox(width: 20.0),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              '2',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                            SizedBox(height: 5.0),
+                            Row(
+                              children: <Widget>[
+                                SvgPicture.asset(
+                                  'assets/icons/bath.svg',
+                                  color: Colors.white,
+                                  width: 25,
+                                ),
+                                SizedBox(
+                                  width: 5.0,
+                                ),
+                                Text(
+                                  'Bathroom',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 13),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: <Widget>[
+                            ClipOval(
+                              child: Material(
+                                color: appColorSecondary, // button color
+                                child: InkWell(
+                                  splashColor: Colors.orange, // inkwell color
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.share, size: 25, color: Colors.white),
+                                  ),
+                                  onTap: () {
+                                    // Navigator.pushNamed(context, profileRoute);
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 25),
+                    Container(
+                      child: Text(
+                        'Property Details',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    _rowCont(
+                        'Location',
+                        '23 Cross, Herbert Layout, Ikoyi, Victoria Island.',
+                        Icons.location_on),
+                    Divider(color: Colors.white38, thickness: 1.0),
+                    _rowCont('State', 'Lagos State', Icons.pin_drop),
+                    Divider(color: Colors.white38, thickness: 1.0),
+                    _rowCont('Land Area', '77km', Icons.landscape),
+                    Divider(color: Colors.white38, thickness: 1.0),
+                    _rowCont(
+                        'Available date', '20th May, 2020', Icons.date_range),
+                    Divider(color: Colors.white38, thickness: 1.0),
+                    const SizedBox(height: 20),
+                    RaisedButtonWidget(dashboardRoute, 'Buy Property', true),
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
             ),
           ),
@@ -295,15 +387,24 @@ class _PropertyDetailsState extends State<PropertyDetails> {
             Icon(
               iconNew,
               color: appTextColorPrimary2,
+              size: 16.0,
+            ),
+            SizedBox(
+              width: 5.0,
             ),
             Text(
               title,
               style: TextStyle(color: appTextColorPrimary2),
             ),
           ]),
-          Text(
-            subTitle,
-            style: TextStyle(color: appTextColorPrimary2),
+          Container(
+            width: 170.0,
+            child: Text(
+              subTitle,
+              softWrap: true,
+              style: TextStyle(color: appTextColorPrimary2),
+              textAlign: TextAlign.right,
+            ),
           ),
         ],
       ),
