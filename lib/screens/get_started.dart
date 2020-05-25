@@ -27,31 +27,35 @@ class _GetStartedState extends State<GetStarted> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
+            child: Transform.translate(
+              offset: Offset.fromDirection(0.0, 0.5,),
+              
+                          child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                      child: Text(
+                    'Get Started',
+                    style: TextStyle(color: Colors.white, fontSize: 40.0),
+                  )),
+                  const SizedBox(height: 20),
+                  Container(
                     child: Text(
-                  'Get Started',
-                  style: TextStyle(color: Colors.white, fontSize: 40.0),
-                )),
-                const SizedBox(height: 20),
-                Container(
-                  child: Text(
-                    'Now you can Buy, Rent and Sell properties from your mobile phone as quickly as possible.',
-                    style: Theme.of(context).textTheme.bodyText1,
+                      'Now you can Buy, Rent and Sell properties from your mobile phone as quickly as possible.',
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                RaisedButtonWidget(loginRoute, 'Log In', false),
-                const SizedBox(height: 20),
-                RaisedButtonWidget(
-                  signUpRoute,
-                  'Sign Up',
-                  true,
-                ),
-              ],
+                  const SizedBox(height: 20),
+                  RaisedButtonWidget(loginRoute, 'Log In', false),
+                  const SizedBox(height: 20),
+                  RaisedButtonWidget(
+                    signUpRoute,
+                    'Sign Up',
+                    true,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

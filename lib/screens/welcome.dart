@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/constants.dart';
+import 'package:quick_shelter/screens/get_started.dart';
 
 class WelcomePage extends StatelessWidget {
   Future<bool> _onBackPressed() {
@@ -75,7 +76,8 @@ class WelcomePage extends StatelessWidget {
                       ],
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, getStartedRoute);
+                      Navigator.of(context).push(_createRoute());
+                      //Navigator.pushNamed(context, getStartedRoute);
                     },
                   ),
                 ),
@@ -87,4 +89,22 @@ class WelcomePage extends StatelessWidget {
       ),
     );
   }
+
+  Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => GetStarted(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
 }

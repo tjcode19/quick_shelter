@@ -22,15 +22,15 @@ class _RegCompletedState extends State<RegCompleted> {
         body: Container(
           padding: EdgeInsets.all(20),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
                 padding: EdgeInsets.all(30),
                 child: Column(
                   children: <Widget>[
-                    Image.asset('assets/images/welcome.png', height: 300, width: MediaQuery.of(context).size.width,),
-                    const SizedBox(height: 40),
+                    Image.asset('assets/images/building.png', height: 300, width: MediaQuery.of(context).size.width-10,),
+                    const SizedBox(height: 25),
                     RichText(
                       text: TextSpan(
                         text: 'Welcome ',
@@ -40,7 +40,7 @@ class _RegCompletedState extends State<RegCompleted> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     Container(
                       child: Text(
                         'We hope you find homes, apartment rentals and real estate listings.',
