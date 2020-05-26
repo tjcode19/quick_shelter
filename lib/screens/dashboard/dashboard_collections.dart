@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:quick_shelter/widgets/raised_button.dart';
 
 import '../../colors.dart';
 import '../../constants.dart';
@@ -45,7 +46,7 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
           Container(
               margin: EdgeInsets.symmetric(horizontal: 5),
               alignment: Alignment.center,
-              child: Text('Edit'))
+              child: Text('Edit', style: TextStyle(color: appColorSecondary),))
         ],
         title: RichText(
           text: TextSpan(
@@ -66,35 +67,71 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.all(15),
           child: Column(
             children: <Widget>[
-              const SizedBox(height: 20),
               Container(
                 alignment: Alignment.topLeft,
-                margin: EdgeInsets.only(left: 10.0),
                 child: Text(
                   'My Collections',
                   style: TextStyle(color: appSecondaryColor, fontSize: 18.0),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
+              Stack(
+                children: <Widget>[
+                  Container(
+                    height: 70,
+                  ),
+                  Positioned(
+                    right: 0.0,
+                    top: 0,
+                    child: Container(
+                      width: size.width / 2,
+                      child: OutlineButton(
+                        padding: EdgeInsets.all(11),
+                        color: Colors.white,
+                        highlightedBorderColor: Colors.white,
+                        borderSide: BorderSide(color: appTextColorPrimary2),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(15))),
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(10, 3, 4, 4),
+                          child: Text(
+                            'For Rent',
+                            style: TextStyle(
+                                color: appTextColorPrimary2, fontSize: 13),
+                          ),
+                        ),
+                        onPressed: () {
+                          //showSnackBar("OutlineButton with Shape");
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                      width: size.width / 2,
+                      child:
+                          RaisedButtonWidget('routeName', 'For Sale', false)),
+                ],
+              ),
+
               Container(
-                height: 580.0,
+                height: 400,
                 child: CustomScrollView(
                   primary: false,
                   slivers: <Widget>[
                     SliverPadding(
-                      padding: const EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(0),
                       sliver: SliverGrid.count(
                         crossAxisSpacing: 5,
-                        childAspectRatio: (itemWidth / itemHeight),
+                        childAspectRatio: ( (itemWidth+10) / (itemHeight)),
                         mainAxisSpacing: 1,
                         crossAxisCount: 2,
                         children: <Widget>[
-                          _propertItem,
-                          _propertItem,
-                          _propertItem,
+                          _propertItem(context),
+                          _propertItem(context),
                         ],
                       ),
                     ),
@@ -108,12 +145,13 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
     );
   }
 
-  Widget _propertItem = Card(
+  Widget _propertItem(ctxt){ return Card(
     elevation: 2.0,
     child: InkWell(
       splashColor: Colors.orange.withAlpha(30),
       onTap: () {
         print('Card tapped.');
+        Navigator.pushNamed(ctxt, collPropDetailsRoute);
       },
       child: Container(
         margin: EdgeInsets.all(2),
@@ -195,5 +233,5 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
         ),
       ),
     ),
-  );
+  );}
 }
