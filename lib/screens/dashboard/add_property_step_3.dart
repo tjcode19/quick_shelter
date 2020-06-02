@@ -85,15 +85,14 @@ class _AddPropStep3State extends State<AddPropStep3> {
               Divider(color: Colors.white54, thickness: 1.0),
               _rowCont('Deed of Mortgate', 'Approved', Icons.remove),
               Divider(color: Colors.white54, thickness: 1.0),
-              _rowCont('Survey Plan', 'Approved', Icons.remove),
+              _rowCont('Survey Plans', 'Approved', Icons.remove),
               Divider(color: Colors.white54, thickness: 1.0),
               const SizedBox(height: 40),
-              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    width: MediaQuery.of(context).size.width / 2-40,
+                    width: MediaQuery.of(context).size.width / 2 - 40,
                     margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
                     child: OutlineButton(
                       padding: EdgeInsets.all(10),
@@ -103,27 +102,26 @@ class _AddPropStep3State extends State<AddPropStep3> {
                       shape: RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.only(topRight: Radius.circular(15))),
-                      child:  Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
-                              child: Text(
-                                'Skip',
-                                style: TextStyle(
-                                    color: appTextColorPrimary2, fontSize: 15),
-                              ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                            child: Text(
+                              'Skip',
+                              style: TextStyle(
+                                  color: appTextColorPrimary2, fontSize: 15),
                             ),
-                          ],
-                        ),
-                      
+                          ),
+                        ],
+                      ),
                       onPressed: () {
                         _settingModalBottomSheet(context);
                       },
                     ),
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width / 2-30,
+                    width: MediaQuery.of(context).size.width / 2 - 30,
                     margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
                     child: RaisedButton(
                       padding: EdgeInsets.all(10),
@@ -150,7 +148,7 @@ class _AddPropStep3State extends State<AddPropStep3> {
                         ],
                       ),
                       onPressed: () {
-                         _settingModalBottomSheet(context);
+                        _settingModalBottomSheet(context);
                       },
                     ),
                   ),
@@ -165,27 +163,33 @@ class _AddPropStep3State extends State<AddPropStep3> {
   }
 
   _rowCont(String title, String subTitle, iconNew) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              title,
-              style: TextStyle(color: appTextColorPrimary2),
-            ),
-            Text(
-              subTitle,
-              style: TextStyle(color: appTextColorPrimary2),
-            ),
-          ]),
-          Icon(
-            iconNew,
-            color: appTextColorPrimary2,
-          )
-        ],
-      ),
+    return  InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, fileUploadRoute);
+          },
+                  child:Container(
+        margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+        child:  Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(
+                  title,
+                  style: TextStyle(color: appTextColorPrimary2),
+                ),
+                Text(
+                  subTitle,
+                  style: TextStyle(color: appTextColorPrimary2),
+                ),
+              ]),
+              Icon(
+                iconNew,
+                color: appTextColorPrimary2,
+              )
+            ],
+          ),
+        ),
+      
     );
   }
 
@@ -216,7 +220,9 @@ class _AddPropStep3State extends State<AddPropStep3> {
                 size: 100,
                 color: appTextColorPrimary2,
               ),
-              const SizedBox(height: 10), //You have successfully added a new property to your collections.
+              const SizedBox(
+                  height:
+                      10), //You have successfully added a new property to your collections.
               Container(
                   margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
                   child: Text(
@@ -225,8 +231,8 @@ class _AddPropStep3State extends State<AddPropStep3> {
                     softWrap: true,
                     textAlign: TextAlign.center,
                   )),
-                  const SizedBox(height: 10),
-                  Container(
+              const SizedBox(height: 10),
+              Container(
                   margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
                   child: Text(
                     'You have successfully added a new property to your collections.',
@@ -234,13 +240,13 @@ class _AddPropStep3State extends State<AddPropStep3> {
                     softWrap: true,
                     textAlign: TextAlign.center,
                   )),
-                  const SizedBox(height: 40),
+              const SizedBox(height: 40),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    width: MediaQuery.of(context).size.width / 2-40,
+                    width: MediaQuery.of(context).size.width / 2 - 40,
                     margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
                     child: OutlineButton(
                       padding: EdgeInsets.all(10),
@@ -250,27 +256,26 @@ class _AddPropStep3State extends State<AddPropStep3> {
                       shape: RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.only(topRight: Radius.circular(15))),
-                      child:  Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
-                              child: Text(
-                                'Dismiss',
-                                style: TextStyle(
-                                    color: appTextColorPrimary2, fontSize: 15),
-                              ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                            child: Text(
+                              'Dismiss',
+                              style: TextStyle(
+                                  color: appTextColorPrimary2, fontSize: 15),
                             ),
-                          ],
-                        ),
-                      
+                          ),
+                        ],
+                      ),
                       onPressed: () {
                         Navigator.pushNamed(context, dashboardRoute);
                       },
                     ),
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width / 2-30,
+                    width: MediaQuery.of(context).size.width / 2 - 30,
                     margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
                     child: RaisedButton(
                       padding: EdgeInsets.all(10),

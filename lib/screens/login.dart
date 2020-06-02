@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:quick_shelter/models/LoginResponse.dart';
+import 'package:quick_shelter/repository/login_repo.dart';
 import 'package:quick_shelter/widgets/input_field.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../colors.dart';
 import '../constants.dart';
 
 class Login extends StatefulWidget {
@@ -11,10 +15,86 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool rememberMe = false;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final QuickShelterRepository repo = QuickShelterRepository();
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final scaffoldKey = new GlobalKey<ScaffoldState>();
+  //Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  // Future<bool> saveData(nameKey, value) async {
+  //   SharedPreferences preferences = await SharedPreferences.getInstance();
+  //   return await preferences.setString(nameKey, value);
+  // }
+
+  //  Future<String> loadData(nameKey) async {
+  //   SharedPreferences preferences = await SharedPreferences.getInstance();
+  //   String name_str =  preferences.getString(nameKey);
+
+  //   setState(() {
+  //     _emailController.text=name_str;
+  //   });
+  // }
+
+  _loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String n = prefs.getString('Email');
+
+    _emailController.text = n;
+  }
+
+  //Incrementing counter after click
+  _setData()  async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('Email', _emailController.text);
+  }
+
+  void _submitData() {
+    print('loginRes');
+
+    final userEmail = _emailController.text;
+    final userPassword = _passwordController.text;
+
+    if (userEmail.isEmpty || userPassword.isEmpty) {
+     // _showSnackBar('Problem Login In');
+      return;
+    }
+
+    if (rememberMe) {
+      //  saveData('Email', userEmail);
+      //  saveData('Password', userPassword);
+      _setData();
+      _loadData();
+    }
+
+    showLoadingDialog(context, _keyLoader);
+    var _loginRes = repo.loginData(userEmail.trim(), userPassword);
+
+    _loginRes.then((value) {
+      print('donnned ${value.auth}');
+      if (value.auth) {
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        Navigator.pushNamed(context, dashboardRoute);
+      } else {
+        _showSnackBar('Problem Login In');
+      }
+    });
+    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+    print(_loginRes);
+    print('######');
+    //print(loginRes.auth);
+
+    //Navigator.of(context).pop();
+  }
+
+  void _showSnackBar(String text) {
+    final snackBar = SnackBar(content: Text(text));
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
 
   @override
   Widget build(BuildContext context) {
-
     Future<bool> _onBackPressed() {
       Navigator.popAndPushNamed(context, getStartedRoute);
     }
@@ -78,10 +158,20 @@ class _LoginState extends State<Login> {
                         ),
                         const SizedBox(height: 60),
                         InputFieldWidget(
-                            'Enter email', TextInputType.emailAddress, false, capitalizationType: TextCapitalization.none,),
+                          'Enter email',
+                          TextInputType.emailAddress,
+                          false,
+                          capitalizationType: TextCapitalization.none,
+                          controller: _emailController,
+                        ),
                         const SizedBox(height: 20),
                         InputFieldWidget(
-                            'Enter password', TextInputType.text, true, capitalizationType: TextCapitalization.none,),
+                          'Enter password',
+                          TextInputType.text,
+                          true,
+                          capitalizationType: TextCapitalization.none,
+                          controller: _passwordController,
+                        ),
                         const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -123,7 +213,12 @@ class _LoginState extends State<Login> {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        RaisedButtonWidget(dashboardRoute, 'Log In', true),
+                        RaisedButtonWidget(
+                          dashboardRoute,
+                          'Log In',
+                          true,
+                          action: _submitData,
+                        ),
                         const SizedBox(height: 80),
                         GestureDetector(
                           onTap: () {
@@ -160,5 +255,33 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  static Future<void> showLoadingDialog(
+      BuildContext context, GlobalKey key) async {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new WillPopScope(
+              onWillPop: () async => false,
+              child: SimpleDialog(
+                  key: key,
+                  backgroundColor: appPrimary,
+                  children: <Widget>[
+                    Center(
+                      child: Column(children: [
+                        CircularProgressIndicator(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Please Wait....",
+                          style: TextStyle(color: Colors.white),
+                        )
+                      ]),
+                    )
+                  ]));
+        });
   }
 }

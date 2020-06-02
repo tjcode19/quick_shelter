@@ -15,3 +15,4 @@ const String collPropDetailsRoute = '/collPropertyDetails';
 const String personalInfoRoute = '/personalInfo';
 const String searchPropRoute = '/searchProp';
 const String searchResultRoute = '/searchResult';
+const String fileUploadRoute = '/fileUpload';

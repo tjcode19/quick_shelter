@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quick_shelter/screens/dashboard/file_upload.dart';
 import 'package:quick_shelter/screens/dashboard/search_result.dart';
 import 'screens/dashboard/add_property_step_2.dart';
 import 'screens/dashboard/add_property_step_3.dart';
@@ -55,6 +56,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => SearchProp());
     case searchResultRoute:
       return MaterialPageRoute(builder: (context) => SearchResult());
+    case fileUploadRoute:
+      return MaterialPageRoute(builder: (context) => FileUpload());
     // case loanRequestTwoRoute:
     //   return MaterialPageRoute(builder: (context) => LoanRequestTwo());
     // case loanRequestThreeRoute:

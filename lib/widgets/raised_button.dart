@@ -6,10 +6,11 @@ class RaisedButtonWidget extends StatelessWidget {
   Color btnColor;
   Color btnTextColor;
   double fnSize;
+  final Function action;
 
   bool isBtnColorPrimary;
 
-  RaisedButtonWidget(this.routeName, this.btnLabel, this.isBtnColorPrimary , {this.fnSize:17});
+  RaisedButtonWidget(this.routeName, this.btnLabel, this.isBtnColorPrimary , {this.fnSize:17, this.action });
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,20 @@ class RaisedButtonWidget extends StatelessWidget {
           ],
         ),
         onPressed: () {
-          Navigator.pushNamed(context, routeName);
+          print('pressed');
+          if(action != null){
+             print('pressed 1');
+              action();
+          }
+          else if( routeName!='pop'){  
+             print('pressed 2');          
+            Navigator.pushNamed(context, routeName);
+          }
+          else{
+             print('pressed 3');
+            Navigator.pop(context);
+          }
+          
         },
       ),
     );
