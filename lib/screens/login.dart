@@ -15,26 +15,23 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool rememberMe = false;
+  String _prefEmail, _prefPassword;
+   
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final QuickShelterRepository repo = QuickShelterRepository();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   final scaffoldKey = new GlobalKey<ScaffoldState>();
-  //Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  // Future<bool> saveData(nameKey, value) async {
-  //   SharedPreferences preferences = await SharedPreferences.getInstance();
-  //   return await preferences.setString(nameKey, value);
-  // }
-
-  //  Future<String> loadData(nameKey) async {
-  //   SharedPreferences preferences = await SharedPreferences.getInstance();
-  //   String name_str =  preferences.getString(nameKey);
-
-  //   setState(() {
-  //     _emailController.text=name_str;
-  //   });
-  // }
+  Future<Null> getSharedPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _prefEmail = prefs.getString("Email");
+    _prefPassword = prefs.getString("Password");
+    setState(() {
+      _emailController.text = _prefEmail;
+    });
+  }
+  
 
   _loadData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -43,10 +40,19 @@ class _LoginState extends State<Login> {
     _emailController.text = n;
   }
 
+ 
+
   //Incrementing counter after click
   _setData()  async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('Email', _emailController.text);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _prefEmail = "";
+    getSharedPrefs();  
   }
 
   void _submitData() {
@@ -64,7 +70,7 @@ class _LoginState extends State<Login> {
       //  saveData('Email', userEmail);
       //  saveData('Password', userPassword);
       _setData();
-      _loadData();
+     
     }
 
     showLoadingDialog(context, _keyLoader);
