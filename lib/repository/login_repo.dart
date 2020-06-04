@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'package:http/http.dart' as http;
+//import 'package:http/http.dart' as http;
 
-import 'package:quick_shelter/models/LoginRequest.dart';
 import 'package:quick_shelter/models/LoginResponse.dart';
 import 'package:quick_shelter/network/ApiProvider.dart';
 

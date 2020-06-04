@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:quick_shelter/models/LoginResponse.dart';
 import 'package:quick_shelter/repository/login_repo.dart';
 import 'package:quick_shelter/widgets/input_field.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../colors.dart';
+import '../colors.dart';
+import '../colors.dart';
 import '../colors.dart';
 import '../constants.dart';
 
@@ -16,43 +18,43 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   bool rememberMe = false;
   String _prefEmail, _prefPassword;
-   
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final QuickShelterRepository repo = QuickShelterRepository();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   final scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Future<Null> getSharedPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _prefEmail = prefs.getString("Email");
     _prefPassword = prefs.getString("Password");
+    bool rem = prefs.getBool('remeberMe');
+
     setState(() {
       _emailController.text = _prefEmail;
+      rememberMe = rem;
     });
   }
-  
 
-  _loadData() async {
+  _setData(bool clearValues) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String n = prefs.getString('Email');
 
-    _emailController.text = n;
-  }
-
- 
-
-  //Incrementing counter after click
-  _setData()  async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('Email', _emailController.text);
+    if (!clearValues) {
+      prefs.setBool('remeberMe', rememberMe);
+      prefs.setString('Email', _emailController.text);
+    } else {
+      prefs.setString('Email', '');
+      prefs.setBool('remeberMe', false);
+    }
   }
 
   @override
   void initState() {
     super.initState();
     _prefEmail = "";
-    getSharedPrefs();  
+    getSharedPrefs();
   }
 
   void _submitData() {
@@ -62,15 +64,8 @@ class _LoginState extends State<Login> {
     final userPassword = _passwordController.text;
 
     if (userEmail.isEmpty || userPassword.isEmpty) {
-     // _showSnackBar('Problem Login In');
+      showInSnackBar('Email and Password must be filled');
       return;
-    }
-
-    if (rememberMe) {
-      //  saveData('Email', userEmail);
-      //  saveData('Password', userPassword);
-      _setData();
-     
     }
 
     showLoadingDialog(context, _keyLoader);
@@ -79,13 +74,21 @@ class _LoginState extends State<Login> {
     _loginRes.then((value) {
       print('donnned ${value.auth}');
       if (value.auth) {
+        if (rememberMe) {
+          print('Remembered');
+          _setData(false);
+        } else {
+          print('Not Remembered');
+          _setData(true);
+        }
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
         Navigator.pushNamed(context, dashboardRoute);
       } else {
-        _showSnackBar('Problem Login In');
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        showInSnackBar(value.reason);
       }
     });
-    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+    
 
     print(_loginRes);
     print('######');
@@ -93,11 +96,11 @@ class _LoginState extends State<Login> {
 
     //Navigator.of(context).pop();
   }
+  
 
-  void _showSnackBar(String text) {
-    final snackBar = SnackBar(content: Text(text));
-    Scaffold.of(context).showSnackBar(snackBar);
-  }
+void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text(value), backgroundColor: Colors.red, ));
+}
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +112,7 @@ class _LoginState extends State<Login> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -273,7 +277,7 @@ class _LoginState extends State<Login> {
               onWillPop: () async => false,
               child: SimpleDialog(
                   key: key,
-                  backgroundColor: appPrimary,
+                  backgroundColor: Colors.white,
                   children: <Widget>[
                     Center(
                       child: Column(children: [
@@ -283,7 +287,7 @@ class _LoginState extends State<Login> {
                         ),
                         Text(
                           "Please Wait....",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: appSecondaryColor),
                         )
                       ]),
                     )

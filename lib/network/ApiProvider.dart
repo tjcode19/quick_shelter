@@ -55,7 +55,9 @@ class ApiProvider {
       case 400:
         throw BadRequestException(response.body.toString());
       case 401:
-
+        var responseJson = json.decode(response.body.toString());
+        print(responseJson);
+        return responseJson;
       case 403:
         throw UnauthorisedException(response.body.toString());
       case 500:

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/colors.dart';
-import 'package:quick_shelter/widgets/input_field.dart';
-import 'package:quick_shelter/widgets/input_field_multi_line.dart';
-import 'package:quick_shelter/widgets/raised_button.dart';
 
 import '../../constants.dart';
 
