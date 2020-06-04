@@ -2,6 +2,7 @@ import 'dart:async';
 //import 'package:http/http.dart' as http;
 
 import 'package:quick_shelter/models/LoginResponse.dart';
+import 'package:quick_shelter/models/SignUpResponse.dart';
 import 'package:quick_shelter/network/ApiProvider.dart';
 
 class QuickShelterRepository {
@@ -10,8 +11,6 @@ class QuickShelterRepository {
   var headerValue = <String, String>{
     'Content-Type': 'application/json; charset=UTF-8',
   };
-
-  //LoginRequest loginRequest = LoginRequest(email: '', password: '');
 
   Future<LoginResponse> loginData(String email, String password) async {
     final response = await _provider.post(
@@ -23,6 +22,31 @@ class QuickShelterRepository {
       },
     );
     return LoginResponse.fromJson(response);
+  }
+
+  Future<SignUpResponse> signUpData(String firstname, String surName, String phoneNum, String email, String password) async {
+    final response = await _provider.post(
+      "auth/signup",
+      headerValue,
+      <String, String>{
+        'FirstName': firstname,
+        'SurName': surName,
+        'PhoneNumber': phoneNum,
+        'Email': email,
+        'Password': password,
+      },
+    );
+    return SignUpResponse.fromJson(response);
+  }
+
+  
+
+  Future<SignUpResponse> validatePhone(String phoneNum, String code) async {
+    final response = await _provider.get(
+      "validate-phone/?phone=$phoneNum/code=$code&",
+      headerValue,
+    );
+    return SignUpResponse.fromJson(response);
   }
 
 //   Future<LoginResponse> createAlbum(String email, String password) async {

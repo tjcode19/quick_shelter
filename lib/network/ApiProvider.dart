@@ -8,7 +8,7 @@ import 'CustomException.dart';
 class ApiProvider {
   final String _baseUrl = "https://quick-shelter.herokuapp.com/api/";
 
-  Future<dynamic> get(String url) async {
+  Future<dynamic> get(String url, Map headerValue) async {
     var responseJson;
     try {
       final response = await http.get(_baseUrl + url);

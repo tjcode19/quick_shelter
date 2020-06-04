@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 import '../pin_entry_text_field.dart';
+import '../repository/login_repo.dart';
 import '../widgets/raised_button.dart';
 
 class VerifyPhone extends StatefulWidget {
@@ -13,6 +14,27 @@ class VerifyPhone extends StatefulWidget {
 }
 
 class _VerifyPhoneState extends State<VerifyPhone> {
+
+  final QuickShelterRepository repo = QuickShelterRepository();
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+
+  _validatePhone(String phoneNum, String code){
+    print('get pin');
+
+    var _validatePh = repo.validatePhone(phoneNum, code);
+
+    _validatePh.then((value) {
+      print('donnned $value');
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (value == null) {        
+        Navigator.pushNamed(context, dashboardRoute);
+      } else {
+        //showInSnackBar(value);
+      }
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
     final screeSize = MediaQuery.of(context).size;
@@ -80,6 +102,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                         showFieldAsBox: false,
                         fields: 6,                        
                         onSubmit: (String pin) {
+                          _validatePhone('07036443808', pin);
                           // showDialog(
                           //     context: context,
                           //     builder: (context) {

@@ -5,9 +5,6 @@ import 'package:quick_shelter/widgets/raised_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../colors.dart';
-import '../colors.dart';
-import '../colors.dart';
-import '../colors.dart';
 import '../constants.dart';
 
 class Login extends StatefulWidget {
@@ -30,7 +27,8 @@ class _LoginState extends State<Login> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _prefEmail = prefs.getString("Email");
     _prefPassword = prefs.getString("Password");
-    bool rem = prefs.getBool('remeberMe');
+    bool rem = (prefs.getBool('rememberMe') ==null)?false:prefs.getBool('rememberMe');
+    print(rem);
 
     setState(() {
       _emailController.text = _prefEmail;
@@ -42,11 +40,11 @@ class _LoginState extends State<Login> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (!clearValues) {
-      prefs.setBool('remeberMe', rememberMe);
+      prefs.setBool('rememberMe', rememberMe);
       prefs.setString('Email', _emailController.text);
     } else {
       prefs.setString('Email', '');
-      prefs.setBool('remeberMe', false);
+      prefs.setBool('rememberMe', rememberMe);
     }
   }
 
@@ -69,38 +67,35 @@ class _LoginState extends State<Login> {
     }
 
     showLoadingDialog(context, _keyLoader);
+
+    if (rememberMe) {
+      print('Remembered');
+      _setData(false);
+    } else {
+      print('Not Remembered');
+      _setData(true);
+    }
+
     var _loginRes = repo.loginData(userEmail.trim(), userPassword);
 
     _loginRes.then((value) {
       print('donnned ${value.auth}');
-      if (value.auth) {
-        if (rememberMe) {
-          print('Remembered');
-          _setData(false);
-        } else {
-          print('Not Remembered');
-          _setData(true);
-        }
-        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (value.auth) {        
         Navigator.pushNamed(context, dashboardRoute);
       } else {
-        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
         showInSnackBar(value.reason);
       }
     });
-    
-
-    print(_loginRes);
     print('######');
-    //print(loginRes.auth);
-
-    //Navigator.of(context).pop();
   }
-  
 
-void showInSnackBar(String value) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text(value), backgroundColor: Colors.red, ));
-}
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(value),
+      backgroundColor: Colors.red,
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
