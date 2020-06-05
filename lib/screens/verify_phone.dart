@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-// import 'package:pin_entry_text_field/pin_entry_text_field.dart';
-// import 'package:otp_text_field/otp_field.dart';
-// import 'package:otp_text_field/style.dart';
-
+import '../widgets/commonUtils.dart';
 import '../constants.dart';
 import '../pin_entry_text_field.dart';
-import '../repository/login_repo.dart';
+import '../repository/quick_shelter_repo.dart';
 import '../widgets/raised_button.dart';
 
 class VerifyPhone extends StatefulWidget {
@@ -17,20 +14,23 @@ class _VerifyPhoneState extends State<VerifyPhone> {
 
   final QuickShelterRepository repo = QuickShelterRepository();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   _validatePhone(String phoneNum, String code){
     print('get pin');
+    showLoadingDialog(context, _keyLoader);
 
     var _validatePh = repo.validatePhone(phoneNum, code);
 
     _validatePh.then((value) {
-      print('donnned $value');
+      print(value.message);
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value == null) {        
-        Navigator.pushNamed(context, dashboardRoute);
-      } else {
-        //showInSnackBar(value);
-      }
+      // if (value == null) {        
+      //   Navigator.pushNamed(context, dashboardRoute);
+      // } else {
+      //   //showInSnackBar(value);
+      // }
+      snackBar(value.message, _scaffoldKey);
     });
 
   }
@@ -39,6 +39,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
   Widget build(BuildContext context) {
     final screeSize = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

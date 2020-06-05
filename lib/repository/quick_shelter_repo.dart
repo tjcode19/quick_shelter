@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:quick_shelter/models/LoginResponse.dart';
 import 'package:quick_shelter/models/SignUpResponse.dart';
+import 'package:quick_shelter/models/ValidatePhone.dart';
 import 'package:quick_shelter/network/ApiProvider.dart';
 
 class QuickShelterRepository {
@@ -37,16 +38,14 @@ class QuickShelterRepository {
       },
     );
     return SignUpResponse.fromJson(response);
-  }
+  }  
 
-  
-
-  Future<SignUpResponse> validatePhone(String phoneNum, String code) async {
+  Future<ValidatePhone> validatePhone(String phoneNum, String code) async {
     final response = await _provider.get(
-      "validate-phone/?phone=$phoneNum/code=$code&",
+      "validate-phone/$phoneNum/$code",
       headerValue,
     );
-    return SignUpResponse.fromJson(response);
+    return ValidatePhone.fromJson(response);
   }
 
 //   Future<LoginResponse> createAlbum(String email, String password) async {

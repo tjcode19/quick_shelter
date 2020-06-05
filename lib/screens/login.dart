@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:quick_shelter/repository/login_repo.dart';
-import 'package:quick_shelter/widgets/input_field.dart';
+import 'package:quick_shelter/widgets/commonUtils.dart';
+import '../repository/quick_shelter_repo.dart';
+import '../widgets/input_field.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../colors.dart';
 import '../constants.dart';
 
 class Login extends StatefulWidget {
@@ -14,7 +13,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool rememberMe = false;
-  String _prefEmail, _prefPassword;
+  String _prefEmail;
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -26,7 +25,6 @@ class _LoginState extends State<Login> {
   Future<Null> getSharedPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _prefEmail = prefs.getString("Email");
-    _prefPassword = prefs.getString("Password");
     bool rem = (prefs.getBool('rememberMe') ==null)?false:prefs.getBool('rememberMe');
     print(rem);
 
@@ -63,6 +61,7 @@ class _LoginState extends State<Login> {
 
     if (userEmail.isEmpty || userPassword.isEmpty) {
       showInSnackBar('Email and Password must be filled');
+      snackBar('Email and Password must be filled', _scaffoldKey);
       return;
     }
 
@@ -100,7 +99,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     Future<bool> _onBackPressed() {
-      Navigator.popAndPushNamed(context, getStartedRoute);
+      return Navigator.popAndPushNamed(context, getStartedRoute);
     }
 
     final screeSize = MediaQuery.of(context).size;
@@ -262,31 +261,4 @@ class _LoginState extends State<Login> {
     );
   }
 
-  static Future<void> showLoadingDialog(
-      BuildContext context, GlobalKey key) async {
-    return showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return new WillPopScope(
-              onWillPop: () async => false,
-              child: SimpleDialog(
-                  key: key,
-                  backgroundColor: Colors.white,
-                  children: <Widget>[
-                    Center(
-                      child: Column(children: [
-                        CircularProgressIndicator(),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "Please Wait....",
-                          style: TextStyle(color: appSecondaryColor),
-                        )
-                      ]),
-                    )
-                  ]));
-        });
-  }
 }
