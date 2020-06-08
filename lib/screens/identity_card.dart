@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:quick_shelter/colors.dart';
+import 'package:quick_shelter/repository/quick_shelter_repo.dart';
+import 'package:quick_shelter/widgets/commonUtils.dart';
 import 'package:quick_shelter/widgets/tapableText.dart';
-//import 'package:camera/camera.dart';
 
 import '../constants.dart';
 import '../widgets/raised_button.dart';
@@ -12,16 +16,43 @@ class IdentityCard extends StatefulWidget {
 }
 
 class _IdentityCardState extends State<IdentityCard> {
+  final QuickShelterRepository repo = QuickShelterRepository();
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _viewMore = false;
-  // Function _nextView() {
-  //   Navigator.pushNamedAndRemoveUntil(
-  //       context, regCompletedRoute, (route) => false);
-  // }
+  File _image;
+
+   void _uploadFile(){
+    print('File Upload');
+
+    if (_image==null) {
+      snackBar('Please select a file to upload', _scaffoldKey);
+      return;
+    }
+    showLoadingDialog(context, _keyLoader);
+
+    var _apiCall = repo.uploadId(_image, 'NationalID');
+
+    print(_apiCall);
+
+    _apiCall.then((value) {
+      print(value.message);
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      // if (value.accessToken != null) {        
+      Navigator.pushNamed(context, regCompletedRoute);
+      // } else {
+      //   snackBar('Registration Failed \t ${value.message}', _scaffoldKey);
+      // }
+      //snackBar(value.message, _scaffoldKey);
+    });
+
+  }
 
   @override
   Widget build(BuildContext context) {
     final screeSize = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -85,52 +116,10 @@ class _IdentityCardState extends State<IdentityCard> {
                         ),
                       ),
                       const SizedBox(height: 40),
-                      Container(
-                        height: 150.0,
-                        width: double.infinity,
-                        //color: appPrimary,
-                        decoration: BoxDecoration(
-                            color: appPrimary,
-                            borderRadius: BorderRadius.all(Radius.circular(6)),
-                            border: Border.all(color: appTextColorPrimary2)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                            ),
-                            Center(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(30.0, 10, 30, 0),
-                                child: Text(
-                                  'Upload valid ID Image',
-                                  style: TextStyle(color: appTextColorPrimary2),
-                                  textAlign: TextAlign.center,
-                                  softWrap: true,
-                                ),
-                              ),
-                            ),
-                            Center(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10.0, 0, 10, 10),
-                                child: Text(
-                                  '(Intl. passport, NIN, drivers license, voters card)',
-                                  style: TextStyle(color: appTextColorPrimary2),
-                                  textAlign: TextAlign.center,
-                                  softWrap: true,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      _setImageView(context),
                       const SizedBox(height: 30),
                       RaisedButtonWidget(
-                          regCompletedRoute, 'Complete Registraton', true),
+                          regCompletedRoute, 'Complete Registraton', true, action: _uploadFile,),
                       const SizedBox(height: 20),
                       InkWell(
                         splashColor: Colors.orange,
@@ -249,4 +238,130 @@ class _IdentityCardState extends State<IdentityCard> {
       ),
     );
   }
+
+  Future<void> _showSelectionDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text(
+                "Select from?",
+                style: TextStyle(
+                    color: appSecondaryColor,
+                    fontStyle: FontStyle.normal,
+                    fontSize: 25.0),
+              ),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: Text("Gallery"),
+                      onTap: () {
+                        _openGallery(context);
+                      },
+                    ),
+                    Padding(padding: EdgeInsets.all(8.0)),
+                    GestureDetector(
+                      child: Text("Camera"),
+                      onTap: () {
+                        _openCamera(context);
+                      },
+                    )
+                  ],
+                ),
+              ));
+        });
+  }
+
+  final picker = ImagePicker();
+  
+
+  Future _openGallery(BuildContext context) async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = File(pickedFile.path);
+    });
+
+    Navigator.of(context).pop();
+  }
+
+  Future _openCamera(BuildContext context) async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      _image = File(pickedFile.path);
+      print(pickedFile.path);
+    });
+
+    Navigator.of(context).pop();
+  }
+
+  Widget _setImageView(BuildContext context) {
+    if (_image != null) {
+      //return Image.file(_image, width: 500, height: 500);
+      return GestureDetector(
+        onTap: () => _showSelectionDialog(context),
+        child: Container(
+          height: 200.0,
+          width: double.infinity,
+          //color: appPrimary,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                    image: FileImage(_image),
+                    fit: BoxFit.cover),
+              color: appPrimary,
+              borderRadius: BorderRadius.all(Radius.circular(6)),
+              border: Border.all(color: appTextColorPrimary2)),
+          
+        ),
+      );
+    } else {
+      return GestureDetector(
+        onTap: () => _showSelectionDialog(context),
+        child: Container(
+          height: 150.0,
+          width: double.infinity,
+          //color: appPrimary,
+          decoration: BoxDecoration(
+              color: appPrimary,
+              borderRadius: BorderRadius.all(Radius.circular(6)),
+              border: Border.all(color: appTextColorPrimary2)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                Icons.camera_alt,
+                color: Colors.white,
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(30.0, 10, 30, 0),
+                  child: Text(
+                    'Upload valid ID Image',
+                    style: TextStyle(color: appTextColorPrimary2),
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                  ),
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 10),
+                  child: Text(
+                    '(Intl. passport, NIN, drivers license, voters card)',
+                    style: TextStyle(color: appTextColorPrimary2),
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
 }

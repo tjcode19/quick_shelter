@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 //import 'package:http/http.dart' as http;
 
+import 'package:quick_shelter/models/GetProfileResponse.dart';
 import 'package:quick_shelter/models/LoginResponse.dart';
 import 'package:quick_shelter/models/SignUpResponse.dart';
+import 'package:quick_shelter/models/UploadIdResponse.dart';
 import 'package:quick_shelter/models/ValidatePhone.dart';
 import 'package:quick_shelter/network/ApiProvider.dart';
 
@@ -42,11 +45,28 @@ class QuickShelterRepository {
 
   Future<ValidatePhone> validatePhone(String phoneNum, String code) async {
     final response = await _provider.get(
-      "validate-phone/$phoneNum/$code",
-      headerValue,
+      "validate-phone/$phoneNum/$code"
     );
     return ValidatePhone.fromJson(response);
   }
+
+  Future<GetProfileResponse> getProfile() async {
+    final response = await _provider.get(
+      "user/profile",
+    );
+    return GetProfileResponse.fromJson(response);
+  }
+
+  Future<UploadIdResponse> uploadId(File file, String fileType) async {
+    final response = await _provider.uploadFile(
+      file,
+      "user/update/national-id",
+      fileType
+    );
+    return UploadIdResponse.fromJson(response);
+  }
+
+
 
 //   Future<LoginResponse> createAlbum(String email, String password) async {
 //   final http.Response response = await http.post(

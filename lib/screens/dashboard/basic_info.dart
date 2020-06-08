@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/colors.dart';
 import 'package:quick_shelter/constants.dart';
+import 'package:quick_shelter/repository/quick_shelter_repo.dart';
+import 'package:quick_shelter/widgets/commonUtils.dart';
 import 'package:quick_shelter/widgets/input_field.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
 
@@ -10,6 +12,44 @@ class BasicInfo extends StatefulWidget {
 }
 
 class _BasicInfoState extends State<BasicInfo> {
+
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final QuickShelterRepository repo = QuickShelterRepository();
+
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _fNameController = TextEditingController();
+  final _lNameController = TextEditingController();
+  final _phoneController = TextEditingController();
+
+
+  _getUserProfile(){
+    print('Get User Profile');
+    showLoadingDialog(context, _keyLoader);
+    var _apiCall = repo.getProfile();
+
+    _apiCall.then((value) {
+      print(value);
+      //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+      setState(() {
+        _fNameController.text = value.firstName;
+        _lNameController.text = value.surName;
+        _phoneController.text = value.phoneNumber;
+        _emailController.text = value.email;
+        
+      });
+    });
+
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserProfile();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,6 +128,8 @@ class _BasicInfoState extends State<BasicInfo> {
               '',
               TextInputType.text,
               false,
+              controller: _fNameController,
+              color: appSecondaryColor,
             ),
             const SizedBox(height: 10),
             Row(
@@ -109,6 +151,8 @@ class _BasicInfoState extends State<BasicInfo> {
               '',
               TextInputType.text,
               false,
+              controller: _lNameController,
+              color: appSecondaryColor,
             ),
             const SizedBox(height: 10),
             Row(
@@ -131,6 +175,8 @@ class _BasicInfoState extends State<BasicInfo> {
               TextInputType.emailAddress,
               false,
               capitalizationType: TextCapitalization.none,
+              controller: _emailController,
+              color: appSecondaryColor,
             ),
             const SizedBox(height: 10),
             Row(
@@ -152,6 +198,8 @@ class _BasicInfoState extends State<BasicInfo> {
               '',
               TextInputType.phone,
               false,
+              controller: _phoneController,
+              color: appSecondaryColor,
             ),
             const SizedBox(height: 10),
             Row(
@@ -173,6 +221,8 @@ class _BasicInfoState extends State<BasicInfo> {
               '',
               TextInputType.text,
               true,
+              controller: _passwordController,
+              color: appSecondaryColor,
             ),
             
             const SizedBox(height: 20),

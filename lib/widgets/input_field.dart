@@ -6,8 +6,9 @@ class InputFieldWidget extends StatelessWidget {
   final bool isPasswordField;
   final TextCapitalization capitalizationType;
   final TextEditingController controller;
+  final Color color;
 
-  InputFieldWidget(this.label, this.keyType, this.isPasswordField, {this.capitalizationType:TextCapitalization.words, this.controller });
+  InputFieldWidget(this.label, this.keyType, this.isPasswordField, {this.capitalizationType:TextCapitalization.words, this.controller, this.color:Colors.white });
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class InputFieldWidget extends StatelessWidget {
       child: TextFormField(  
         controller: controller,
         textCapitalization: capitalizationType,  
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),    
+        style: TextStyle(color: color, fontWeight: FontWeight.w500),    
         obscureText: isPasswordField,
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,

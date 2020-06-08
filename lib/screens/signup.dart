@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quick_shelter/repository/quick_shelter_repo.dart';
+import 'package:quick_shelter/widgets/commonUtils.dart';
 
 import '../constants.dart';
 import '../widgets/input_field.dart';
@@ -11,8 +13,46 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final QuickShelterRepository repo = QuickShelterRepository();
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+ void  _signUpFunc(){
+    print('Sign Up Funtion');
+    final userFirstName = _firstNameController.text;
+    final userLastName = _lastNameController.text;
+    final userEmail = _emailController.text;
+    final userPhone = _phoneController.text;
+    final userPassword = _passwordController.text;
+
+    if (userEmail.isEmpty || userPassword.isEmpty) {
+      snackBar('Email and Password must be filled', _scaffoldKey);
+      return;
+    }
+    showLoadingDialog(context, _keyLoader);
+
+    var _signUp = repo.signUpData(userFirstName, userLastName, userPhone, userEmail, userPassword);
+
+    _signUp.then((value) {
+      print(value.message);
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (value.accessToken != null) {        
+        Navigator.pushNamed(context, verifyPhoneRoute);
+      } else {
+        snackBar('Registration Failed \t ${value.message}', _scaffoldKey);
+      }
+      //snackBar(value.message, _scaffoldKey);
+    });
+
+  }
   Future<bool> _onBackPressed() {
-    Navigator.popAndPushNamed(context, getStartedRoute);
+    return Navigator.popAndPushNamed(context, getStartedRoute);
   }
 
   @override
@@ -20,6 +60,7 @@ class _SignUpState extends State<SignUp> {
     return WillPopScope(
       onWillPop: _onBackPressed,
           child: Scaffold(
+            key: _scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -70,15 +111,15 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                         const SizedBox(height: 40),
-                        InputFieldWidget('Firstname', TextInputType.text, false),
+                        InputFieldWidget('Firstname', TextInputType.text, false, controller: _firstNameController,),
                         const SizedBox(height: 20),
-                        InputFieldWidget('Lastname', TextInputType.text, false),
+                        InputFieldWidget('Lastname', TextInputType.text, false, controller: _lastNameController,),
                         const SizedBox(height: 20),
-                        InputFieldWidget('ex. email@email.com', TextInputType.emailAddress, false, capitalizationType: TextCapitalization.none,),
+                        InputFieldWidget('ex. email@email.com', TextInputType.emailAddress, false, controller: _emailController,capitalizationType: TextCapitalization.none,),
                         const SizedBox(height: 20),
-                        InputFieldWidget('Phone Number', TextInputType.phone, false),
+                        InputFieldWidget('Phone Number', TextInputType.phone, false, controller: _phoneController,),
                         const SizedBox(height: 20),
-                        InputFieldWidget('Password', TextInputType.text, true),
+                        InputFieldWidget('Password', TextInputType.text, true, controller: _passwordController,),
                         
                         const SizedBox(height: 30),
                         RaisedButtonWidget(verifyPhoneRoute, 'Continue', true),

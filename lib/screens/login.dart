@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quick_shelter/utils/sharedPreference.dart';
 import 'package:quick_shelter/widgets/commonUtils.dart';
 import '../repository/quick_shelter_repo.dart';
 import '../widgets/input_field.dart';
@@ -15,6 +16,8 @@ class _LoginState extends State<Login> {
   bool rememberMe = false;
   String _prefEmail;
 
+  SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final QuickShelterRepository repo = QuickShelterRepository();
@@ -22,11 +25,26 @@ class _LoginState extends State<Login> {
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  Future<Null> getSharedPrefs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _prefEmail = prefs.getString("Email");
-    bool rem = (prefs.getBool('rememberMe') ==null)?false:prefs.getBool('rememberMe');
-    print(rem);
+  // Future<Null> getSharedPrefs() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   _prefEmail = prefs.getString("Email");
+  //   bool rem = (prefs.getBool('rememberMe') == null)
+  //       ? false
+  //       : prefs.getBool('rememberMe');
+  //   print(rem);
+
+  //   setState(() {
+  //     _emailController.text = _prefEmail;
+  //     rememberMe = rem;
+  //   });
+  // }
+
+
+
+  getLoginPref() async {
+    _prefEmail = await _sharedPreferenceQS.getSharedPrefs(String, 'Email');
+    bool _rem = await _sharedPreferenceQS.getSharedPrefs(bool, 'rememberMe');
+    bool rem = (_rem == null) ? false : _rem;
 
     setState(() {
       _emailController.text = _prefEmail;
@@ -34,23 +52,33 @@ class _LoginState extends State<Login> {
     });
   }
 
-  _setData(bool clearValues) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
+  _setLoginPref(bool clearValues) async {
     if (!clearValues) {
-      prefs.setBool('rememberMe', rememberMe);
-      prefs.setString('Email', _emailController.text);
+      _sharedPreferenceQS.setData(bool, 'rememberMe', rememberMe);
+      _sharedPreferenceQS.setData(bool, 'Email', _emailController.text);
     } else {
-      prefs.setString('Email', '');
-      prefs.setBool('rememberMe', rememberMe);
+      _sharedPreferenceQS.setData(bool, 'rememberMe', rememberMe);
+      _sharedPreferenceQS.setData(bool, 'Email', '');
     }
   }
+
+  // _setData(bool clearValues) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  //   if (!clearValues) {
+  //     prefs.setBool('rememberMe', rememberMe);
+  //     prefs.setString('Email', _emailController.text);
+  //   } else {
+  //     prefs.setString('Email', '');
+  //     prefs.setBool('rememberMe', rememberMe);
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
     _prefEmail = "";
-    getSharedPrefs();
+    getLoginPref();
   }
 
   void _submitData() {
@@ -60,7 +88,6 @@ class _LoginState extends State<Login> {
     final userPassword = _passwordController.text;
 
     if (userEmail.isEmpty || userPassword.isEmpty) {
-      showInSnackBar('Email and Password must be filled');
       snackBar('Email and Password must be filled', _scaffoldKey);
       return;
     }
@@ -69,10 +96,10 @@ class _LoginState extends State<Login> {
 
     if (rememberMe) {
       print('Remembered');
-      _setData(false);
+      _setLoginPref(false);
     } else {
       print('Not Remembered');
-      _setData(true);
+      _setLoginPref(true);
     }
 
     var _loginRes = repo.loginData(userEmail.trim(), userPassword);
@@ -80,7 +107,8 @@ class _LoginState extends State<Login> {
     _loginRes.then((value) {
       print('donnned ${value.auth}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.auth) {        
+      if (value.auth) {
+        _sharedPreferenceQS.setData(String, 'accessToken', value.accessToken);
         Navigator.pushNamed(context, dashboardRoute);
       } else {
         showInSnackBar(value.reason);
@@ -260,5 +288,4 @@ class _LoginState extends State<Login> {
       ),
     );
   }
-
 }
