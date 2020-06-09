@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/colors.dart';
+import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 
 import '../../constants.dart';
 
@@ -9,6 +10,8 @@ class AddPropStep3 extends StatefulWidget {
 }
 
 class _AddPropStep3State extends State<AddPropStep3> {
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,7 +148,8 @@ class _AddPropStep3State extends State<AddPropStep3> {
                         ],
                       ),
                       onPressed: () {
-                        _settingModalBottomSheet(context);
+                        //_addProperty();
+                        // _settingModalBottomSheet(context);
                       },
                     ),
                   ),
@@ -160,44 +164,44 @@ class _AddPropStep3State extends State<AddPropStep3> {
   }
 
   _rowCont(String title, String subTitle, iconNew) {
-    return  InkWell(
-          onTap: () {
-            Navigator.pushNamed(context, fileUploadRoute);
-          },
-                  child:Container(
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, fileUploadRoute);
+      },
+      child: Container(
         margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-        child:  Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(
-                  title,
-                  style: TextStyle(color: appTextColorPrimary2),
-                ),
-                Text(
-                  subTitle,
-                  style: TextStyle(color: appTextColorPrimary2),
-                ),
-              ]),
-              Icon(
-                iconNew,
-                color: appTextColorPrimary2,
-              )
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                title,
+                style: TextStyle(color: appTextColorPrimary2),
+              ),
+              Text(
+                subTitle,
+                style: TextStyle(color: appTextColorPrimary2),
+              ),
+            ]),
+            Icon(
+              iconNew,
+              color: appTextColorPrimary2,
+            )
+          ],
         ),
-      
+      ),
     );
   }
 
   void _settingModalBottomSheet(context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: appSecondaryColor,
+      isDismissible: false,
+      backgroundColor: Colors.transparent,
       builder: (BuildContext bc) {
         return Container(
           height: MediaQuery.of(context).size.height / 2,
-          margin: EdgeInsets.only(right: 5, left: 5),
+          margin: EdgeInsets.only(right: 0, left: 0),
           decoration: BoxDecoration(
               color: appSecondaryColor,
               //borderRadius: BorderRadius.all(Radius.circular(15)),

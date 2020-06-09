@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 //import 'package:http/http.dart' as http;
 
+import 'package:quick_shelter/models/AddPropertyResponse.dart';
 import 'package:quick_shelter/models/GetProfileResponse.dart';
 import 'package:quick_shelter/models/LoginResponse.dart';
 import 'package:quick_shelter/models/SignUpResponse.dart';
@@ -43,33 +44,33 @@ class QuickShelterRepository {
     return SignUpResponse.fromJson(response);
   }
 
-  Future<SignUpResponse> addProperty(String firstname, String surName,
-      String phoneNum, String email, String password) async {
+  Future<AddPropertyResponse> addProperty(Map data) async {
     final response = await _provider.post(
-      "auth/signup",
-      <String, Object>{
-        'Type': firstname,
-        'Location': surName,
-        'Adddress': phoneNum,
-        'Description': email,
-        'State': password,
-        'Country': password,
-        'LandArea': password,
-        "Specifications": {
-          "NO_OF_ROOMS": 3,
-          "NO_OF_FLOORS": 3,
-          "HAS_SWIMMING_POOL": true
-        },
-        "addListing": phoneNum,
-        "Listing": {
-          "ListingType": "FOR RENT",
-          "AvailableFrom": "01-12-2020",
-          "MinPeriod": "3",
-          "PeriodUnits": "YEAR"
-        }
-      },
+      "add-property",
+      {}
+      // <String, Object>{
+      //   'Type': ,
+      //   'Location': loc,
+      //   'Adddress': addr,
+      //   'Description': descrip,
+      //   'State': password,
+      //   'Country': password,
+      //   'LandArea': password,
+      //   "Specifications": {
+      //     "NO_OF_ROOMS": 3,
+      //     "NO_OF_FLOORS": 3,
+      //     "HAS_SWIMMING_POOL": true
+      //   },
+      //   "addListing": phoneNum,
+      //   "Listing": {
+      //     "ListingType": "FOR RENT",
+      //     "AvailableFrom": "01-12-2020",
+      //     "MinPeriod": "3",
+      //     "PeriodUnits": "YEAR"
+      //   }
+      // },
     );
-    return SignUpResponse.fromJson(response);
+    return AddPropertyResponse.fromJson(response);
   }
 
   Future<UpdateProfileResponse> updateProfile(

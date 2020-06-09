@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/colors.dart';
+import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/widgets/input_field.dart';
 import 'package:quick_shelter/widgets/input_field_multi_line.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
@@ -12,6 +13,60 @@ class DashboardAddProp extends StatefulWidget {
 }
 
 class _DashboardAddPropState extends State<DashboardAddProp> {
+  final _sellingPriceController = TextEditingController();
+  final _noOfBedroomsController = TextEditingController();
+  final _noOfBathroomsController = TextEditingController();
+  var _propertyTypeController = TextEditingController();
+  final _propStateController = TextEditingController();
+  final _propLocationController = TextEditingController();
+  final _propLandAreaController = TextEditingController();
+  final _propDescController = TextEditingController();
+  final _propAvailableDateController = TextEditingController();
+
+  final QuickShelterRepository repo = QuickShelterRepository();
+
+  String type = "";
+ 
+
+  var data = {
+        'Type': 'type',
+        'Location': 'loc',
+        'Adddress': 'addr',
+        'Description': 'descrip',
+        'State': 'password',
+        'Country': 'password',
+        'LandArea':' password',
+        "Specifications": {
+          "NO_OF_ROOMS": 3,
+          "NO_OF_FLOORS": 3,
+          "HAS_SWIMMING_POOL": true
+        },
+        "addListing": 'phoneNum',
+        "Listing": {
+          "ListingType": "FOR RENT",
+          "AvailableFrom": "01-12-2020",
+          "MinPeriod": "3",
+          "PeriodUnits": "YEAR"
+        }
+      };
+
+  void _addProperty() {
+    var _apiCall = repo.addProperty(data);
+
+    _apiCall.then((value) {
+      print(value.message);
+      //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (value.code == '200') {
+        //_sharedPreferenceQS.setData(String, 'accessToken', value.accessToken);
+        //Navigator.pushNamed(context, verifyPhoneRoute);
+       // _settingModalBottomSheet(context);
+      } else {
+        //snackBar('Registration Failed \t ${value.message}', _scaffoldKey);
+      }
+      //snackBar(value.message, _scaffoldKey);
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     final screeSize = MediaQuery.of(context).size;
@@ -125,7 +180,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 ],
               ),
               const SizedBox(height: 8),
-              InputFieldWidget('Selling Price', TextInputType.number, false),
+              InputFieldWidget('Selling Price', TextInputType.number, false, controller: _sellingPriceController),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,7 +201,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                             textAlign: TextAlign.left,
                           ),
                         ),
-                        InputFieldWidget('ex. 3', TextInputType.text, false),
+                        InputFieldWidget('ex. 3', TextInputType.text, false, controller: _noOfBedroomsController,),
                       ],
                     ),
                   ),
@@ -165,7 +220,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                             textAlign: TextAlign.left,
                           ),
                         ),
-                        InputFieldWidget('ex. 2', TextInputType.text, false),
+                        InputFieldWidget('ex. 2', TextInputType.text, false, controller: _noOfBathroomsController,),
                       ],
                     ),
                   )
@@ -210,11 +265,11 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                   Container(
                       width: screeSize.width / 2 - 30,
                       child:
-                          InputFieldWidget('ex. Lagos state', TextInputType.text, false)),
+                          InputFieldWidget('ex. Lagos state', TextInputType.text, false, controller: _propStateController,)),
                   Container(
                       width: screeSize.width / 2 - 30,
                       child:
-                          InputFieldWidget('ex. Lekki Phase 1', TextInputType.text, false)),
+                          InputFieldWidget('ex. Lekki Phase 1', TextInputType.text, false, controller: _propLocationController,)),
                 ],
               ),
               const SizedBox(height: 20),
@@ -233,7 +288,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 ],
               ),
               const SizedBox(height: 8),
-              InputFieldWidget('ex. 77 km2', TextInputType.text, false),
+              InputFieldWidget('ex. 77 km2', TextInputType.text, false, controller: _propLandAreaController,),
               const SizedBox(height: 20),
               Row(
                 children: [
@@ -250,9 +305,9 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 ],
               ),
               const SizedBox(height: 8),
-              InputFieldWidget('30 May, 2020', TextInputType.text, false),
+              InputFieldWidget('30 May, 2020', TextInputType.text, false, controller: _propAvailableDateController,),
               const SizedBox(height: 40),
-              RaisedButtonWidget(addPropertyStep2Route, 'Continue', true),
+              RaisedButtonWidget(addPropertyStep2Route, 'Continue', true, action: _addProperty,),
               const SizedBox(height: 20),
             ],
           ),
