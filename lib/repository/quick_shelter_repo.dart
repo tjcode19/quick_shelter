@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:quick_shelter/models/GetProfileResponse.dart';
 import 'package:quick_shelter/models/LoginResponse.dart';
 import 'package:quick_shelter/models/SignUpResponse.dart';
+import 'package:quick_shelter/models/UpdateProfileResponse.dart';
 import 'package:quick_shelter/models/UploadIdResponse.dart';
 import 'package:quick_shelter/models/ValidatePhone.dart';
 import 'package:quick_shelter/network/ApiProvider.dart';
@@ -19,7 +20,6 @@ class QuickShelterRepository {
   Future<LoginResponse> loginData(String email, String password) async {
     final response = await _provider.post(
       "auth/signin",
-      headerValue,
       <String, String>{
         'Email': email,
         'Password': password,
@@ -28,10 +28,10 @@ class QuickShelterRepository {
     return LoginResponse.fromJson(response);
   }
 
-  Future<SignUpResponse> signUpData(String firstname, String surName, String phoneNum, String email, String password) async {
+  Future<SignUpResponse> signUpData(String firstname, String surName,
+      String phoneNum, String email, String password) async {
     final response = await _provider.post(
       "auth/signup",
-      headerValue,
       <String, String>{
         'FirstName': firstname,
         'SurName': surName,
@@ -41,12 +41,53 @@ class QuickShelterRepository {
       },
     );
     return SignUpResponse.fromJson(response);
-  }  
+  }
+
+  Future<SignUpResponse> addProperty(String firstname, String surName,
+      String phoneNum, String email, String password) async {
+    final response = await _provider.post(
+      "auth/signup",
+      <String, Object>{
+        'Type': firstname,
+        'Location': surName,
+        'Adddress': phoneNum,
+        'Description': email,
+        'State': password,
+        'Country': password,
+        'LandArea': password,
+        "Specifications": {
+          "NO_OF_ROOMS": 3,
+          "NO_OF_FLOORS": 3,
+          "HAS_SWIMMING_POOL": true
+        },
+        "addListing": phoneNum,
+        "Listing": {
+          "ListingType": "FOR RENT",
+          "AvailableFrom": "01-12-2020",
+          "MinPeriod": "3",
+          "PeriodUnits": "YEAR"
+        }
+      },
+    );
+    return SignUpResponse.fromJson(response);
+  }
+
+  Future<UpdateProfileResponse> updateProfile(
+      String firstname, String surName, String phoneNum, String email) async {
+    final response = await _provider.put(
+      "user/profile",
+      <String, String>{
+        'FirstName': firstname,
+        'SurName': surName,
+        'PhoneNumber': phoneNum,
+        'Email': email,
+      },
+    );
+    return UpdateProfileResponse.fromJson(response);
+  }
 
   Future<ValidatePhone> validatePhone(String phoneNum, String code) async {
-    final response = await _provider.get(
-      "validate-phone/$phoneNum/$code"
-    );
+    final response = await _provider.get("validate-phone/$phoneNum/$code");
     return ValidatePhone.fromJson(response);
   }
 
@@ -58,15 +99,10 @@ class QuickShelterRepository {
   }
 
   Future<UploadIdResponse> uploadId(File file, String fileType) async {
-    final response = await _provider.uploadFile(
-      file,
-      "user/update/national-id",
-      fileType
-    );
+    final response =
+        await _provider.uploadFile(file, "user/update/national-id", fileType);
     return UploadIdResponse.fromJson(response);
   }
-
-
 
 //   Future<LoginResponse> createAlbum(String email, String password) async {
 //   final http.Response response = await http.post(
@@ -91,6 +127,5 @@ class QuickShelterRepository {
 //     throw Exception('Failed to load album');
 //   }
 // }
-
 
 }

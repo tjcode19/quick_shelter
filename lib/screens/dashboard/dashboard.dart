@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quick_shelter/colors.dart';
 import 'package:quick_shelter/screens/dashboard/dashboard_collections.dart';
 import 'package:quick_shelter/screens/get_started.dart';
 
@@ -33,7 +34,7 @@ class _DashboardState extends State<Dashboard> {
       return showDialog(
             context: context,
             builder: (context) => new AlertDialog(
-              title: new Text('Logout!'),
+              title: new Text('Logout!', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 18, color: appColorSecondary),),
               content: new Text('Are you sure you want to logout?'),
               actions: <Widget>[
                 new GestureDetector(
@@ -53,7 +54,7 @@ class _DashboardState extends State<Dashboard> {
           ) ??
           false;
     } else {
-      _onItemTapped(0);
+       _onItemTapped(0);
     }
   }
   

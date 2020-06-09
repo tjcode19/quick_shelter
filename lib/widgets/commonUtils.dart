@@ -10,7 +10,7 @@ void snackBar(String value, _scaffoldKey) {
 }
 
 
-Future<void> showLoadingDialog(
+showLoadingDialog(
       BuildContext context, GlobalKey key) async {
     return showDialog<void>(
         context: context,

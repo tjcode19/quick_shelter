@@ -16,9 +16,16 @@ class ApiProvider {
   
 
   String token;
+  Map<String, String> headers;
 
   getTokenPref() async {
     token = await _sharedPreferenceQS.getSharedPrefs(String, 'accessToken');
+
+    headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Accept": "application/json",
+      "Authorization": "Bearer $token"
+    };
   }
 
 
@@ -26,10 +33,6 @@ class ApiProvider {
   Future<dynamic> get(String url) async {
     var responseJson;
     await getTokenPref();
-    Map<String, String> headers = {
-      "Accept": "application/json",
-      "Authorization": "Bearer $token"
-    };
     try {
       final response = await http.get(_baseUrl + url, headers: headers);
       responseJson = _response(response);
@@ -39,12 +42,29 @@ class ApiProvider {
     return responseJson;
   }
 
-  Future<dynamic> post(String url, Map headerValue, Map body) async {
+  Future<dynamic> post(String url,Map body) async {
     var responseJson;
+    await getTokenPref();
     try {
       final response = await http.post(
         _baseUrl + url,
-        headers: headerValue,
+          headers: headers,
+        body: jsonEncode(body),
+      );
+      responseJson = _response(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> put(String url, Map body) async {
+    var responseJson;
+    await getTokenPref();
+    try {
+      final response = await http.put(
+        _baseUrl + url,
+        headers: headers,
         body: jsonEncode(body),
       );
       responseJson = _response(response);
@@ -58,19 +78,6 @@ class ApiProvider {
       File image, String url, String fileType) async {   
 
     await getTokenPref();
-//    var uri = Uri.parse(_baseUrl + url);
-//    var request = http.MultipartRequest('POST', uri)
-//      ..fields['uploadfile'] = image.path
-//      ..fields['type'] = 'NationalID'
-//      ..files.add(await http.MultipartFile.fromPath('image', image.path,
-//          contentType: MediaType('image', 'jpeg')));
-//    request.headers.addAll(headers);
-//    //var response = await request.send();
-//    final streamedResponse = await request.send();
-//    final response = await http.Response.fromStream(streamedResponse);
-//    print(response);
-    // if (response.statusCode == 200) print('Uploaded!');
-
     // Find the mime type of the selected file by looking at the header bytes of the file
      final mimeTypeData =
          lookupMimeType(image.path, headerBytes: [0xFF, 0xD8]).split('/');
@@ -80,12 +87,6 @@ class ApiProvider {
      // Attach the file in the request
      final file = await http.MultipartFile.fromPath('uploadfile', image.path,
          contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-     // Explicitly pass the extension of the image with request body
-     // Since image_picker has some bugs due which it mixes up
-     // image extension with file name like this filenamejpge
-     // Which creates some problem at the server side to manage
-     // or verify the file extension
-    // imageUploadRequest.fields['uploadfile'] = image.path;
      imageUploadRequest.fields['type'] = fileType;
      //imageUploadRequest.headers.addAll(headers);
      imageUploadRequest.files.add(file);

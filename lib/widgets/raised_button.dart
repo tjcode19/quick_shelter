@@ -9,11 +9,16 @@ class RaisedButtonWidget extends StatelessWidget {
   final Function action;
 
   bool isBtnColorPrimary;
+  bool isValidatable;
+  final GlobalKey<FormState> formKey;
+  
 
-  RaisedButtonWidget(this.routeName, this.btnLabel, this.isBtnColorPrimary , {this.fnSize:17, this.action });
+  RaisedButtonWidget(this.routeName, this.btnLabel, this.isBtnColorPrimary,
+      {this.fnSize: 17, this.action, this.isValidatable:false, this.formKey});
 
   @override
   Widget build(BuildContext context) {
+
     if (isBtnColorPrimary) {
       btnColor = Theme.of(context).primaryColor;
       btnTextColor = Colors.white;
@@ -48,19 +53,27 @@ class RaisedButtonWidget extends StatelessWidget {
         ),
         onPressed: () {
           print('pressed');
-          if(action != null){
-             print('pressed 1');
+          if (action != null) {
+            if (isValidatable) {
+              if (formKey.currentState.validate()) {
+                // If the form is valid, display a snackbar. In the real world,
+                // you'd often call a server or save the information in a database.
+
+                action();
+              }
+            }
+            else{
               action();
-          }
-          else if( routeName!='pop'){  
-             print('pressed 2');          
+            }
+            print('pressed 1');
+            
+          } else if (routeName != 'pop') {
+            print('pressed 2');
             Navigator.pushNamed(context, routeName);
-          }
-          else{
-             print('pressed 3');
+          } else {
+            print('pressed 3');
             Navigator.pop(context);
           }
-          
         },
       ),
     );

@@ -7,16 +7,22 @@ class InputFieldWidget extends StatelessWidget {
   final TextCapitalization capitalizationType;
   final TextEditingController controller;
   final Color color;
+  final String errorMsg;
 
-  InputFieldWidget(this.label, this.keyType, this.isPasswordField, {this.capitalizationType:TextCapitalization.words, this.controller, this.color:Colors.white });
+  InputFieldWidget(this.label, this.keyType, this.isPasswordField,
+      {this.capitalizationType: TextCapitalization.words,
+      this.controller,
+      this.color: Colors.white,
+      this.errorMsg
+      });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: TextFormField(  
+      child: TextFormField(
         controller: controller,
-        textCapitalization: capitalizationType,  
-        style: TextStyle(color: color, fontWeight: FontWeight.w500),    
+        textCapitalization: capitalizationType,
+        style: TextStyle(color: color, fontWeight: FontWeight.w500),
         obscureText: isPasswordField,
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -34,8 +40,8 @@ class InputFieldWidget extends StatelessWidget {
           labelText: label,
         ),
         validator: (val) {
-          if (val.length == 0) {
-            return "Amount cannot be empty";
+          if (val.isEmpty) {
+            return errorMsg;
           } else {
             return null;
           }

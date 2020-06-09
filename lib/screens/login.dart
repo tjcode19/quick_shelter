@@ -62,17 +62,6 @@ class _LoginState extends State<Login> {
     }
   }
 
-  // _setData(bool clearValues) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  //   if (!clearValues) {
-  //     prefs.setBool('rememberMe', rememberMe);
-  //     prefs.setString('Email', _emailController.text);
-  //   } else {
-  //     prefs.setString('Email', '');
-  //     prefs.setBool('rememberMe', rememberMe);
-  //   }
-  // }
 
   @override
   void initState() {
@@ -109,12 +98,30 @@ class _LoginState extends State<Login> {
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.auth) {
         _sharedPreferenceQS.setData(String, 'accessToken', value.accessToken);
+        _getUserProfile();
         Navigator.pushNamed(context, dashboardRoute);
       } else {
         showInSnackBar(value.reason);
       }
     });
     print('######');
+  }
+
+  _getUserProfile() {
+    print('Get User Profile');
+    var _apiCall = repo.getProfile();
+
+    _apiCall.then((value) {
+      print(value);
+      setState(() {
+        _sharedPreferenceQS.setData(String, 'userFN', value.firstName);
+        _sharedPreferenceQS.setData(String, 'userLN', value.surName);
+        _sharedPreferenceQS.setData(String, 'userPN', value.phoneNumber);
+        _sharedPreferenceQS.setData(String, 'userEm', value.email);
+
+      });
+    });
+
   }
 
   void showInSnackBar(String value) {

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
+import 'package:quick_shelter/utils/sharedPreference.dart';
 import 'package:quick_shelter/widgets/commonUtils.dart';
 
 import '../constants.dart';
 import '../widgets/input_field.dart';
 import '../widgets/raised_button.dart';
-
 
 class SignUp extends StatefulWidget {
   @override
@@ -16,6 +16,8 @@ class _SignUpState extends State<SignUp> {
   final QuickShelterRepository repo = QuickShelterRepository();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
+  SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
 
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
@@ -23,7 +25,7 @@ class _SignUpState extends State<SignUp> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
 
- void  _signUpFunc(){
+  void _signUpFunc() {
     print('Sign Up Funtion');
     final userFirstName = _firstNameController.text;
     final userLastName = _lastNameController.text;
@@ -37,20 +39,24 @@ class _SignUpState extends State<SignUp> {
     }
     showLoadingDialog(context, _keyLoader);
 
-    var _signUp = repo.signUpData(userFirstName, userLastName, userPhone, userEmail, userPassword);
+    var _signUp = repo.signUpData(
+        userFirstName, userLastName, userPhone, userEmail, userPassword);
+
+        _sharedPreferenceQS.setData(String, 'surName', userLastName);
 
     _signUp.then((value) {
       print(value.message);
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.accessToken != null) {        
+      if (value.accessToken != null) {
+        _sharedPreferenceQS.setData(String, 'accessToken', value.accessToken);
         Navigator.pushNamed(context, verifyPhoneRoute);
       } else {
         snackBar('Registration Failed \t ${value.message}', _scaffoldKey);
       }
       //snackBar(value.message, _scaffoldKey);
     });
-
   }
+
   Future<bool> _onBackPressed() {
     return Navigator.popAndPushNamed(context, getStartedRoute);
   }
@@ -59,12 +65,12 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onBackPressed,
-          child: Scaffold(
-            key: _scaffoldKey,
+      child: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-                child: Stack(children: [
+          child: Stack(children: [
             Container(
               decoration: BoxDecoration(
                   image: DecorationImage(
@@ -93,63 +99,99 @@ class _SignUpState extends State<SignUp> {
                           topLeft: Radius.circular(20),
                           topRight: Radius.circular(20)),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                            margin: EdgeInsets.only(top: 30),
+                    child: Form(
+                      autovalidate: true,
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                              margin: EdgeInsets.only(top: 30),
+                              child: Text(
+                                'Sign Up',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20.0),
+                              )),
+                          const SizedBox(height: 20),
+                          Container(
                             child: Text(
-                              'Sign Up',
-                              style: TextStyle(color: Colors.white, fontSize: 20.0),
-                            )),
-                        const SizedBox(height: 20),
-                        Container(
-                          child: Text(
-                            'Please provide correct email address and password to login.',
-                            style: Theme.of(context).textTheme.bodyText1,
+                              'Can we know you?',
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 40),
-                        InputFieldWidget('Firstname', TextInputType.text, false, controller: _firstNameController,),
-                        const SizedBox(height: 20),
-                        InputFieldWidget('Lastname', TextInputType.text, false, controller: _lastNameController,),
-                        const SizedBox(height: 20),
-                        InputFieldWidget('ex. email@email.com', TextInputType.emailAddress, false, controller: _emailController,capitalizationType: TextCapitalization.none,),
-                        const SizedBox(height: 20),
-                        InputFieldWidget('Phone Number', TextInputType.phone, false, controller: _phoneController,),
-                        const SizedBox(height: 20),
-                        InputFieldWidget('Password', TextInputType.text, true, controller: _passwordController,),
-                        
-                        const SizedBox(height: 30),
-                        RaisedButtonWidget(verifyPhoneRoute, 'Continue', true),
-                        const SizedBox(height: 25),
-                        GestureDetector(
-                          onTap: (){
-                           // Navigator.pushNamed(context, loginRoute);
-                            Navigator.popAndPushNamed(context, loginRoute);
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: RichText(
-                              text: TextSpan(
-                                text: 'Already a member? ',
-                                style: TextStyle(fontSize: 15),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: 'Log in',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 16,
+                          const SizedBox(height: 40),
+                          InputFieldWidget(
+                            'Firstname',
+                            TextInputType.text,
+                            false,
+                            controller: _firstNameController,
+                            errorMsg: 'First name can not be empty',
+                          ),
+                          const SizedBox(height: 20),
+                          InputFieldWidget(
+                            'Lastname',
+                            TextInputType.text,
+                            false,
+                            controller: _lastNameController,
+                            errorMsg: 'Last name can not be empty',
+                          ),
+                          const SizedBox(height: 20),
+                          InputFieldWidget(
+                            'ex. email@email.com',
+                            TextInputType.emailAddress,
+                            false,
+                            controller: _emailController,
+                            capitalizationType: TextCapitalization.none,
+                            errorMsg: 'Email can not be empty',
+                          ),
+                          const SizedBox(height: 20),
+                          InputFieldWidget(
+                            'Phone Number',
+                            TextInputType.phone,
+                            false,
+                            controller: _phoneController,
+                            errorMsg: 'Phone number can not be empty',
+                          ),
+                          const SizedBox(height: 20),
+                          InputFieldWidget(
+                            'Password',
+                            TextInputType.text,
+                            true,
+                            controller: _passwordController,
+                            errorMsg: 'Password can not be empty',
+                          ),
+                          const SizedBox(height: 30),
+                          RaisedButtonWidget(
+                              verifyPhoneRoute, 'Continue', true, isValidatable: true, formKey: _formKey, action: _signUpFunc,),
+                          const SizedBox(height: 25),
+                          GestureDetector(
+                            onTap: () {
+                              // Navigator.pushNamed(context, loginRoute);
+                              Navigator.popAndPushNamed(context, loginRoute);
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: RichText(
+                                text: TextSpan(
+                                  text: 'Already a member? ',
+                                  style: TextStyle(fontSize: 15),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: 'Log in',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 16,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 5),
-                      ],
+                          const SizedBox(height: 5),
+                        ],
+                      ),
                     ),
                   ),
                 ],
