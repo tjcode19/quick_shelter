@@ -70,7 +70,7 @@ class _LoginState extends State<Login> {
     getLoginPref();
   }
 
-  void _submitData() {
+  void _submitData(){
     print('loginRes');
 
     final userEmail = _emailController.text;
@@ -93,12 +93,13 @@ class _LoginState extends State<Login> {
 
     var _loginRes = repo.loginData(userEmail.trim(), userPassword);
 
-    _loginRes.then((value) {
+    _loginRes.then((value) async {
       print('donnned ${value.auth}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.auth) {
         _sharedPreferenceQS.setData(String, 'accessToken', value.accessToken);
-        _getUserProfile();
+        await _resetDetails();        
+        await _getUserProfile();
         Navigator.pushNamed(context, dashboardRoute);
       } else {
         showInSnackBar(value.reason);
@@ -107,19 +108,36 @@ class _LoginState extends State<Login> {
     print('######');
   }
 
+  _resetDetails(){
+    _sharedPreferenceQS.setData(String, 'userFN', '');
+        _sharedPreferenceQS.setData(String, 'userLN', '');
+        _sharedPreferenceQS.setData(String, 'userPN', '');
+        _sharedPreferenceQS.setData(String, 'userEm', '');
+        _sharedPreferenceQS.setData(bool, 'detailsLoaded', false);
+        print('User details cleared');
+  }
+
   _getUserProfile() {
     print('Get User Profile');
     var _apiCall = repo.getProfile();
 
     _apiCall.then((value) {
       print(value);
-      setState(() {
+      // if(value.code != '200'){
+      //   _sharedPreferenceQS.setData(bool, 'detailsLoaded', false);
+      // }
+      // else{
+        //setState(() {
         _sharedPreferenceQS.setData(String, 'userFN', value.firstName);
         _sharedPreferenceQS.setData(String, 'userLN', value.surName);
         _sharedPreferenceQS.setData(String, 'userPN', value.phoneNumber);
         _sharedPreferenceQS.setData(String, 'userEm', value.email);
+        _sharedPreferenceQS.setData(bool, 'detailsLoaded', true);
 
-      });
+     // });
+
+     // }
+      
     });
 
   }

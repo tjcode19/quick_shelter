@@ -24,6 +24,7 @@ class _SignUpState extends State<SignUp> {
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   void _signUpFunc() {
     print('Sign Up Funtion');
@@ -32,9 +33,10 @@ class _SignUpState extends State<SignUp> {
     final userEmail = _emailController.text;
     final userPhone = _phoneController.text;
     final userPassword = _passwordController.text;
+    final confirmPassword = _passwordController.text;
 
     if (userEmail.isEmpty || userPassword.isEmpty) {
-      snackBar('Email and Password must be filled', _scaffoldKey);
+      snackBar('All fields must be filled', _scaffoldKey);
       return;
     }
     showLoadingDialog(context, _keyLoader);
@@ -47,14 +49,40 @@ class _SignUpState extends State<SignUp> {
     _signUp.then((value) {
       print(value.message);
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.accessToken != null) {
+      if (value.accessToken != null && value.code=='200') {
         _sharedPreferenceQS.setData(String, 'accessToken', value.accessToken);
+        _getUserProfile();
         Navigator.pushNamed(context, verifyPhoneRoute);
       } else {
-        snackBar('Registration Failed \t ${value.message}', _scaffoldKey);
+        snackBar('Registration Failed \n ${value.message}', _scaffoldKey);
       }
       //snackBar(value.message, _scaffoldKey);
     });
+  }
+
+    _getUserProfile() {
+    print('Get User Profile');
+    var _apiCall = repo.getProfile();
+
+    _apiCall.then((value) {
+      print(value);
+      // if(value.code != '200'){
+      //   _sharedPreferenceQS.setData(bool, 'detailsLoaded', false);
+      // }
+      // else{
+        //setState(() {
+        _sharedPreferenceQS.setData(String, 'userFN', value.firstName);
+        _sharedPreferenceQS.setData(String, 'userLN', value.surName);
+        _sharedPreferenceQS.setData(String, 'userPN', value.phoneNumber);
+        _sharedPreferenceQS.setData(String, 'userEm', value.email);
+        _sharedPreferenceQS.setData(bool, 'detailsLoaded', true);
+
+     // });
+
+     // }
+      
+    });
+
   }
 
   Future<bool> _onBackPressed() {
@@ -160,6 +188,14 @@ class _SignUpState extends State<SignUp> {
                             true,
                             controller: _passwordController,
                             errorMsg: 'Password can not be empty',
+                          ),
+                          const SizedBox(height: 20),
+                          InputFieldWidget(
+                            'Confirm Password',
+                            TextInputType.text,
+                            true,
+                            controller: _confirmPasswordController,
+                            errorMsg: 'Password does not match',
                           ),
                           const SizedBox(height: 30),
                           RaisedButtonWidget(

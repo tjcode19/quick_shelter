@@ -16,6 +16,7 @@ class _BasicInfoState extends State<BasicInfo> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   final QuickShelterRepository repo = QuickShelterRepository();
   SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final _emailController = TextEditingController();
   //final _passwordController = TextEditingController();
@@ -24,6 +25,7 @@ class _BasicInfoState extends State<BasicInfo> {
   final _phoneController = TextEditingController();
 
   String _prefFN, _prefSN, _prefEm, _prefPh;
+  bool _detailsLoaded;
 
   _updateProfile() {
     showLoadingDialog(context, _keyLoader);
@@ -32,35 +34,47 @@ class _BasicInfoState extends State<BasicInfo> {
 
     _apiCall.then((value) {
       print(value);
-      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      _settingModalBottomSheet(context);
+      if (value.code != '200') {
+        snackBar(value.message, _scaffoldKey);
+      } else {
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        _settingModalBottomSheet(context);
+      }
     });
   }
 
   _getUserProfile() async {
-    _prefFN = await _sharedPreferenceQS.getSharedPrefs(String, 'userFN');
-    _prefSN = await _sharedPreferenceQS.getSharedPrefs(String, 'userLN');
-    _prefPh = await _sharedPreferenceQS.getSharedPrefs(String, 'userPN');
-    _prefEm = await _sharedPreferenceQS.getSharedPrefs(String, 'userEm');
-
-    setState(() {
+    _detailsLoaded =
+        await _sharedPreferenceQS.getSharedPrefs(bool, 'detailsLoaded');
+    if (_detailsLoaded) {
+      _prefFN = await _sharedPreferenceQS.getSharedPrefs(String, 'userFN');
+      _prefSN = await _sharedPreferenceQS.getSharedPrefs(String, 'userLN');
+      _prefPh = await _sharedPreferenceQS.getSharedPrefs(String, 'userPN');
+      _prefEm = await _sharedPreferenceQS.getSharedPrefs(String, 'userEm');
+      setState(() {
       _emailController.text = _prefEm;
       _fNameController.text = _prefFN;
       _lNameController.text = _prefSN;
       _phoneController.text = _prefPh;
     });
+    }
+    else{
+      snackBar('Falied to retrieve user details', _scaffoldKey);
+    }
+
+    
   }
 
   @override
   void initState() {
     super.initState();
-
     _getUserProfile();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0.0,

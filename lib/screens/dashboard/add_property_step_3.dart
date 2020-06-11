@@ -149,7 +149,7 @@ class _AddPropStep3State extends State<AddPropStep3> {
                       ),
                       onPressed: () {
                         //_addProperty();
-                        // _settingModalBottomSheet(context);
+                        _settingModalBottomSheet(context);
                       },
                     ),
                   ),

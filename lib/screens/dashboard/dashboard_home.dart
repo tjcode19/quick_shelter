@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/constants.dart';
+import 'package:quick_shelter/utils/sharedPreference.dart';
 
 import '../../colors.dart';
 
@@ -10,9 +11,12 @@ class DashboardHome extends StatefulWidget {
 }
 
 class _DashboardHomeState extends State<DashboardHome> {
+
+  SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
   ScrollController _controller;
   String message = "";
   bool _isVisible = true;
+  String _prefUserFN;
 
   _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
@@ -25,14 +29,26 @@ class _DashboardHomeState extends State<DashboardHome> {
         !_controller.position.outOfRange) {
       setState(() {
         _isVisible = true;
+        _prefUserFN = _prefUserFN;
       });
     }
+  }
+
+  _getUserProfile() async {
+    
+    _prefUserFN = await _sharedPreferenceQS.getSharedPrefs(String, 'userFN');
+
+    setState(() {
+      _prefUserFN = _prefUserFN;
+    });
+    
   }
 
   @override
   void initState() {
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
+    _getUserProfile();
     super.initState();
   }
 

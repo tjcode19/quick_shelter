@@ -11,8 +11,9 @@ class GetProfileResponse {
   final String NationalID;
   final String isEmailVerified;  
   final String isProfileReviewed;  
+  final String code;
 
-  GetProfileResponse({this.firstName, this.surName, this.middleName, this.phoneNumber, this.email, this.password, this.DOB, this.USER_TYPE, this.NationalID, this.isEmailVerified, this.isProfileReviewed, this.id});
+  GetProfileResponse({this.firstName, this.surName, this.middleName, this.phoneNumber, this.email, this.password, this.DOB, this.USER_TYPE, this.NationalID, this.isEmailVerified, this.isProfileReviewed, this.id, this.code});
 
   factory GetProfileResponse.fromJson(Map<String, dynamic> json) {
     return GetProfileResponse(
@@ -23,6 +24,7 @@ class GetProfileResponse {
       phoneNumber: json['PhoneNumber'],
       email: json['Email'],
       password: json['Password'],
+      code: json['code']
 
     );
   }
