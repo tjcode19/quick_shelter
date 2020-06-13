@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/colors.dart';
-import 'package:quick_shelter/widgets/input_field.dart';
-import 'package:quick_shelter/widgets/input_field_multi_line.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
-
-import '../../constants.dart';
 
 class FileUpload extends StatefulWidget {
   @override
@@ -87,4 +83,71 @@ class _FileUploadState extends State<FileUpload> {
       ),
     );
   }
+
+  // Widget _setImageView(BuildContext context) {
+  //   if (_image != null) {
+  //     //return Image.file(_image, width: 500, height: 500);
+  //     return GestureDetector(
+  //       onTap: () => _showSelectionDialog(context),
+  //       child: Container(
+  //         height: 200.0,
+  //         width: double.infinity,
+  //         //color: appPrimary,
+  //         decoration: BoxDecoration(
+  //           image: DecorationImage(
+  //                   image: FileImage(_image),
+  //                   fit: BoxFit.cover),
+  //             color: appPrimary,
+  //             borderRadius: BorderRadius.all(Radius.circular(6)),
+  //             border: Border.all(color: appTextColorPrimary2)),
+          
+  //       ),
+  //     );
+  //   } else {
+  //     return GestureDetector(
+  //       onTap: () => _showSelectionDialog(context),
+  //       child: Container(
+  //         height: 150.0,
+  //         width: double.infinity,
+  //         //color: appPrimary,
+  //         decoration: BoxDecoration(
+  //             color: appPrimary,
+  //             borderRadius: BorderRadius.all(Radius.circular(6)),
+  //             border: Border.all(color: appTextColorPrimary2)),
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: <Widget>[
+  //             Icon(
+  //               Icons.camera_alt,
+  //               color: Colors.white,
+  //             ),
+  //             Center(
+  //               child: Padding(
+  //                 padding: const EdgeInsets.fromLTRB(30.0, 10, 30, 0),
+  //                 child: Text(
+  //                   'Upload valid ID Image',
+  //                   style: TextStyle(color: appTextColorPrimary2),
+  //                   textAlign: TextAlign.center,
+  //                   softWrap: true,
+  //                 ),
+  //               ),
+  //             ),
+  //             Center(
+  //               child: Padding(
+  //                 padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 10),
+  //                 child: Text(
+  //                   '(Intl. passport, NIN, drivers license, voters card)',
+  //                   style: TextStyle(color: appTextColorPrimary2),
+  //                   textAlign: TextAlign.center,
+  //                   softWrap: true,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     );
+  //   }
+  // }
 }

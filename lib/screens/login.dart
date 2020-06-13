@@ -4,7 +4,6 @@ import 'package:quick_shelter/widgets/commonUtils.dart';
 import '../repository/quick_shelter_repo.dart';
 import '../widgets/input_field.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../constants.dart';
 
 class Login extends StatefulWidget {
@@ -102,7 +101,7 @@ class _LoginState extends State<Login> {
         await _getUserProfile();
         Navigator.pushNamed(context, dashboardRoute);
       } else {
-        showInSnackBar(value.reason);
+        showInSnackBar(value.message);
       }
     });
     print('######');
