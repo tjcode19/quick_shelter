@@ -13,44 +13,46 @@ class DashboardAddProp extends StatefulWidget {
 }
 
 class _DashboardAddPropState extends State<DashboardAddProp> {
+  final QuickShelterRepository repo = QuickShelterRepository();
   final _sellingPriceController = TextEditingController();
   final _noOfBedroomsController = TextEditingController();
   final _noOfBathroomsController = TextEditingController();
-  var _propertyTypeController = TextEditingController();
+  final _propertyTypeController = TextEditingController();
   final _propStateController = TextEditingController();
   final _propLocationController = TextEditingController();
   final _propLandAreaController = TextEditingController();
   final _propDescController = TextEditingController();
   final _propAvailableDateController = TextEditingController();
-
-  final QuickShelterRepository repo = QuickShelterRepository();
+  final _propAddressController = TextEditingController();
+  final _propCountryController = TextEditingController();
 
   String type = "";
- 
-
-  var data = {
-        'Type': 'type',
-        'Location': 'loc',
-        'Adddress': 'addr',
-        'Description': 'descrip',
-        'State': 'password',
-        'Country': 'password',
-        'LandArea':' password',
-        "Specifications": {
-          "NO_OF_ROOMS": 3,
-          "NO_OF_FLOORS": 3,
-          "HAS_SWIMMING_POOL": true
-        },
-        "addListing": 'phoneNum',
-        "Listing": {
-          "ListingType": "FOR RENT",
-          "AvailableFrom": "01-12-2020",
-          "MinPeriod": "3",
-          "PeriodUnits": "YEAR"
-        }
-      };
+  bool sale = true;
+  bool rent = false;
 
   void _addProperty() {
+    Map data = {
+      'Type': _propertyTypeController.text,
+      'Location': _propLocationController.text,
+      'Adddress': _propAddressController.text,
+      'Description': _propDescController.text,
+      'State': _propStateController.text,
+      'Country': _propCountryController.text,
+      'LandArea': _propLandAreaController.text,
+      "Specifications": {
+        "NO_OF_ROOMS": _noOfBedroomsController.text,
+        "NO_OF_FLOORS": 3,
+        "HAS_SWIMMING_POOL": true
+      },
+      "addListing": 'phoneNum',
+      "Listing": {
+        "ListingType": "FOR RENT",
+        "AvailableFrom": _propAvailableDateController.text,
+        "MinPeriod": "3",
+        "PeriodUnits": "YEAR"
+      }
+    };
+
     var _apiCall = repo.addProperty(data);
 
     _apiCall.then((value) {
@@ -59,14 +61,20 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
       if (value.code == '200') {
         //_sharedPreferenceQS.setData(String, 'accessToken', value.accessToken);
         //Navigator.pushNamed(context, verifyPhoneRoute);
-       // _settingModalBottomSheet(context);
+        // _settingModalBottomSheet(context);
       } else {
         //snackBar('Registration Failed \t ${value.message}', _scaffoldKey);
       }
       //snackBar(value.message, _scaffoldKey);
     });
   }
-  
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screeSize = MediaQuery.of(context).size;
@@ -153,15 +161,16 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                           ),
                         ),
                         onPressed: () {
+                          sale = !sale;
                           //showSnackBar("OutlineButton with Shape");
                         },
                       ),
                     ),
                   ),
                   Container(
-                      width: screeSize.width / 2,
-                      child:
-                          RaisedButtonWidget('routeName', 'For Sale', false)),
+                    width: screeSize.width / 2,
+                    child: RaisedButtonWidget('routeName', 'For Sale', false),
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -180,7 +189,8 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 ],
               ),
               const SizedBox(height: 8),
-              InputFieldWidget('Selling Price', TextInputType.number, false, controller: _sellingPriceController),
+              InputFieldWidget('Selling Price', TextInputType.number, false,
+                  controller: _sellingPriceController),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -201,7 +211,12 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                             textAlign: TextAlign.left,
                           ),
                         ),
-                        InputFieldWidget('ex. 3', TextInputType.text, false, controller: _noOfBedroomsController,),
+                        InputFieldWidget(
+                          'ex. 3',
+                          TextInputType.text,
+                          false,
+                          controller: _noOfBedroomsController,
+                        ),
                       ],
                     ),
                   ),
@@ -220,7 +235,12 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                             textAlign: TextAlign.left,
                           ),
                         ),
-                        InputFieldWidget('ex. 2', TextInputType.text, false, controller: _noOfBathroomsController,),
+                        InputFieldWidget(
+                          'ex. 2',
+                          TextInputType.text,
+                          false,
+                          controller: _noOfBathroomsController,
+                        ),
                       ],
                     ),
                   )
@@ -264,12 +284,20 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 children: <Widget>[
                   Container(
                       width: screeSize.width / 2 - 30,
-                      child:
-                          InputFieldWidget('ex. Lagos state', TextInputType.text, false, controller: _propStateController,)),
+                      child: InputFieldWidget(
+                        'ex. Lagos state',
+                        TextInputType.text,
+                        false,
+                        controller: _propStateController,
+                      )),
                   Container(
                       width: screeSize.width / 2 - 30,
-                      child:
-                          InputFieldWidget('ex. Lekki Phase 1', TextInputType.text, false, controller: _propLocationController,)),
+                      child: InputFieldWidget(
+                        'ex. Lekki Phase 1',
+                        TextInputType.text,
+                        false,
+                        controller: _propLocationController,
+                      )),
                 ],
               ),
               const SizedBox(height: 20),
@@ -288,7 +316,12 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 ],
               ),
               const SizedBox(height: 8),
-              InputFieldWidget('ex. 77 km2', TextInputType.text, false, controller: _propLandAreaController,),
+              InputFieldWidget(
+                'ex. 77 km2',
+                TextInputType.text,
+                false,
+                controller: _propLandAreaController,
+              ),
               const SizedBox(height: 20),
               Row(
                 children: [
@@ -305,9 +338,18 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 ],
               ),
               const SizedBox(height: 8),
-              InputFieldWidget('30 May, 2020', TextInputType.text, false, controller: _propAvailableDateController,),
+              InputFieldWidget(
+                '30 May, 2020',
+                TextInputType.text,
+                false,
+                controller: _propAvailableDateController,
+              ),
               const SizedBox(height: 40),
-              RaisedButtonWidget(addPropertyStep2Route, 'Continue', true,),
+              RaisedButtonWidget(
+                addPropertyStep2Route,
+                'Continue',
+                true,
+              ),
               const SizedBox(height: 20),
             ],
           ),

@@ -3,7 +3,11 @@ import 'dart:io';
 //import 'package:http/http.dart' as http;
 
 import 'package:quick_shelter/models/AddPropertyResponse.dart';
+import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/models/GetProfileResponse.dart';
+import 'package:quick_shelter/models/GetPropertyListingReq.dart';
+import 'package:quick_shelter/models/GetSingleProperty.dart';
+import 'package:quick_shelter/models/GetSinglePropertyListing.dart';
 import 'package:quick_shelter/models/LoginResponse.dart';
 import 'package:quick_shelter/models/SignUpResponse.dart';
 import 'package:quick_shelter/models/UpdateProfileResponse.dart';
@@ -44,31 +48,55 @@ class QuickShelterRepository {
     return SignUpResponse.fromJson(response);
   }
 
+  Future<LoginResponse> addSavedProperty(int prodID) async {
+    final response = await _provider.post(
+      "save-properties",
+      <String, dynamic>{
+        'propertyID': prodID,
+      },
+    );
+    return LoginResponse.fromJson(response);
+  }
+
   Future<AddPropertyResponse> addProperty(Map data) async {
     final response = await _provider.post(
       "add-property",
-      {}
-      // <String, Object>{
-      //   'Type': ,
-      //   'Location': loc,
-      //   'Adddress': addr,
-      //   'Description': descrip,
-      //   'State': password,
-      //   'Country': password,
-      //   'LandArea': password,
-      //   "Specifications": {
-      //     "NO_OF_ROOMS": 3,
-      //     "NO_OF_FLOORS": 3,
-      //     "HAS_SWIMMING_POOL": true
-      //   },
-      //   "addListing": phoneNum,
-      //   "Listing": {
-      //     "ListingType": "FOR RENT",
-      //     "AvailableFrom": "01-12-2020",
-      //     "MinPeriod": "3",
-      //     "PeriodUnits": "YEAR"
-      //   }
-      // },
+     // {}
+      <String, Object>{
+        'Type': data['Type'],
+        'Location': data['Location'],
+        'Adddress': data['Adddress'],
+        'Description': data['Description'],
+        'State': data['State'],
+        'Country': data['Country'],
+        'LandArea': data['LandArea'],
+        "Specifications": {
+          "NO_OF_ROOMS": 3,
+          "NO_OF_FLOORS": 3,
+          "HAS_SWIMMING_POOL": true
+        },
+        "addListing": data['addListing'],
+        "Listing": {
+          "ListingType": data['addListing'],
+          "AvailableFrom": data['addListing'],
+          "MinPeriod": data['addListing'],
+          "PeriodUnits": data['addListing']
+        }
+      },
+    );
+    return AddPropertyResponse.fromJson(response);
+  }
+  
+  Future<AddPropertyResponse> addPropertyListing(String lType, String availableFrom, String minP, String pUnits) async {
+    final response = await _provider.post(
+      "add-listing",
+      <String, Object>{
+        'PropertyID': 0,
+        'ListingType': lType,
+        'AvailableFrom': availableFrom,
+        'MinPeriod': minP,
+        'PeriodUnits': pUnits,
+      },
     );
     return AddPropertyResponse.fromJson(response);
   }
@@ -99,9 +127,63 @@ class QuickShelterRepository {
     return GetProfileResponse.fromJson(response);
   }
 
+  Future<GetProfileResponse> getSavedProperties() async {
+    final response = await _provider.get(
+      "saved-properties",
+    );
+    return GetProfileResponse.fromJson(response);
+  }
+
+  Future<GetProfileResponse> getUserProperties() async {
+    final response = await _provider.get(
+      "user-properties",
+    );
+    return GetProfileResponse.fromJson(response);
+  }
+
+  Future<GetAllProperties> getAllProperties() async {
+    final response = await _provider.get(
+      "search-property",
+    );
+    return GetAllProperties.fromJson(response);
+  }
+
+  Future<GetSingleProperty> getSingleProperty(String propID) async {
+    final response = await _provider.get(
+      "get-property/$propID",
+    );
+    return GetSingleProperty.fromJson(response);
+  }
+
+  Future<GetSinglePropertyListing> getSinglePropertyListing(String listingID) async {
+    final response = await _provider.get(
+      "get-listing/$listingID",
+    );
+    return GetSinglePropertyListing.fromJson(response);
+  }
+
+  Future<GetPropertyListingReq> getPropertyListingReq(String type) async {
+    final response = await _provider.get(
+      "get-listing-requirements/$type",
+    );
+    return GetPropertyListingReq.fromJson(response);
+  }
+
   Future<UploadIdResponse> uploadId(File file, String fileType) async {
     final response =
         await _provider.uploadFile(file, "user/update/national-id", fileType);
+    return UploadIdResponse.fromJson(response);
+  }
+
+  Future<UploadIdResponse> uploadPropDocs(File file, String fileType) async {
+    final response =
+        await _provider.uploadFile(file, "property/property-documents/:propertyID", fileType);
+    return UploadIdResponse.fromJson(response);
+  }
+
+  Future<UploadIdResponse> uploadPropPictures(File file, String fileType) async {
+    final response =
+        await _provider.uploadFile(file, "property/property-photos/:propertyID", fileType);
     return UploadIdResponse.fromJson(response);
   }
 
