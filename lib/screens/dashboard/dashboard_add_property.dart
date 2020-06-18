@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quick_shelter/colors.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/widgets/input_field.dart';
@@ -30,6 +31,8 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
   bool sale = true;
   bool rent = false;
 
+  String stateSelection = "";
+
   void _addProperty() {
     Map data = {
       'Type': _propertyTypeController.text,
@@ -40,14 +43,15 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
       'Country': _propCountryController.text,
       'LandArea': _propLandAreaController.text,
       "Specifications": {
+        "NO_OF_LIVINGROOMS": 2,
         "NO_OF_ROOMS": _noOfBedroomsController.text,
         "NO_OF_FLOORS": 3,
         "HAS_SWIMMING_POOL": true
       },
-      "addListing": 'phoneNum',
+      "addListing": true,
       "Listing": {
         "ListingType": "FOR RENT",
-        "AvailableFrom": _propAvailableDateController.text,
+        "IS_AVAILABLE": true,
         "MinPeriod": "3",
         "PeriodUnits": "YEAR"
       }
@@ -251,7 +255,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 children: [
                   Container(
                     child: Text(
-                      'Property Type',
+                      'Property Description',
                       style: TextStyle(
                         fontSize: 15,
                         color: Colors.white,
@@ -283,13 +287,41 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                      width: screeSize.width / 2 - 30,
-                      child: InputFieldWidget(
-                        'ex. Lagos state',
-                        TextInputType.text,
-                        false,
-                        controller: _propStateController,
-                      )),
+                    width: screeSize.width / 2 - 30,
+                    child:
+                        // DropDownFormField(
+                        //   titleText: '',
+                        //   hintText: 'Select State',
+                        //   value: _myActivity,
+                        //   onSaved: (value) {
+                        //     setState(() {
+                        //       _myActivity = value;
+                        //     });
+                        //   },
+                        //   onChanged: (value) {
+                        //     setState(() {
+                        //       _myActivity = value;
+                        //     });
+                        //   },
+                        //   dataSource: _states,
+                        //   textField: 'display',
+                        //   valueField: 'value',
+                        // ),
+                        InkWell(
+                      onTap: () {
+                        showAlertDialog(context);
+                      },
+                      child: Container(
+                        child: InputFieldWidget(
+                          'ex. Lagos state',
+                          TextInputType.text,
+                          false,
+                          controller: _propStateController,
+                          enableField: false,
+                        ),
+                      ),
+                    ),
+                  ),
                   Container(
                       width: screeSize.width / 2 - 30,
                       child: InputFieldWidget(
@@ -338,17 +370,24 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 ],
               ),
               const SizedBox(height: 8),
-              InputFieldWidget(
-                '30 May, 2020',
-                TextInputType.text,
-                false,
-                controller: _propAvailableDateController,
+              InkWell(
+                onTap: () {
+                  _selectDate(context);
+                },
+                child: InputFieldWidget(
+                  '30 May, 2020',
+                  TextInputType.text,
+                  false,
+                  controller: _propAvailableDateController,
+                  enableField: false,
+                ),
               ),
               const SizedBox(height: 40),
               RaisedButtonWidget(
                 addPropertyStep2Route,
                 'Continue',
                 true,
+                 action: _addProperty,
               ),
               const SizedBox(height: 20),
             ],
@@ -356,5 +395,59 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
         ),
       ),
     );
+  }
+
+  final states = ['Lagos', 'Abuja', 'Rivers', 'Oyo'];
+
+  // replace this function with the examples above
+  Future showAlertDialog(BuildContext context) async {
+    // set up the SimpleDialog
+    SimpleDialog dialog = SimpleDialog(
+      title: const Text(
+        'Select State',
+        style: TextStyle(fontSize: 17.0, fontStyle: FontStyle.normal),
+      ),
+      children: states.map((e) {
+        return new SimpleDialogOption(
+          onPressed: () {
+            Navigator.pop(context,
+                e); //here passing the index to be return on item selection
+          },
+          child: new Text(e), //item value
+        );
+      }).toList(),
+    );
+
+    // show the dialog
+    String dialogVal = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return dialog;
+      },
+    );
+
+    setState(() {
+      //stateSelection = dialogVal;
+      print('Hello $dialogVal');
+      _propStateController.text = dialogVal;
+    });
+  }
+
+  DateTime selectedDate = DateTime.now();
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2020, 1),
+        lastDate: DateTime(2025));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        // DateTime now = DateTime.now();
+        String formattedDate = DateFormat('dd MMM, yyyy').format(selectedDate);
+        _propAvailableDateController.text = formattedDate;
+      });
   }
 }

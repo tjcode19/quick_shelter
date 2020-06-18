@@ -11,6 +11,7 @@ class InputFieldMultiLineWidget extends StatelessWidget {
     return Container(
       child: TextFormField(
         maxLines: lines,
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),        
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,
           border: new OutlineInputBorder(
@@ -28,12 +29,12 @@ class InputFieldMultiLineWidget extends StatelessWidget {
         ),
         validator: (val) {
           if (val.length == 0) {
-            return "Amount cannot be empty";
+            return "Description can't be empty";
           } else {
             return null;
           }
         },
-        keyboardType: TextInputType.number,
+        keyboardType: TextInputType.text,
       ),
     );
   }

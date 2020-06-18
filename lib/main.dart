@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
         fontFamily: "Product-Sans",
         accentColor: Color.fromRGBO(226, 208, 195, 1),
         cursorColor: Color.fromRGBO(226, 208, 195, 1),
+        disabledColor: Color.fromRGBO(226, 208, 195, 1),
         
         textTheme: TextTheme(
           

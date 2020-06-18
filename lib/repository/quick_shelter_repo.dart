@@ -71,6 +71,7 @@ class QuickShelterRepository {
         'Country': data['Country'],
         'LandArea': data['LandArea'],
         "Specifications": {
+          "NO_OF_LIVINGROOMS":2,
           "NO_OF_ROOMS": 3,
           "NO_OF_FLOORS": 3,
           "HAS_SWIMMING_POOL": true
@@ -78,7 +79,7 @@ class QuickShelterRepository {
         "addListing": data['addListing'],
         "Listing": {
           "ListingType": data['addListing'],
-          "AvailableFrom": data['addListing'],
+          "IS_AVAILABLE": data['IS_AVAILABLE'],
           "MinPeriod": data['addListing'],
           "PeriodUnits": data['addListing']
         }
@@ -142,9 +143,13 @@ class QuickShelterRepository {
   }
 
   Future<GetAllProperties> getAllProperties() async {
-    final response = await _provider.get(
+    final response = await _provider.post(
       "search-property",
+      <String, String>{
+        'ListingType': 'FOR RENT',
+      },
     );
+    print(response);
     return GetAllProperties.fromJson(response);
   }
 

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/constants.dart';
+import 'package:quick_shelter/models/GetAllProperties.dart';
+import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/utils/sharedPreference.dart';
+import 'package:quick_shelter/widgets/commonUtils.dart';
 
 import '../../colors.dart';
 
@@ -11,12 +14,14 @@ class DashboardHome extends StatefulWidget {
 }
 
 class _DashboardHomeState extends State<DashboardHome> {
-
   SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
+  final QuickShelterRepository repo = QuickShelterRepository();
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   ScrollController _controller;
   String message = "";
   bool _isVisible = true;
   String _prefUserFN;
+  List<ListingM> _propertyList = List<ListingM>();
 
   _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
@@ -35,13 +40,28 @@ class _DashboardHomeState extends State<DashboardHome> {
   }
 
   _getUserProfile() async {
-    
     _prefUserFN = await _sharedPreferenceQS.getSharedPrefs(String, 'userFN');
 
     setState(() {
       _prefUserFN = _prefUserFN;
     });
-    
+  }
+
+  void _getAllProperties() {
+    print('Get Properties');
+    //showLoadingDialog(context, _keyLoader);
+    var _apiCall = repo.getAllProperties();
+
+    _apiCall.then((value) {
+      print('donnned ${value.data.listing}');
+      //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (value.data.listing != null) {
+        setState(() => {_propertyList = value.data.listing});
+      } else {
+        //showInSnackBar(value.message);
+      }
+    });
+    print('######');
   }
 
   @override
@@ -49,6 +69,8 @@ class _DashboardHomeState extends State<DashboardHome> {
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
     _getUserProfile();
+    _getAllProperties();
+
     super.initState();
   }
 
@@ -99,20 +121,21 @@ class _DashboardHomeState extends State<DashboardHome> {
           ),
         ),
         actions: <Widget>[
-         Padding(
-           padding: const EdgeInsets.only(right:8.0),
-           child: CircleAvatar(
-             backgroundColor: appTextColorPrimary,
-                      child: IconButton(
-                  icon: Icon(Icons.search, color: Colors.white,),
-                  onPressed: () {
-                    Navigator.pushNamed(context, searchPropRoute);
-                  },
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: CircleAvatar(
+              backgroundColor: appTextColorPrimary,
+              child: IconButton(
+                icon: Icon(
+                  Icons.search,
+                  color: Colors.white,
                 ),
-           ),
-         ),
-        
-
+                onPressed: () {
+                  Navigator.pushNamed(context, searchPropRoute);
+                },
+              ),
+            ),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -133,13 +156,19 @@ class _DashboardHomeState extends State<DashboardHome> {
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10.0),
                 height: 280.0,
-                child: ListView(
+                child:
+                    // ListView(
+                    //   scrollDirection: Axis.horizontal,
+                    //   children: <Widget>[
+                    //     _propertItem(),
+                    //     _propertItem(),
+                    //     _propertItem(),
+                    //   ],
+                    // ),
+                    ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    _propertItem(),
-                    _propertItem(),
-                    _propertItem(),
-                  ],
+                  itemCount: _propertyList.length,
+                  itemBuilder: _buildItemsForListView,
                 ),
               ),
               Container(
@@ -164,9 +193,9 @@ class _DashboardHomeState extends State<DashboardHome> {
                         mainAxisSpacing: 1,
                         crossAxisCount: 2,
                         children: <Widget>[
-                          _propertItem(),
-                          _propertItem(),
-                          _propertItem(),
+                          // _propertItem(),
+                          // _propertItem(),
+                          // _propertItem(),
                         ],
                       ),
                     ),
@@ -204,7 +233,11 @@ class _DashboardHomeState extends State<DashboardHome> {
     );
   }
 
-  Widget _propertItem() => Card(
+  Card _buildItemsForListView(BuildContext context, int index) {
+    return _propertItem(index);
+  }
+
+  Widget _propertItem(int index) => Card(
         elevation: 2.0,
         child: InkWell(
           splashColor: Colors.orange.withAlpha(30),
@@ -242,38 +275,54 @@ class _DashboardHomeState extends State<DashboardHome> {
                             TextStyle(fontSize: 13, color: appTextColorPrimary),
                       ),
                       const SizedBox(height: 10),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(right: 2.0),
-                            child: Icon(
-                              Icons.location_on,
-                              size: 10,
-                              color: Colors.orange,
-                            ),
-                          ),
-                          Container(
-                            child: Expanded(
-                              child: Text(
-                                '23 Cross, HRBR layout, bangalore',
-                                softWrap: true,
-                                style: TextStyle(
-                                    fontSize: 10, color: Colors.black87),
+                      Container(
+                        height: 35.0,
+                        child: Row(
+                          
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.only(right: 2.0),
+                              child: Icon(
+                                Icons.location_on,
+                                size: 10,
+                                color: Colors.orange,
                               ),
                             ),
-                          ),
-                        ],
+                            Container(
+                              child: Expanded(
+                                child: Text(
+                                  _propertyList[index].property.location,
+                                  softWrap: true,
+                                  style: TextStyle(
+                                      fontSize: 10, color: Colors.black87),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 25),
+                      const SizedBox(height: 15),
                       Row(
+                        
                         children: <Widget>[
                           SvgPicture.asset(
                             'assets/icons/bed.svg',
                             color: Colors.orange,
                           ),
                           const SizedBox(width: 5),
-                          Text('3 Bed',
+                          Text(
+                              ((_propertyList[index]
+                                              .property
+                                              .specifications
+                                              .noOfRooms ==
+                                          null)
+                                      ? 'NA' 
+                                      : _propertyList[index]
+                                          .property
+                                          .specifications
+                                          .noOfRooms)
+                                  .toString(),
                               style: TextStyle(
                                   color: Colors.black87, fontSize: 12.0)),
                           const SizedBox(width: 15),

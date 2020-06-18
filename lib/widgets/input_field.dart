@@ -8,18 +8,21 @@ class InputFieldWidget extends StatelessWidget {
   final TextEditingController controller;
   final Color color;
   final String errorMsg;
+  final bool enableField;
 
   InputFieldWidget(this.label, this.keyType, this.isPasswordField,
       {this.capitalizationType: TextCapitalization.words,
       this.controller,
       this.color: Colors.white,
-      this.errorMsg
+      this.errorMsg,
+      this.enableField:true
       });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: TextFormField(
+        enabled: enableField,
         controller: controller,
         textCapitalization: capitalizationType,
         style: TextStyle(color: color, fontWeight: FontWeight.w500),
@@ -35,6 +38,7 @@ class InputFieldWidget extends StatelessWidget {
             borderSide: new BorderSide(
                 color: Color.fromRGBO(226, 208, 195, 1), width: 2.0),
           ),
+          
           fillColor: Colors.transparent,
           filled: true,
           labelText: label,

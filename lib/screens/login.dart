@@ -69,7 +69,7 @@ class _LoginState extends State<Login> {
     getLoginPref();
   }
 
-  void _submitData(){
+  void _submitData() async{
     print('loginRes');
 
     final userEmail = _emailController.text;
@@ -80,15 +80,17 @@ class _LoginState extends State<Login> {
       return;
     }
 
-    showLoadingDialog(context, _keyLoader);
+    
 
     if (rememberMe) {
       print('Remembered');
-      _setLoginPref(false);
+      await _setLoginPref(false);
     } else {
       print('Not Remembered');
-      _setLoginPref(true);
+      await _setLoginPref(true);
     }
+
+    showLoadingDialog(context, _keyLoader);
 
     var _loginRes = repo.loginData(userEmail.trim(), userPassword);
 
@@ -97,7 +99,7 @@ class _LoginState extends State<Login> {
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.auth) {
         _sharedPreferenceQS.setData(String, 'accessToken', value.accessToken);
-        await _resetDetails();        
+        await _resetDetails().runtimeType;                
         await _getUserProfile();
         Navigator.pushNamed(context, dashboardRoute);
       } else {

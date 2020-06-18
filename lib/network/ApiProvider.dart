@@ -42,7 +42,7 @@ class ApiProvider {
     return responseJson;
   }
 
-  Future<dynamic> post(String url,Map body) async {
+  Future<Map<String, dynamic>> post(String url,Map body) async {
     var responseJson;
     await getTokenPref();
     try {
@@ -124,12 +124,12 @@ class ApiProvider {
     switch (response.statusCode) {
       case 200:
         var responseJson = json.decode(response.body.toString());
-        print(responseJson);
+        //print(responseJson);
         return responseJson;     
 
       default:
          var responseJson = json.decode(response.body.toString());
-        print(response);
+        //print(response);
         return responseJson;
     }
   }
