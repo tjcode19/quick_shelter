@@ -9,19 +9,22 @@ class InputFieldWidget extends StatelessWidget {
   final Color color;
   final String errorMsg;
   final bool enableField;
+  final String cPassword;
+  final Function onChange;
 
   InputFieldWidget(this.label, this.keyType, this.isPasswordField,
       {this.capitalizationType: TextCapitalization.words,
       this.controller,
       this.color: Colors.white,
       this.errorMsg,
-      this.enableField:true
-      });
+      this.enableField: true,
+      this.cPassword, this.onChange});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: TextFormField(
+        onChanged: onChange,
         enabled: enableField,
         controller: controller,
         textCapitalization: capitalizationType,
@@ -38,7 +41,6 @@ class InputFieldWidget extends StatelessWidget {
             borderSide: new BorderSide(
                 color: Color.fromRGBO(226, 208, 195, 1), width: 2.0),
           ),
-          
           fillColor: Colors.transparent,
           filled: true,
           labelText: label,
@@ -47,6 +49,14 @@ class InputFieldWidget extends StatelessWidget {
           if (val.isEmpty) {
             return errorMsg;
           } else {
+            if (cPassword!=null) {
+              print(cPassword);
+              print(val);
+              if (cPassword != val) {
+                return errorMsg;
+              } else
+                return null;
+            }
             return null;
           }
         },

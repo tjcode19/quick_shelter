@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:quick_shelter/widgets/input_field.dart';
+import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../../colors.dart';
 import '../../constants.dart';
 
 class PropertyDetails extends StatefulWidget {
+  final propertyDetails;
+  const PropertyDetails({Key key, this.propertyDetails}) : super(key: key);
   @override
   _PropertyDetailsState createState() => _PropertyDetailsState();
 }
 
 class _PropertyDetailsState extends State<PropertyDetails> {
   bool rememberMe = false;
+  ListingM _propertyDetails;
 
   List<Object> imageList = [
     {
@@ -56,6 +60,13 @@ class _PropertyDetailsState extends State<PropertyDetails> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    _propertyDetails = widget.propertyDetails;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screeSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -70,21 +81,45 @@ class _PropertyDetailsState extends State<PropertyDetails> {
               ),
             ),
           ),
+
+          // Stack(
+          //         alignment: Alignment.center,
+          //         children: [
+          //         Container(
+          //           child: CircularProgressIndicator()),
+          //         FadeInImage.memoryNetwork(
+          //           width: 175,
+          //           height: 123,
+          //           placeholder: kTransparentImage,
+          //           image: (_propertyDetails.photos.isNotEmpty)
+          //               ? _propertyDetails.photos[0].path
+          //               : 'https://picsum.photos/250?image=9',
+          //           fit: BoxFit.cover,
+          //         ),
+          //       ]),
+
           IndexedStack(
             index: _currentPosition,
-            children:
-                ls
-                    .map(
-                      (e) => Container(
-                        height: screeSize.height / 2 + 50,
-                        constraints: BoxConstraints.loose(Size.infinite),
-                        child: Image.asset(
-                          e.bigPix,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    )
-                    .toList(),
+            children: _propertyDetails.photos
+                .map(
+                  (e) => Container(
+                    height: screeSize.height / 2 + 50,
+                    constraints: BoxConstraints.loose(Size.infinite),
+                    child:
+                        // Image.asset(
+                        //   e.bigPix,
+                        //   fit: BoxFit.cover,
+                        // ),
+                        FadeInImage.memoryNetwork(
+                      placeholder: kTransparentImage,
+                      image: (_propertyDetails.photos.isNotEmpty)
+                          ? e.path
+                          : 'https://picsum.photos/250?image=9',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                )
+                .toList(),
           ),
           Container(
             margin: EdgeInsets.fromLTRB(0, 20, 10, 10),
@@ -142,7 +177,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                   ),
                 ),
                 Visibility(
-                  visible: (_currentPosition < (ls.length - 1) ? true : false),
+                  visible: (_currentPosition < (_propertyDetails.photos.length - 1) ? true : false),
                   child: ClipOval(
                     child: Material(
                       color: Colors.white, // button color
@@ -172,8 +207,8 @@ class _PropertyDetailsState extends State<PropertyDetails> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: ls.map((e) {
-                  int indexL = ls.indexOf(e);
+                children: _propertyDetails.photos.map((e) {
+                  int indexL = _propertyDetails.photos.indexOf(e);
                   return GestureDetector(
                     onTap: () {
                       print(indexL);
@@ -192,7 +227,29 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                               ),
                             )
                           : null,
-                      child: Image.asset(e.thumbnail),
+                      child:
+                          //Image.asset(e.path),
+                          //     FadeInImage.memoryNetwork(
+                          //   width: 55,
+                          //   height: 55,
+                          //   placeholder: kTransparentImage,
+                          //   image: (_propertyDetails.photos.isNotEmpty)
+                          //       ? e.path
+                          //       : 'https://picsum.photos/250?image=9',
+                          //   fit: BoxFit.cover,
+                          // ),
+                          Stack(alignment: Alignment.center, children: [
+                        Container(child: CircularProgressIndicator()),
+                        FadeInImage.memoryNetwork(
+                          width: 55,
+                          height: 55,
+                          placeholder: kTransparentImage,
+                          image: (_propertyDetails.photos.isNotEmpty)
+                              ? e.path
+                              : 'https://picsum.photos/250?image=9',
+                          fit: BoxFit.cover,
+                        ),
+                      ]),
                     ),
                   );
                 }).toList(),
@@ -264,7 +321,8 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              '3',
+                              _propertyDetails.property.specifications.noOfRooms
+                                  .toString(),
                               style:
                                   TextStyle(color: Colors.white, fontSize: 15),
                             ),
@@ -329,7 +387,8 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                                   splashColor: Colors.orange, // inkwell color
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.share, size: 25, color: Colors.white),
+                                    child: Icon(Icons.share,
+                                        size: 25, color: Colors.white),
                                   ),
                                   onTap: () {
                                     // Navigator.pushNamed(context, profileRoute);
@@ -352,9 +411,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    _rowCont(
-                        'Location',
-                        '23 Cross, Herbert Layout, Ikoyi, Victoria Island.',
+                    _rowCont('Location', _propertyDetails.property.location,
                         Icons.location_on),
                     Divider(color: Colors.white38, thickness: 1.0),
                     _rowCont('State', 'Lagos State', Icons.pin_drop),

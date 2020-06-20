@@ -7,14 +7,15 @@ import 'dashboard_home.dart';
 
 
 class Dashboard extends StatefulWidget {
+  
   @override
   _DashboardState createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  // static const TextStyle optionStyle =
+  //     TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static List<Widget> _widgetOptions = <Widget>[
      DashboardHome(),
@@ -55,6 +56,7 @@ class _DashboardState extends State<Dashboard> {
           false;
     } else {
        _onItemTapped(0);
+       
     }
   }
   

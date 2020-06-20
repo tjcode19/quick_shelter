@@ -53,11 +53,11 @@ class _LoginState extends State<Login> {
 
   _setLoginPref(bool clearValues) async {
     if (!clearValues) {
-      _sharedPreferenceQS.setData(bool, 'rememberMe', rememberMe);
-      _sharedPreferenceQS.setData(bool, 'Email', _emailController.text);
+      _sharedPreferenceQS.setData('bool', 'rememberMe', rememberMe);
+      _sharedPreferenceQS.setData('String', 'Email', _emailController.text);
     } else {
-      _sharedPreferenceQS.setData(bool, 'rememberMe', rememberMe);
-      _sharedPreferenceQS.setData(bool, 'Email', '');
+      _sharedPreferenceQS.setData('bool', 'rememberMe', rememberMe);
+      _sharedPreferenceQS.setData('String', 'Email', '');
     }
   }
 
@@ -80,7 +80,7 @@ class _LoginState extends State<Login> {
       return;
     }
 
-    
+  rememberMe = (rememberMe == null) ? false : rememberMe;
 
     if (rememberMe) {
       print('Remembered');
@@ -98,9 +98,10 @@ class _LoginState extends State<Login> {
       print('donnned ${value.auth}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.auth) {
-        _sharedPreferenceQS.setData(String, 'accessToken', value.accessToken);
+        _sharedPreferenceQS.setData('String', 'accessToken', value.accessToken);
+        _sharedPreferenceQS.setData('String', 'userFN', value.user.firstName);
         await _resetDetails().runtimeType;                
-        await _getUserProfile();
+        await _getUserProfile().runtimeType;
         Navigator.pushNamed(context, dashboardRoute);
       } else {
         showInSnackBar(value.message);
@@ -110,11 +111,10 @@ class _LoginState extends State<Login> {
   }
 
   _resetDetails(){
-    _sharedPreferenceQS.setData(String, 'userFN', '');
-        _sharedPreferenceQS.setData(String, 'userLN', '');
-        _sharedPreferenceQS.setData(String, 'userPN', '');
-        _sharedPreferenceQS.setData(String, 'userEm', '');
-        _sharedPreferenceQS.setData(bool, 'detailsLoaded', false);
+        _sharedPreferenceQS.setData('String', 'userLN', '');
+        _sharedPreferenceQS.setData('String', 'userPN', '');
+        _sharedPreferenceQS.setData('String', 'userEm', '');
+        _sharedPreferenceQS.setData('bool', 'detailsLoaded', false);
         print('User details cleared');
   }
 
@@ -123,22 +123,13 @@ class _LoginState extends State<Login> {
     var _apiCall = repo.getProfile();
 
     _apiCall.then((value) {
-      print(value);
-      // if(value.code != '200'){
-      //   _sharedPreferenceQS.setData(bool, 'detailsLoaded', false);
-      // }
-      // else{
-        //setState(() {
-        _sharedPreferenceQS.setData(String, 'userFN', value.firstName);
-        _sharedPreferenceQS.setData(String, 'userLN', value.surName);
-        _sharedPreferenceQS.setData(String, 'userPN', value.phoneNumber);
-        _sharedPreferenceQS.setData(String, 'userEm', value.email);
-        _sharedPreferenceQS.setData(bool, 'detailsLoaded', true);
+        _sharedPreferenceQS.setData('String', 'userLN', value.surName);
+        _sharedPreferenceQS.setData('String', 'userPN', value.phoneNumber);
+        _sharedPreferenceQS.setData('String', 'userEm', value.email);
+        _sharedPreferenceQS.setData('bool', 'detailsLoaded', true);
 
-     // });
+        print('User details set');
 
-     // }
-      
     });
 
   }

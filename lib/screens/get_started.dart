@@ -11,7 +11,7 @@ class GetStarted extends StatefulWidget {
 
 class _GetStartedState extends State<GetStarted> {
   Future<bool> _onBackPressed() {
-    exit(0);
+     exit(0);
   }
 
   @override

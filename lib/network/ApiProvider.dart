@@ -75,7 +75,9 @@ class ApiProvider {
   }
 
   Future<Map<String, dynamic>> uploadFile(
-      File image, String url, String fileType) async {   
+      File image, String url, String fileType, String docName, String actionType) async {
+
+    print(url);
 
     await getTokenPref();
     // Find the mime type of the selected file by looking at the header bytes of the file
@@ -83,9 +85,9 @@ class ApiProvider {
          lookupMimeType(image.path, headerBytes: [0xFF, 0xD8]).split('/');
      // Intilize the multipart request
      final imageUploadRequest =
-         http.MultipartRequest('POST', Uri.parse(_baseUrl + url));
+         http.MultipartRequest(actionType, Uri.parse(_baseUrl + url));
      // Attach the file in the request
-     final file = await http.MultipartFile.fromPath('uploadfile', image.path,
+     final file = await http.MultipartFile.fromPath(docName, image.path,
          contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
      imageUploadRequest.fields['type'] = fileType;
      //imageUploadRequest.headers.addAll(headers);
@@ -108,28 +110,17 @@ class ApiProvider {
      }
   }
 
-//   Future<http.Response> createAlbum(String title) {
-//   return http.post(
-//     'https://jsonplaceholder.typicode.com/albums',
-//     headers: <String, String>{
-//       'Content-Type': 'application/json; charset=UTF-8',
-//     },
-//     body: jsonEncode(<String, String>{
-//       'title': title,
-//     }),
-//   );
-// }
 
   dynamic _response(http.Response response) {
     switch (response.statusCode) {
       case 200:
         var responseJson = json.decode(response.body.toString());
-        //print(responseJson);
+        print(responseJson);
         return responseJson;     
 
       default:
          var responseJson = json.decode(response.body.toString());
-        //print(response);
+        print(response);
         return responseJson;
     }
   }

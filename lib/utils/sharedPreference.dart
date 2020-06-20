@@ -19,17 +19,17 @@ class SharedPreferenceQS {
 
   }
 
-  Future<Null> setData(var sharedType, String fieldName, var fieldValue) async {
+  Future<Null> setData(String sharedType, String fieldName, var fieldValue) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     switch(sharedType){
-      case String:
+      case 'String':
          prefs.setString(fieldName, fieldValue);
          break;
-      case int:
+      case 'int':
         prefs.setInt(fieldName, fieldValue);
         break;
-      case bool:
+      case 'bool':
         prefs.setBool(fieldName, fieldValue);
         break;
     }

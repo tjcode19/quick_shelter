@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quick_shelter/colors.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
+import 'package:quick_shelter/widgets/commonUtils.dart';
 import 'package:quick_shelter/widgets/input_field.dart';
 import 'package:quick_shelter/widgets/input_field_multi_line.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
@@ -15,6 +16,9 @@ class DashboardAddProp extends StatefulWidget {
 
 class _DashboardAddPropState extends State<DashboardAddProp> {
   final QuickShelterRepository repo = QuickShelterRepository();
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  
   final _sellingPriceController = TextEditingController();
   final _noOfBedroomsController = TextEditingController();
   final _noOfBathroomsController = TextEditingController();
@@ -25,7 +29,9 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
   final _propDescController = TextEditingController();
   final _propAvailableDateController = TextEditingController();
   final _propAddressController = TextEditingController();
-  final _propCountryController = TextEditingController();
+  //final _propCountryController = TextEditingController();
+
+  
 
   String type = "";
   bool sale = true;
@@ -34,43 +40,64 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
   String stateSelection = "";
 
   void _addProperty() {
+
+    if(_sellingPriceController.text.isEmpty){
+
+      snackBar('value', _scaffoldKey);
+
+    }
+
+
+    showLoadingDialog(context, _keyLoader);
     Map data = {
       'Type': _propertyTypeController.text,
       'Location': _propLocationController.text,
       'Adddress': _propAddressController.text,
       'Description': _propDescController.text,
       'State': _propStateController.text,
-      'Country': _propCountryController.text,
+      'Country': 'Nigeria',
       'LandArea': _propLandAreaController.text,
+      'Price': _sellingPriceController.text,
       "Specifications": {
         "NO_OF_LIVINGROOMS": 2,
-        "NO_OF_ROOMS": _noOfBedroomsController.text,
+        "NO_OF_BEDROOMS": _noOfBedroomsController.text,
+        "NO_OF_BATHROOMS": _noOfBathroomsController,
         "NO_OF_FLOORS": 3,
-        "HAS_SWIMMING_POOL": true
+        "HAS_SWIMMING_POOL": false
       },
       "addListing": true,
       "Listing": {
         "ListingType": "FOR RENT",
         "IS_AVAILABLE": true,
         "MinPeriod": "3",
-        "PeriodUnits": "YEAR"
+        "PeriodUnits": "YEAR",
+        "Price":_sellingPriceController.text
       }
     };
 
-    var _apiCall = repo.addProperty(data);
+   var _apiCall = repo.addProperty(data);
 
-    _apiCall.then((value) {
-      print(value.message);
-      //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.code == '200') {
-        //_sharedPreferenceQS.setData(String, 'accessToken', value.accessToken);
-        //Navigator.pushNamed(context, verifyPhoneRoute);
-        // _settingModalBottomSheet(context);
-      } else {
-        //snackBar('Registration Failed \t ${value.message}', _scaffoldKey);
-      }
-      //snackBar(value.message, _scaffoldKey);
-    });
+   _apiCall.then((value) {
+     print(value.message);
+     Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+     if (value.code == '200') {
+       Navigator.pushNamed(context, addPropertyStep2Route,
+           arguments: value.propertyID);
+
+        //    Navigator.push(
+        //    context,
+        //    MaterialPageRoute(
+        //      builder: (context) => AddPropStep2(
+        //        propertyID: value.propertyID,
+        //      ),
+        //    ),
+        //  );
+     } else {
+       snackBar('Adding or property failed', _scaffoldKey);
+     }
+     //snackBar(value.message, _scaffoldKey);
+   },
+   );
   }
 
   @override
@@ -194,7 +221,11 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
               ),
               const SizedBox(height: 8),
               InputFieldWidget('Selling Price', TextInputType.number, false,
-                  controller: _sellingPriceController),
+                  controller: _sellingPriceController, onChange: (content) {
+                setState(() {
+                  print(content);
+                });
+              }),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -217,7 +248,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                         ),
                         InputFieldWidget(
                           'ex. 3',
-                          TextInputType.text,
+                          TextInputType.number,
                           false,
                           controller: _noOfBedroomsController,
                         ),
@@ -241,7 +272,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                         ),
                         InputFieldWidget(
                           'ex. 2',
-                          TextInputType.text,
+                          TextInputType.number,
                           false,
                           controller: _noOfBathroomsController,
                         ),
@@ -288,26 +319,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 children: <Widget>[
                   Container(
                     width: screeSize.width / 2 - 30,
-                    child:
-                        // DropDownFormField(
-                        //   titleText: '',
-                        //   hintText: 'Select State',
-                        //   value: _myActivity,
-                        //   onSaved: (value) {
-                        //     setState(() {
-                        //       _myActivity = value;
-                        //     });
-                        //   },
-                        //   onChanged: (value) {
-                        //     setState(() {
-                        //       _myActivity = value;
-                        //     });
-                        //   },
-                        //   dataSource: _states,
-                        //   textField: 'display',
-                        //   valueField: 'value',
-                        // ),
-                        InkWell(
+                    child: InkWell(
                       onTap: () {
                         showAlertDialog(context);
                       },
@@ -387,7 +399,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 addPropertyStep2Route,
                 'Continue',
                 true,
-                 action: _addProperty,
+                action: _addProperty,
               ),
               const SizedBox(height: 20),
             ],
@@ -427,8 +439,6 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
     );
 
     setState(() {
-      //stateSelection = dialogVal;
-      print('Hello $dialogVal');
       _propStateController.text = dialogVal;
     });
   }
@@ -437,7 +447,6 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
-      
         context: context,
         initialDate: selectedDate,
         firstDate: DateTime(2020, 1),

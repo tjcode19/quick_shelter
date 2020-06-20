@@ -1,197 +1,291 @@
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/colors.dart';
+import 'package:quick_shelter/models/GetPropertyListingReq.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
+import 'package:quick_shelter/screens/dashboard/file_upload.dart';
 
 import '../../constants.dart';
 
 class AddPropStep3 extends StatefulWidget {
+  final int propertyID;
+
+  const AddPropStep3({Key key, this.propertyID}) : super(key: key);
+
   @override
   _AddPropStep3State createState() => _AddPropStep3State();
 }
 
 class _AddPropStep3State extends State<AddPropStep3> {
-  
+  final QuickShelterRepository repo = QuickShelterRepository();
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+
+  var _propertyListingReq = List<GetPropertyListingReqM>();
+  // Iterable list;
+
+  int selectedItemId;
+  int propertyID;
+
+  Future _getPropertListingReq() async {
+    print('Get Properties');
+
+    print(widget.propertyID);
+
+    // propertyID =  await _sharedPreferenceQS.getSharedPrefs(String, 'propertyID');
+
+    var _apiCall = repo.getPropertyListingReq('FOR SALE');
+
+    await _apiCall.then((value) {
+      print('donnned ${value.getPropertyReqs}');
+      //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (value != null) {
+        // Iterable list = value as Iterable;
+
+        setState(() => {
+              _propertyListingReq = value.getPropertyReqs,
+            });
+      } else {
+        //showInSnackBar(value.message);
+      }
+    });
+    print(_propertyListingReq);
+  }
+
+  @override
+  void initState() {
+    //showLoadingDialog(context, _keyLoader);
+    _getPropertListingReq();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: appSecondaryColor,
-      appBar: AppBar(
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, dashboardRoute);
+        return false;
+      },
+      child: Scaffold(
         backgroundColor: appSecondaryColor,
-        elevation: 0.0,
-        leading: IconButton(
-          color: Colors.white,
-          iconSize: 30.0,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back),
+        appBar: AppBar(
+          backgroundColor: appSecondaryColor,
+          elevation: 0.0,
+          leading: IconButton(
+            color: Colors.white,
+            iconSize: 30.0,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back),
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Container(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text(
-                  'Upload Documents (Optional)',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  'Step 3 of 3',
-                  style: TextStyle(color: Colors.white70, fontSize: 14.0),
-                  textAlign: TextAlign.center,
-                )
-              ]),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(
-                        top: 4,
-                      ),
-                      child: Text(
-                        'Legal Required Documents',
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Upload Documents (Optional)',
                         style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        'Step 3 of 3',
+                        style: TextStyle(color: Colors.white70, fontSize: 14.0),
+                        textAlign: TextAlign.center,
+                      )
+                    ]),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          top: 4,
                         ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Divider(color: Colors.white38, thickness: 1.0),
-              _rowCont('Certificate of occupancy', 'Approved', Icons.check),
-              Divider(color: Colors.white38, thickness: 1.0),
-              _rowCont('Deed of assignment', 'Approved', Icons.check),
-              Divider(color: Colors.white54, thickness: 1.0),
-              _rowCont('Deed of lease', 'Approved', Icons.check),
-              Divider(color: Colors.white54, thickness: 1.0),
-              _rowCont('Deed of Sublease', 'Approved', Icons.clear),
-              Divider(color: Colors.white54, thickness: 1.0),
-              _rowCont('Land Certificate', 'Approved', Icons.remove),
-              Divider(color: Colors.white54, thickness: 1.0),
-              _rowCont('Deed of Mortgate', 'Approved', Icons.remove),
-              Divider(color: Colors.white54, thickness: 1.0),
-              _rowCont('Survey Plans', 'Approved', Icons.remove),
-              Divider(color: Colors.white54, thickness: 1.0),
-              const SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    width: MediaQuery.of(context).size.width / 2 - 40,
-                    margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: OutlineButton(
-                      padding: EdgeInsets.all(10),
-                      color: Colors.white,
-                      highlightedBorderColor: Colors.white,
-                      borderSide: BorderSide(color: appTextColorPrimary2),
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.only(topRight: Radius.circular(15))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
-                            child: Text(
-                              'Skip',
-                              style: TextStyle(
-                                  color: appTextColorPrimary2, fontSize: 15),
-                            ),
+                        child: Text(
+                          'Legal Required Documents',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
                           ),
-                        ],
+                          textAlign: TextAlign.left,
+                        ),
                       ),
-                      onPressed: () {
-                        _settingModalBottomSheet(context);
-                      },
                     ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                // Divider(color: Colors.white38, thickness: 1.0),
+                // _rowCont('Certificate of occupancy', 'Approved', Icons.check),
+                // Divider(color: Colors.white38, thickness: 1.0),
+                // _rowCont('Deed of assignment', 'Approved', Icons.check),
+                // Divider(color: Colors.white54, thickness: 1.0),
+                // _rowCont('Deed of lease', 'Approved', Icons.check),
+                // Divider(color: Colors.white54, thickness: 1.0),
+                // _rowCont('Deed of Sublease', 'Approved', Icons.clear),
+                // Divider(color: Colors.white54, thickness: 1.0),
+                // _rowCont('Land Certificate', 'Approved', Icons.remove),
+                // Divider(color: Colors.white54, thickness: 1.0),
+                // _rowCont('Deed of Mortgate', 'Approved', Icons.remove),
+                // Divider(color: Colors.white54, thickness: 1.0),
+                // _rowCont('Survey Plans', 'Approved', Icons.remove),
+                // Divider(color: Colors.white54, thickness: 1.0),
+
+                //             [for (MapEntry entry in _propertyListingReq.asMap().entries)
+                //   _rowCont(entry.key, entry.value.toString(), Icons.remove)
+                // ],
+                //           ),
+                // ListView.builder(
+                //     scrollDirection: Axis.vertical,
+                //     itemCount: _propertyListingReq.length,
+                //     itemBuilder: _buildItemsForListView,)
+
+                //     // for (var item in _propertyListingReq)
+                //     // //Text(item.name)
+                //     //   _rowCont(item.name, item.description, Icons.remove)
+                //   ,
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10.0),
+                  height: 280.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: _propertyListingReq.length,
+                    itemBuilder: _buildItemsForListView,
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 2 - 30,
-                    margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: RaisedButton(
-                      padding: EdgeInsets.all(10),
-                      highlightElevation: 5.0,
-                      elevation: 3.0,
-                      splashColor: Colors.orange[100],
-                      highlightColor: Colors.orange[100],
-                      color: appColorSecondary,
-                      shape: RoundedRectangleBorder(
-                          //borderRadius: new BorderRadius.circular(10.0),
-                          borderRadius:
-                              BorderRadius.only(topRight: Radius.circular(20))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
-                            child: Text(
-                              'Add Property',
-                              style: TextStyle(
-                                  color: appTextColorPrimary2, fontSize: 15),
+                ),
+                const SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2 - 40,
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      child: OutlineButton(
+                        padding: EdgeInsets.all(10),
+                        color: Colors.white,
+                        highlightedBorderColor: Colors.white,
+                        borderSide: BorderSide(color: appTextColorPrimary2),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(15))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                              child: Text(
+                                'Skip',
+                                style: TextStyle(
+                                    color: appTextColorPrimary2, fontSize: 15),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                        onPressed: () {
+                          _settingModalBottomSheet(context);
+                        },
                       ),
-                      onPressed: () {
-                        //_addProperty();
-                        _settingModalBottomSheet(context);
-                      },
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-            ],
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2 - 30,
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      child: RaisedButton(
+                        padding: EdgeInsets.all(10),
+                        highlightElevation: 5.0,
+                        elevation: 3.0,
+                        splashColor: Colors.orange[100],
+                        highlightColor: Colors.orange[100],
+                        color: appColorSecondary,
+                        shape: RoundedRectangleBorder(
+                            //borderRadius: new BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                              child: Text(
+                                'Add Property',
+                                style: TextStyle(
+                                    color: appTextColorPrimary2, fontSize: 15),
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: () {
+                          //_addProperty();
+                          _settingModalBottomSheet(context);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  _rowCont(String title, String subTitle, iconNew) {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, fileUploadRoute);
-      },
-      child: Container(
-        margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(
-                title,
-                style: TextStyle(color: appTextColorPrimary2),
-              ),
-              Text(
-                subTitle,
-                style: TextStyle(color: appTextColorPrimary2),
-              ),
-            ]),
-            Icon(
-              iconNew,
-              color: appTextColorPrimary2,
-            )
-          ],
-        ),
-      ),
-    );
+  Widget _buildItemsForListView(BuildContext context, int index) {
+    return _rowCont(index);
   }
+
+  Widget _rowCont(int index) => InkWell(
+        onTap: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FileUpload(
+                docType: _propertyListingReq[index].name,
+                docTypeId: index,
+                propertyID: widget.propertyID,
+              ),
+            ),
+          );
+
+          setState(() {
+            _propertyListingReq[result['id']].status = result['status'];
+
+            print('Hello ${result['status']}');
+          });
+        },
+        child: Container(
+          margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(
+                  _propertyListingReq[index].name,
+                  style: TextStyle(color: appTextColorPrimary2),
+                ),
+                Text(
+                  _propertyListingReq[index].description,
+                  style: TextStyle(color: appTextColorPrimary2),
+                ),
+              ]),
+              Icon(
+                (_propertyListingReq[index].status) ? Icons.check : Icons.close,
+                color: appTextColorPrimary2,
+              )
+            ],
+          ),
+        ),
+      );
 
   void _settingModalBottomSheet(context) {
     showModalBottomSheet(

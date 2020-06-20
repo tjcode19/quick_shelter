@@ -27,6 +27,9 @@ class ListingM {
   final String minPeriod;
   final String periodUnits;
   final String listingDate;
+  final bool isAvailable;
+  final bool isPublished;
+  final int price;
   final PropertyM property;
   final List<Photos> photos;
 
@@ -36,7 +39,11 @@ class ListingM {
       this.minPeriod,
       this.periodUnits,
       this.listingDate,
-      this.property, this.photos});
+      this.property, 
+      this.isAvailable,
+      this.price,
+      this.isPublished,
+      this.photos});
 
   factory ListingM.fromJson(Map<String, dynamic> json) {
      var list = json['Photos'] as List;
@@ -49,6 +56,9 @@ class ListingM {
         minPeriod: json['MinPeriod'],
         periodUnits: json['PeriodUnits'],
         listingDate: json['ListingDate'],
+        isAvailable: json['IS_AVAILABLE'],
+        isPublished: json['IS_PUBLISHED'],
+        price: json['Price'],
         property: PropertyM.fromJson(json['Property']),
         photos: photoObj );
   }
@@ -101,5 +111,49 @@ class SpecificationsM {
       noOfFloors: json['NO_OF_FLOORS'],
       hasSwimmingPool: json['HAS_SWIMMING_POOL'],
     );
+  }
+}
+
+
+class Listing {
+  final String listingType;
+  final bool availableFrom;
+  final String minPeriod;
+  final String periodUnits;
+  final String listingDate;
+  final bool isAvailable;
+  final bool isPublished;
+  final int price;
+  final PropertyM property;
+  final List<Photos> photos;
+
+  Listing(
+      {this.listingType,
+      this.availableFrom,
+      this.minPeriod,
+      this.periodUnits,
+      this.listingDate,
+      this.property, 
+      this.isAvailable,
+      this.price,
+      this.isPublished,
+      this.photos});
+
+  factory Listing.fromJson(Map<String, dynamic> json) {
+     var list = json['Photos'] as List;
+    print(list.runtimeType);
+    List<Photos> photoObj = list.map((i) => Photos.fromJson(i)).toList();  
+
+    return Listing(
+        listingType: json['ListingType'],
+        availableFrom: json['AvailableFrom'],
+        minPeriod: json['MinPeriod'],
+        periodUnits: json['PeriodUnits'],
+        listingDate: json['ListingDate'],
+        isAvailable: json['IS_AVAILABLE'],
+        isPublished: json['IS_PUBLISHED'],
+        price: json['Price'],
+        property: PropertyM.fromJson(json['Property']),
+        photos: photoObj );
   }
 }

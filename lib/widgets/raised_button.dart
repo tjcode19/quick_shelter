@@ -7,6 +7,8 @@ class RaisedButtonWidget extends StatelessWidget {
   Color btnTextColor;
   double fnSize;
   final Function action;
+  final popValue;
+  final argsPushName;
 
   bool isBtnColorPrimary;
   bool isValidatable;
@@ -14,7 +16,7 @@ class RaisedButtonWidget extends StatelessWidget {
   
 
   RaisedButtonWidget(this.routeName, this.btnLabel, this.isBtnColorPrimary,
-      {this.fnSize: 17, this.action, this.isValidatable:false, this.formKey});
+      {this.fnSize: 17, this.action, this.isValidatable:false, this.formKey, this.popValue, this.argsPushName});
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +71,16 @@ class RaisedButtonWidget extends StatelessWidget {
             
           } else if (routeName != 'pop') {
             print('pressed 2');
-            Navigator.pushNamed(context, routeName);
+            if(argsPushName!=null){
+              Navigator.pushNamed(context, routeName, arguments: argsPushName);
+            }
+            else{
+              Navigator.pushNamed(context, routeName);
+            }
+            
           } else {
             print('pressed 3');
-            Navigator.pop(context);
+            Navigator.pop(context, popValue);
           }
         },
       ),

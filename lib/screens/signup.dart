@@ -26,6 +26,8 @@ class _SignUpState extends State<SignUp> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
+  String password;
+
   void _signUpFunc() {
     print('Sign Up Funtion');
     final userFirstName = _firstNameController.text;
@@ -44,19 +46,27 @@ class _SignUpState extends State<SignUp> {
     var _signUp = repo.signUpData(
         userFirstName, userLastName, userPhone, userEmail, userPassword);
 
-        _sharedPreferenceQS.setData(String, 'surName', userLastName);
+        _sharedPreferenceQS.setData('String', 'surName', userLastName);
 
     _signUp.then((value) {
       print(value.message);
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.accessToken != null && value.code=='200') {
-        _sharedPreferenceQS.setData(String, 'accessToken', value.accessToken);
+        _sharedPreferenceQS.setData('String', 'accessToken', value.accessToken);
         _getUserProfile();
         Navigator.pushNamed(context, verifyPhoneRoute);
       } else {
         snackBar('Registration Failed \n ${value.message}', _scaffoldKey);
       }
       //snackBar(value.message, _scaffoldKey);
+    });
+  }
+
+  _setValue(String _passVal){
+    setState(() {
+
+      password = _passVal;
+      
     });
   }
 
@@ -71,11 +81,11 @@ class _SignUpState extends State<SignUp> {
       // }
       // else{
         //setState(() {
-        _sharedPreferenceQS.setData(String, 'userFN', value.firstName);
-        _sharedPreferenceQS.setData(String, 'userLN', value.surName);
-        _sharedPreferenceQS.setData(String, 'userPN', value.phoneNumber);
-        _sharedPreferenceQS.setData(String, 'userEm', value.email);
-        _sharedPreferenceQS.setData(bool, 'detailsLoaded', true);
+        _sharedPreferenceQS.setData('String', 'userFN', value.firstName);
+        _sharedPreferenceQS.setData('String', 'userLN', value.surName);
+        _sharedPreferenceQS.setData('String', 'userPN', value.phoneNumber);
+        _sharedPreferenceQS.setData('String', 'userEm', value.email);
+        _sharedPreferenceQS.setData('bool', 'detailsLoaded', true);
 
      // });
 
@@ -87,6 +97,11 @@ class _SignUpState extends State<SignUp> {
 
   Future<bool> _onBackPressed() {
     return Navigator.popAndPushNamed(context, getStartedRoute);
+  }
+
+  void dispose() {
+    _firstNameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -188,6 +203,11 @@ class _SignUpState extends State<SignUp> {
                             true,
                             controller: _passwordController,
                             errorMsg: 'Password can not be empty',
+                            onChange: (content){
+                              setState(() {
+                                password = content;
+                              });
+                              }
                           ),
                           const SizedBox(height: 20),
                           InputFieldWidget(
@@ -196,6 +216,7 @@ class _SignUpState extends State<SignUp> {
                             true,
                             controller: _confirmPasswordController,
                             errorMsg: 'Password does not match',
+                            cPassword: password,
                           ),
                           const SizedBox(height: 30),
                           RaisedButtonWidget(

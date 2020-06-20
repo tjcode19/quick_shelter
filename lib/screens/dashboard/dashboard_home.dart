@@ -4,7 +4,7 @@ import 'package:quick_shelter/constants.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/utils/sharedPreference.dart';
-import 'package:quick_shelter/widgets/commonUtils.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../../colors.dart';
 
@@ -16,7 +16,6 @@ class DashboardHome extends StatefulWidget {
 class _DashboardHomeState extends State<DashboardHome> {
   SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
   final QuickShelterRepository repo = QuickShelterRepository();
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   ScrollController _controller;
   String message = "";
   bool _isVisible = true;
@@ -39,8 +38,10 @@ class _DashboardHomeState extends State<DashboardHome> {
     }
   }
 
-  _getUserProfile() async {
+  Future _getUserProfile() async {
     _prefUserFN = await _sharedPreferenceQS.getSharedPrefs(String, 'userFN');
+
+    print('Where are you: $_prefUserFN');
 
     setState(() {
       _prefUserFN = _prefUserFN;
@@ -68,8 +69,8 @@ class _DashboardHomeState extends State<DashboardHome> {
   void initState() {
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
-    _getUserProfile();
-    _getAllProperties();
+     _getUserProfile();
+     _getAllProperties();
 
     super.initState();
   }
@@ -111,7 +112,7 @@ class _DashboardHomeState extends State<DashboardHome> {
             style: TextStyle(fontSize: 16, color: appTextColorPrimary),
             children: <TextSpan>[
               TextSpan(
-                text: 'Tolulope',
+                text: '$_prefUserFN',
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 16,
@@ -157,14 +158,6 @@ class _DashboardHomeState extends State<DashboardHome> {
                 margin: EdgeInsets.symmetric(vertical: 10.0),
                 height: 280.0,
                 child:
-                    // ListView(
-                    //   scrollDirection: Axis.horizontal,
-                    //   children: <Widget>[
-                    //     _propertItem(),
-                    //     _propertItem(),
-                    //     _propertItem(),
-                    //   ],
-                    // ),
                     ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: _propertyList.length,
@@ -192,11 +185,8 @@ class _DashboardHomeState extends State<DashboardHome> {
                         childAspectRatio: (itemWidth / itemHeight),
                         mainAxisSpacing: 1,
                         crossAxisCount: 2,
-                        children: <Widget>[
-                          // _propertItem(),
-                          // _propertItem(),
-                          // _propertItem(),
-                        ],
+                        children: 
+                          _propertyList.map((item) => _propertItem(_propertyList.indexOf(item))).toList(),
                       ),
                     ),
                   ],
@@ -243,19 +233,36 @@ class _DashboardHomeState extends State<DashboardHome> {
           splashColor: Colors.orange.withAlpha(30),
           onTap: () {
             print('Card tapped.');
-            Navigator.pushNamed(context, propDetailsRoute);
+            Navigator.pushNamed(context, propDetailsRoute, arguments: _propertyList[index]);
           },
           child: Container(
             margin: EdgeInsets.all(2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Image.asset(
-                  'assets/images/prop.png',
-                  width: 175,
-                  height: 123,
-                  fit: BoxFit.cover,
-                ),
+                // Image.asset(
+                //   'assets/images/prop.png',
+                //   width: 175,
+                //   height: 123,
+                //   fit: BoxFit.cover,
+                // ),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                  Container(
+                    child: CircularProgressIndicator()),
+                  FadeInImage.memoryNetwork(
+                    width: 175,
+                    height: 123,
+                    placeholder: kTransparentImage,
+                    image: (_propertyList[index].photos.isNotEmpty)
+                        ? _propertyList[index].photos[0].path
+                        : 'https://picsum.photos/250?image=9',
+                    fit: BoxFit.cover,
+                  ),
+                ]),
+                
+
                 Container(
                   width: 172,
                   padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -264,7 +271,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                     children: <Widget>[
                       const SizedBox(height: 10),
                       Text(
-                        'N55,000,000',
+                        'N${_propertyList[index].price}',
                         style:
                             TextStyle(fontSize: 15, color: appTextColorPrimary),
                       ),
@@ -278,7 +285,6 @@ class _DashboardHomeState extends State<DashboardHome> {
                       Container(
                         height: 35.0,
                         child: Row(
-                          
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Container(
@@ -304,7 +310,6 @@ class _DashboardHomeState extends State<DashboardHome> {
                       ),
                       const SizedBox(height: 15),
                       Row(
-                        
                         children: <Widget>[
                           SvgPicture.asset(
                             'assets/icons/bed.svg',
@@ -317,7 +322,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                                               .specifications
                                               .noOfRooms ==
                                           null)
-                                      ? 'NA' 
+                                      ? 'NA'
                                       : _propertyList[index]
                                           .property
                                           .specifications

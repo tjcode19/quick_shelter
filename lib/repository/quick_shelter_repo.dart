@@ -144,7 +144,7 @@ class QuickShelterRepository {
 
   Future<GetAllProperties> getAllProperties() async {
     final response = await _provider.post(
-      "search-property",
+      "search-listing",
       <String, String>{
         'ListingType': 'FOR RENT',
       },
@@ -175,20 +175,23 @@ class QuickShelterRepository {
   }
 
   Future<UploadIdResponse> uploadId(File file, String fileType) async {
+    print('Maind');
     final response =
-        await _provider.uploadFile(file, "user/update/national-id", fileType);
+        await _provider.uploadFile(file, "user/update/national-id", fileType, 'uploadfile', 'POST');
     return UploadIdResponse.fromJson(response);
   }
 
-  Future<UploadIdResponse> uploadPropDocs(File file, String fileType) async {
+  Future<UploadIdResponse> uploadPropDocs(File file, String fileType, String docName, int propertyId) async {
+    print('Main2$propertyId');
     final response =
-        await _provider.uploadFile(file, "property/property-documents/:propertyID", fileType);
+        await _provider.uploadFile(file, "property/documents/$propertyId", fileType, docName, 'PUT');
     return UploadIdResponse.fromJson(response);
   }
 
-  Future<UploadIdResponse> uploadPropPictures(File file, String fileType) async {
+  Future<UploadIdResponse> uploadPropPictures(File file, String fileType, String docName, int propertyId) async {
+    print('Main$propertyId');
     final response =
-        await _provider.uploadFile(file, "property/property-photos/:propertyID", fileType);
+        await _provider.uploadFile(file, "property/photos/$propertyId", fileType, docName, 'PUT');
     return UploadIdResponse.fromJson(response);
   }
 
