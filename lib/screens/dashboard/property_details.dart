@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
+import 'package:quick_shelter/utils/commonFunctions.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -18,27 +19,27 @@ class _PropertyDetailsState extends State<PropertyDetails> {
   bool rememberMe = false;
   ListingM _propertyDetails;
 
-  List<Object> imageList = [
-    {
-      'thumbnail': 'assets/images/1_thumbnail.png',
-      'big': 'assets/images/1_big.png',
-    },
-    {
-      'thumbnail': 'assets/images/1_thumbnail.png',
-      'big': 'assets/images/1_big.png',
-    },
-    {
-      'thumbnail': 'assets/images/1_thumbnail.png',
-      'big': 'assets/images/1_big.png',
-    }
-  ];
+  // List<Object> imageList = [
+  //   {
+  //     'thumbnail': 'assets/images/1_thumbnail.png',
+  //     'big': 'assets/images/1_big.png',
+  //   },
+  //   {
+  //     'thumbnail': 'assets/images/1_thumbnail.png',
+  //     'big': 'assets/images/1_big.png',
+  //   },
+  //   {
+  //     'thumbnail': 'assets/images/1_thumbnail.png',
+  //     'big': 'assets/images/1_big.png',
+  //   }
+  // ];
 
-  var ls = [
-    ImageList('assets/images/1_thumbnail.png', 'assets/images/1_big.png'),
-    ImageList('assets/images/2_thumbnail.png', 'assets/images/2_big.png'),
-    ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
-    ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
-  ];
+  // var ls = [
+  //   ImageList('assets/images/1_thumbnail.png', 'assets/images/1_big.png'),
+  //   ImageList('assets/images/2_thumbnail.png', 'assets/images/2_big.png'),
+  //   ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
+  //   ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
+  // ];
 
   int imageNum = 0;
   int _currentPosition = 0;
@@ -106,10 +107,6 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                     height: screeSize.height / 2 + 50,
                     constraints: BoxConstraints.loose(Size.infinite),
                     child:
-                        // Image.asset(
-                        //   e.bigPix,
-                        //   fit: BoxFit.cover,
-                        // ),
                         FadeInImage.memoryNetwork(
                       placeholder: kTransparentImage,
                       image: (_propertyDetails.photos.isNotEmpty)
@@ -145,7 +142,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(6)),
                     ),
-                    child: Text('For Sale')),
+                    child: Text(_propertyDetails.listingType)),
               ],
             ),
           ),
@@ -293,7 +290,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                               fontSize: 22, color: appTextColorPrimary2),
                           children: <TextSpan>[
                             TextSpan(
-                              text: '55,000,000.',
+                              text: formatMoney(_propertyDetails.price.toDouble()).withoutFractionDigits,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
@@ -301,7 +298,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                               ),
                             ),
                             TextSpan(
-                              text: '00',
+                              text: '.00',
                               style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 22,

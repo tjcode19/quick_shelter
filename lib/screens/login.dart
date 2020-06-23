@@ -97,7 +97,7 @@ class _LoginState extends State<Login> {
     _loginRes.then((value) async {
       print('donnned ${value.auth}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.auth) {
+      if (value.code == '200') {
         _sharedPreferenceQS.setData('String', 'accessToken', value.accessToken);
         _sharedPreferenceQS.setData('String', 'userFN', value.user.firstName);
         await _resetDetails().runtimeType;                

@@ -126,7 +126,7 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
                       padding: const EdgeInsets.all(0),
                       sliver: SliverGrid.count(
                         crossAxisSpacing: 5,
-                        childAspectRatio: ( (itemWidth+10) / (itemHeight)),
+                        childAspectRatio: ( (itemWidth) / (itemHeight)),
                         mainAxisSpacing: 1,
                         crossAxisCount: 2,
                         children: <Widget>[

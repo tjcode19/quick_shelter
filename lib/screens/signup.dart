@@ -51,7 +51,7 @@ class _SignUpState extends State<SignUp> {
     _signUp.then((value) {
       print(value.message);
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.accessToken != null && value.code=='200') {
+      if (value.code =='200') {
         _sharedPreferenceQS.setData('String', 'accessToken', value.accessToken);
         _getUserProfile();
         Navigator.pushNamed(context, verifyPhoneRoute);
@@ -202,6 +202,7 @@ class _SignUpState extends State<SignUp> {
                             TextInputType.text,
                             true,
                             controller: _passwordController,
+                            capitalizationType: TextCapitalization.none,
                             errorMsg: 'Password can not be empty',
                             onChange: (content){
                               setState(() {
@@ -215,6 +216,7 @@ class _SignUpState extends State<SignUp> {
                             TextInputType.text,
                             true,
                             controller: _confirmPasswordController,
+                            capitalizationType: TextCapitalization.none,
                             errorMsg: 'Password does not match',
                             cPassword: password,
                           ),

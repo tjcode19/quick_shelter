@@ -67,7 +67,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case searchPropRoute:
       return MaterialPageRoute(builder: (context) => SearchProp());
     case searchResultRoute:
-      return MaterialPageRoute(builder: (context) => SearchResult());
+    var propertyList = settings.arguments;
+      return MaterialPageRoute(builder: (context) => SearchResult(propertyList: propertyList,));
     case fileUploadRoute:
       return MaterialPageRoute(builder: (context) => FileUpload());
     // case loanRequestTwoRoute:

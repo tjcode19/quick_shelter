@@ -5,6 +5,7 @@ import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/utils/sharedPreference.dart';
 import 'package:transparent_image/transparent_image.dart';
+import '../../utils/commonFunctions.dart';
 
 import '../../colors.dart';
 
@@ -21,6 +22,7 @@ class _DashboardHomeState extends State<DashboardHome> {
   bool _isVisible = true;
   String _prefUserFN;
   List<ListingM> _propertyList = List<ListingM>();
+  bool _isPropLoaded = false;
 
   _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
@@ -58,19 +60,22 @@ class _DashboardHomeState extends State<DashboardHome> {
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.data.listing != null) {
         setState(() => {_propertyList = value.data.listing});
+        _isPropLoaded = true;
       } else {
         //showInSnackBar(value.message);
+        print('Failed to load properties');
       }
     });
-    print('######');
   }
 
   @override
   void initState() {
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
-     _getUserProfile();
-     _getAllProperties();
+    _getUserProfile();
+    if (!_isPropLoaded) {
+      _getAllProperties();
+    }
 
     super.initState();
   }
@@ -157,8 +162,7 @@ class _DashboardHomeState extends State<DashboardHome> {
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10.0),
                 height: 280.0,
-                child:
-                    ListView.builder(
+                child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: _propertyList.length,
                   itemBuilder: _buildItemsForListView,
@@ -185,8 +189,10 @@ class _DashboardHomeState extends State<DashboardHome> {
                         childAspectRatio: (itemWidth / itemHeight),
                         mainAxisSpacing: 1,
                         crossAxisCount: 2,
-                        children: 
-                          _propertyList.map((item) => _propertItem(_propertyList.indexOf(item))).toList(),
+                        children: _propertyList
+                            .map((item) =>
+                                _propertItem(_propertyList.indexOf(item)))
+                            .toList(),
                       ),
                     ),
                   ],
@@ -233,7 +239,8 @@ class _DashboardHomeState extends State<DashboardHome> {
           splashColor: Colors.orange.withAlpha(30),
           onTap: () {
             print('Card tapped.');
-            Navigator.pushNamed(context, propDetailsRoute, arguments: _propertyList[index]);
+            Navigator.pushNamed(context, propDetailsRoute,
+                arguments: _propertyList[index]);
           },
           child: Container(
             margin: EdgeInsets.all(2),
@@ -246,11 +253,8 @@ class _DashboardHomeState extends State<DashboardHome> {
                 //   height: 123,
                 //   fit: BoxFit.cover,
                 // ),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                  Container(
-                    child: CircularProgressIndicator()),
+                Stack(alignment: Alignment.center, children: [
+                  Container(child: CircularProgressIndicator()),
                   FadeInImage.memoryNetwork(
                     width: 175,
                     height: 123,
@@ -261,7 +265,6 @@ class _DashboardHomeState extends State<DashboardHome> {
                     fit: BoxFit.cover,
                   ),
                 ]),
-                
 
                 Container(
                   width: 172,
@@ -270,10 +273,37 @@ class _DashboardHomeState extends State<DashboardHome> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       const SizedBox(height: 10),
-                      Text(
-                        'N${_propertyList[index].price}',
-                        style:
-                            TextStyle(fontSize: 15, color: appTextColorPrimary),
+                      // Text(
+                      //   'NGN ${_formatMoney(_propertyList[index].price.toDouble()).withoutFractionDigits}',
+                      //   style:
+                      //       TextStyle(fontSize: 15, color: appTextColorPrimary),
+                      // ),
+                      RichText(
+                        text: TextSpan(
+                          text: '₦ ',
+                          style: TextStyle(
+                              fontSize: 13, color: appSecondaryColorLight),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: formatMoney(
+                                      _propertyList[index].price.toDouble())
+                                  .withoutFractionDigits,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: appTextColorPrimary,
+                              ),
+                            ),
+                            TextSpan(
+                              text: '.00',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 13,
+                                color: appSecondaryColorLight,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 5),
                       Text(
@@ -281,6 +311,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                         style:
                             TextStyle(fontSize: 13, color: appTextColorPrimary),
                       ),
+
                       const SizedBox(height: 10),
                       Container(
                         height: 35.0,

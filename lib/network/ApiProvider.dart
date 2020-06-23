@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:http_parser/http_parser.dart';
 import 'package:quick_shelter/utils/sharedPreference.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'CustomException.dart';
 

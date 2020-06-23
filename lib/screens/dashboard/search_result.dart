@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:quick_shelter/models/GetAllProperties.dart';
+import 'package:quick_shelter/utils/commonFunctions.dart';
 
 import '../../colors.dart';
 import '../../constants.dart';
 
 class SearchResult extends StatefulWidget {
+  final propertyList;
+  const SearchResult({Key key, this.propertyList}) : super(key: key);
+
   @override
   _SearchResultState createState() => _SearchResultState();
 }
 
 class _SearchResultState extends State<SearchResult> {
+
+List<ListingM> searchedPropList;  
+  
+  @override
+  void initState() {
+    super.initState();
+    searchedPropList = widget.propertyList;
+  }
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -49,7 +62,7 @@ class _SearchResultState extends State<SearchResult> {
                           TextStyle(color: appSecondaryColor, fontSize: 20.0),
                     ),
                     Text(
-                      '10 results',
+                      '${searchedPropList.length} results',
                       style:
                           TextStyle(color: appColorSecondary, fontSize: 17.0),
                     ),
@@ -75,7 +88,7 @@ class _SearchResultState extends State<SearchResult> {
                         child: Container(
                           padding: EdgeInsets.fromLTRB(10, 3, 4, 4),
                           child: Text(
-                            'For Rent',
+                            searchedPropList[0].listingType,
                             style: TextStyle(
                                 color: appColorSecondary, fontSize: 13),
                           ),
@@ -101,7 +114,7 @@ class _SearchResultState extends State<SearchResult> {
               ),
               const SizedBox(height: 10),
               Container(
-                height: 400,
+                height: size.height,
                 child: CustomScrollView(
                   primary: false,
                   slivers: <Widget>[
@@ -112,10 +125,14 @@ class _SearchResultState extends State<SearchResult> {
                         childAspectRatio: ((itemWidth + 10) / (itemHeight)),
                         mainAxisSpacing: 1,
                         crossAxisCount: 2,
-                        children: <Widget>[
-                          _propertItem(context),
-                          _propertItem(context),
-                        ],
+                        children:
+                          searchedPropList.map((e)=>
+                              _propertItem(searchedPropList.indexOf(e), context)).toList(),
+
+                          
+                          //_propertItem(context),
+                          //_propertItem(context),
+                        
                       ),
                     ),
                   ],
@@ -128,7 +145,7 @@ class _SearchResultState extends State<SearchResult> {
     );
   }
 
-  Widget _propertItem(ctxt) {
+  Widget _propertItem(int index, ctxt) {
     return Card(
       elevation: 2.0,
       child: InkWell(
@@ -154,19 +171,39 @@ class _SearchResultState extends State<SearchResult> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const SizedBox(height: 10),
-                    Text(
-                      'N55,000,000',
-                      style:
-                          TextStyle(fontSize: 15, color: appTextColorPrimary),
-                    ),
+                    const SizedBox(height: 10),                    
+                    RichText(
+                        text: TextSpan(
+                          text: '₦ ',
+                          style: TextStyle(
+                              fontSize: 13, color: appSecondaryColorLight),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: formatMoney(searchedPropList[index].price.toDouble()).withoutFractionDigits,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: appTextColorPrimary,
+                              ),
+                            ),
+                            TextSpan(
+                              text: '.00',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 13,
+                                color: appSecondaryColorLight,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     const SizedBox(height: 5),
                     Text(
                       'Studio Apartment',
                       style:
                           TextStyle(fontSize: 13, color: appTextColorPrimary),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -181,7 +218,7 @@ class _SearchResultState extends State<SearchResult> {
                         Container(
                           child: Expanded(
                             child: Text(
-                              '23 Cross, HRBR layout, bangalore',
+                              searchedPropList[index].property.location,
                               softWrap: true,
                               style: TextStyle(
                                   fontSize: 10, color: Colors.black87),

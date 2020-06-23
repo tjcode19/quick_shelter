@@ -33,7 +33,7 @@ class InputFieldWidget extends StatelessWidget {
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,
           border: new OutlineInputBorder(
-            borderRadius: new BorderRadius.only(topRight: Radius.circular(20)),
+            borderRadius: new BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(4)),
             borderSide: new BorderSide(color: Colors.white, width: 2.0),
           ),
           focusedBorder: new OutlineInputBorder(

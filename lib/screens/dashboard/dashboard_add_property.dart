@@ -17,8 +17,8 @@ class DashboardAddProp extends StatefulWidget {
 class _DashboardAddPropState extends State<DashboardAddProp> {
   final QuickShelterRepository repo = QuickShelterRepository();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   final _sellingPriceController = TextEditingController();
   final _noOfBedroomsController = TextEditingController();
   final _noOfBathroomsController = TextEditingController();
@@ -31,22 +31,17 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
   final _propAddressController = TextEditingController();
   //final _propCountryController = TextEditingController();
 
-  
-
-  String type = "";
+  String listingType = "";
   bool sale = true;
   bool rent = false;
 
   String stateSelection = "";
 
   void _addProperty() {
-
-    if(_sellingPriceController.text.isEmpty){
-
-      snackBar('value', _scaffoldKey);
-
+    if (_sellingPriceController.text.isEmpty) {
+      snackBar('Please fill all fields', _scaffoldKey);
+      return;
     }
-
 
     showLoadingDialog(context, _keyLoader);
     Map data = {
@@ -67,42 +62,33 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
       },
       "addListing": true,
       "Listing": {
-        "ListingType": "FOR RENT",
+        "ListingType": listingType,
         "IS_AVAILABLE": true,
         "MinPeriod": "3",
         "PeriodUnits": "YEAR",
-        "Price":_sellingPriceController.text
+        "Price": _sellingPriceController.text
       }
     };
 
-   var _apiCall = repo.addProperty(data);
+    var _apiCall = repo.addProperty(data);
 
-   _apiCall.then((value) {
-     print(value.message);
-     Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-     if (value.code == '200') {
-       Navigator.pushNamed(context, addPropertyStep2Route,
-           arguments: value.propertyID);
-
-        //    Navigator.push(
-        //    context,
-        //    MaterialPageRoute(
-        //      builder: (context) => AddPropStep2(
-        //        propertyID: value.propertyID,
-        //      ),
-        //    ),
-        //  );
-     } else {
-       snackBar('Adding or property failed', _scaffoldKey);
-     }
-     //snackBar(value.message, _scaffoldKey);
-   },
-   );
+    _apiCall.then(
+      (value) {
+        print(value.message);
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        if (value.code == '200') {
+          Navigator.pushNamed(context, addPropertyStep2Route,
+              arguments: value.propertyID);
+        } else {
+          snackBar('Adding or property failed', _scaffoldKey);
+        }
+        //snackBar(value.message, _scaffoldKey);
+      },
+    );
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -111,6 +97,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
     final screeSize = MediaQuery.of(context).size;
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: appSecondaryColor,
       appBar: AppBar(
         backgroundColor: appSecondaryColor,
@@ -165,45 +152,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 ],
               ),
               const SizedBox(height: 20),
-              Stack(
-                children: <Widget>[
-                  Container(
-                    height: 70,
-                  ),
-                  Positioned(
-                    right: 0.0,
-                    top: 0,
-                    child: Container(
-                      width: screeSize.width / 2,
-                      child: OutlineButton(
-                        padding: EdgeInsets.all(11),
-                        color: Colors.white,
-                        highlightedBorderColor: Colors.white,
-                        borderSide: BorderSide(color: appTextColorPrimary2),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(15))),
-                        child: Container(
-                          padding: EdgeInsets.fromLTRB(10, 3, 4, 4),
-                          child: Text(
-                            'For Rent',
-                            style: TextStyle(
-                                color: appTextColorPrimary2, fontSize: 13),
-                          ),
-                        ),
-                        onPressed: () {
-                          sale = !sale;
-                          //showSnackBar("OutlineButton with Shape");
-                        },
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: screeSize.width / 2,
-                    child: RaisedButtonWidget('routeName', 'For Sale', false),
-                  ),
-                ],
-              ),
+              saleRentButton(),
               const SizedBox(height: 20),
               Row(
                 children: [
@@ -458,5 +407,159 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
         String formattedDate = DateFormat('dd MMM, yyyy').format(selectedDate);
         _propAvailableDateController.text = formattedDate;
       });
+  }
+
+  Widget saleRentButton() {
+    final screeSize = MediaQuery.of(context).size;
+    return (sale)
+        ? Stack(
+            children: <Widget>[
+              Container(
+                height: 70,
+              ),
+              Positioned(
+                right: 0.0,
+                top: 0,
+                child: Container(
+                  width: screeSize.width / 2,
+                  child: OutlineButton(
+                    padding: EdgeInsets.all(11),
+                    color: Colors.white,
+                    highlightedBorderColor: Colors.white,
+                    borderSide: BorderSide(color: appTextColorPrimary2),
+                    shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.only(topRight: Radius.circular(15))),
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(10, 3, 4, 4),
+                      child: Text(
+                        'For Rent',
+                        style: TextStyle(
+                            color: appTextColorPrimary2, fontSize: 13),
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        rent = true;
+                        sale = false;
+                        listingType = 'FOR RENT';
+                      });
+                      print(rent);
+                      //showSnackBar("OutlineButton with Shape");
+                    },
+                  ),
+                ),
+              ),
+              Container(
+                width: screeSize.width / 2,
+                child: RaisedButton(
+                  padding: EdgeInsets.all(10),
+                  highlightElevation: 5.0,
+                  elevation: 3.0,
+                  splashColor: Colors.orange[100],
+                  highlightColor: Colors.orange[100],
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      //borderRadius: new BorderRadius.circular(10.0),
+                      borderRadius:
+                          BorderRadius.only(topRight: Radius.circular(20))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                        child: Text(
+                          'For Sale',
+                          style: TextStyle(color: appTextColorPrimary, fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      sale = true;
+                      rent = false;
+                      listingType = 'FOR SALE';
+                    });
+                    print('pressed');
+                  },
+                ),
+              ),
+            ],
+          )
+        : Stack(
+            children: <Widget>[
+              Container(
+                height: 70,
+              ),
+              Container(
+                width: screeSize.width / 2 - 5,
+                child: OutlineButton(
+                  padding: EdgeInsets.all(10),
+                  color: Colors.white,
+                  highlightedBorderColor: Colors.white,
+                  borderSide: BorderSide(color: appTextColorPrimary2),
+                  shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.only(topRight: Radius.circular(15))),
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(10, 3, 4, 4),
+                    child: Text(
+                      'For Sale',
+                      style:
+                          TextStyle(color: appTextColorPrimary2, fontSize: 15),
+                    ),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      sale = true;
+                      rent = false;
+                      listingType = 'FOR SALE';
+                    });
+                    //showSnackBar("OutlineButton with Shape");
+                  },
+                ),
+              ),
+              Positioned(
+                right: 0.0,
+                top: 0,
+                child: Container(
+                  width: screeSize.width / 2,
+                  child: RaisedButton(
+                    padding: EdgeInsets.all(10),
+                    highlightElevation: 5.0,
+                    elevation: 3.0,
+                    splashColor: Colors.orange[100],
+                    highlightColor: Colors.orange[100],
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        //borderRadius: new BorderRadius.circular(10.0),
+                        borderRadius:
+                            BorderRadius.only(topRight: Radius.circular(20))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                          child: Text(
+                            'For Rent',
+                            style: TextStyle(color: appTextColorPrimary, fontSize: 15),
+                          ),
+                        ),
+                      ],
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        sale = false;
+                        rent = true;
+                        listingType = 'FOR RENT';
+                      });
+                      print('pressed');
+                    },
+                  ),
+                ),
+              ),
+            ],
+          );
   }
 }

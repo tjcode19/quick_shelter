@@ -40,7 +40,7 @@ class RaisedButtonWidget extends StatelessWidget {
         color: btnColor,
         shape: RoundedRectangleBorder(
             //borderRadius: new BorderRadius.circular(10.0),
-            borderRadius: BorderRadius.only(topRight: Radius.circular(20))),
+            borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(3))),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
