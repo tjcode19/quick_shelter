@@ -3,9 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/constants.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
+import 'package:quick_shelter/utils/commonFunctions.dart';
 import 'package:quick_shelter/utils/sharedPreference.dart';
 import 'package:transparent_image/transparent_image.dart';
-import '../../utils/commonFunctions.dart';
 
 import '../../colors.dart';
 
@@ -215,7 +215,7 @@ class _DashboardHomeState extends State<DashboardHome> {
           // ),
           // backgroundColor: Theme.of(context).primaryColor,
           label: Text(
-            'New Product',
+            'New Property',
             style: TextStyle(fontSize: 14.0, color: Colors.white),
           ),
           icon: Icon(
@@ -223,7 +223,7 @@ class _DashboardHomeState extends State<DashboardHome> {
             color: Colors.white,
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          tooltip: 'Hello',
+          tooltip: 'Property',
         ),
       ),
     );
@@ -285,9 +285,9 @@ class _DashboardHomeState extends State<DashboardHome> {
                               fontSize: 13, color: appSecondaryColorLight),
                           children: <TextSpan>[
                             TextSpan(
-                              text: formatMoney(
+                              text: (_propertyList[index].price!=null)?formatMoney(
                                       _propertyList[index].price.toDouble())
-                                  .withoutFractionDigits,
+                                  .withoutFractionDigits:'0',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,

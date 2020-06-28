@@ -7,9 +7,9 @@ import 'package:quick_shelter/screens/dashboard/file_upload.dart';
 import '../../constants.dart';
 
 class AddPropStep3 extends StatefulWidget {
-  final int propertyID;
+  final  propertyData;
 
-  const AddPropStep3({Key key, this.propertyID}) : super(key: key);
+  const AddPropStep3({Key key, this.propertyData}) : super(key: key);
 
   @override
   _AddPropStep3State createState() => _AddPropStep3State();
@@ -26,19 +26,14 @@ class _AddPropStep3State extends State<AddPropStep3> {
   int propertyID;
 
   Future _getPropertListingReq() async {
-    print('Get Properties');
+    print('Get Properties Listing Req ${widget.propertyData['listingType']}');
 
-    print(widget.propertyID);
-
-    // propertyID =  await _sharedPreferenceQS.getSharedPrefs(String, 'propertyID');
-
-    var _apiCall = repo.getPropertyListingReq('FOR SALE');
+    var _apiCall = repo.getPropertyListingReq(widget.propertyData['listingType']);
 
     await _apiCall.then((value) {
       print('donnned ${value.getPropertyReqs}');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value != null) {
-        // Iterable list = value as Iterable;
 
         setState(() => {
               _propertyListingReq = value.getPropertyReqs,
@@ -52,10 +47,8 @@ class _AddPropStep3State extends State<AddPropStep3> {
 
   @override
   void initState() {
-    //showLoadingDialog(context, _keyLoader);
-    _getPropertListingReq();
-
     super.initState();
+    _getPropertListingReq();
   }
 
   @override
@@ -99,7 +92,7 @@ class _AddPropStep3State extends State<AddPropStep3> {
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        'Step 3 of 3',
+                        'Step 4 of 4',
                         style: TextStyle(color: Colors.white70, fontSize: 14.0),
                         textAlign: TextAlign.center,
                       )
@@ -252,7 +245,7 @@ class _AddPropStep3State extends State<AddPropStep3> {
               builder: (context) => FileUpload(
                 docType: _propertyListingReq[index].name,
                 docTypeId: index,
-                propertyID: widget.propertyID,
+                propertyID: widget.propertyData['propID'],
               ),
             ),
           );
@@ -398,6 +391,7 @@ class _AddPropStep3State extends State<AddPropStep3> {
                       ),
                       onPressed: () {
                         // _settingModalBottomSheet(context);
+                        Navigator.pushNamed(context, dashboardRoute);
                       },
                     ),
                   ),

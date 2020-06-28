@@ -8,6 +8,7 @@ import 'package:quick_shelter/models/GetProfileResponse.dart';
 import 'package:quick_shelter/models/GetPropertyListingReq.dart';
 import 'package:quick_shelter/models/GetSingleProperty.dart';
 import 'package:quick_shelter/models/GetSinglePropertyListing.dart';
+import 'package:quick_shelter/models/GetUserProperties.dart';
 import 'package:quick_shelter/models/LoginResponse.dart';
 import 'package:quick_shelter/models/SignUpResponse.dart';
 import 'package:quick_shelter/models/UpdateProfileResponse.dart';
@@ -33,6 +34,16 @@ class QuickShelterRepository {
     return LoginResponse.fromJson(response);
   }
 
+  Future<LoginResponse> forgotPassword(String email) async {
+    final response = await _provider.post(
+      "auth/signin",
+      <String, String>{
+        'Email': email,
+      },
+    );
+    return LoginResponse.fromJson(response);
+  }
+
   Future<SignUpResponse> signUpData(String firstname, String surName,
       String phoneNum, String email, String password) async {
     final response = await _provider.post(
@@ -50,7 +61,7 @@ class QuickShelterRepository {
 
   Future<LoginResponse> addSavedProperty(int prodID) async {
     final response = await _provider.post(
-      "save-properties",
+      "save-property",
       <String, dynamic>{
         'propertyID': prodID,
       },
@@ -61,7 +72,6 @@ class QuickShelterRepository {
   Future<AddPropertyResponse> addProperty(Map data) async {
     final response = await _provider.post(
       "add-property",
-     // {}
       <String, Object>{
         'Type': data['Type'],
         'Location': data['Location'],
@@ -71,7 +81,7 @@ class QuickShelterRepository {
         'Country': data['Country'],
         'LandArea': data['LandArea'],
         "Specifications": {
-          "NO_OF_LIVINGROOMS":2,
+          "NO_OF_LIVINGROOMS": 2,
           "NO_OF_ROOMS": 3,
           "NO_OF_FLOORS": 3,
           "HAS_SWIMMING_POOL": true
@@ -87,8 +97,9 @@ class QuickShelterRepository {
     );
     return AddPropertyResponse.fromJson(response);
   }
-  
-  Future<AddPropertyResponse> addPropertyListing(String lType, String availableFrom, String minP, String pUnits) async {
+
+  Future<AddPropertyResponse> addPropertyListing(
+      String lType, String availableFrom, String minP, String pUnits) async {
     final response = await _provider.post(
       "add-listing",
       <String, Object>{
@@ -116,6 +127,16 @@ class QuickShelterRepository {
     return UpdateProfileResponse.fromJson(response);
   }
 
+  Future<UpdateProfileResponse> updatePassword(String password) async {
+    final response = await _provider.post(
+      "user/change-password",
+      <String, String>{
+        'Password': password,
+      },
+    );
+    return UpdateProfileResponse.fromJson(response);
+  }
+
   Future<ValidatePhone> validatePhone(String phoneNum, String code) async {
     final response = await _provider.get("validate-phone/$phoneNum/$code");
     return ValidatePhone.fromJson(response);
@@ -128,18 +149,18 @@ class QuickShelterRepository {
     return GetProfileResponse.fromJson(response);
   }
 
-  Future<GetProfileResponse> getSavedProperties() async {
+  Future<GetAllProperties> getSavedProperties(int page, int noPerPage) async {
     final response = await _provider.get(
-      "saved-properties",
+      "saved-properties/$page/$noPerPage",
     );
-    return GetProfileResponse.fromJson(response);
+    return GetAllProperties.fromJson(response);
   }
 
-  Future<GetProfileResponse> getUserProperties() async {
+  Future<GetUserPropertiesM> getUserProperties() async {
     final response = await _provider.get(
       "user-properties",
     );
-    return GetProfileResponse.fromJson(response);
+    return GetUserPropertiesM.fromJson(response);
   }
 
   Future<GetAllProperties> getAllProperties() async {
@@ -160,7 +181,8 @@ class QuickShelterRepository {
     return GetSingleProperty.fromJson(response);
   }
 
-  Future<GetSinglePropertyListing> getSinglePropertyListing(String listingID) async {
+  Future<GetSinglePropertyListing> getSinglePropertyListing(
+      String listingID) async {
     final response = await _provider.get(
       "get-listing/$listingID",
     );
@@ -176,22 +198,24 @@ class QuickShelterRepository {
 
   Future<UploadIdResponse> uploadId(File file, String fileType) async {
     print('Maind');
-    final response =
-        await _provider.uploadFile(file, "user/update/national-id", fileType, 'uploadfile', 'POST');
+    final response = await _provider.uploadFile(
+        file, "user/update/national-id", fileType, 'uploadfile', 'POST');
     return UploadIdResponse.fromJson(response);
   }
 
-  Future<UploadIdResponse> uploadPropDocs(File file, String fileType, String docName, int propertyId) async {
+  Future<UploadIdResponse> uploadPropDocs(
+      File file, String fileType, String docName, int propertyId) async {
     print('Main2$propertyId');
-    final response =
-        await _provider.uploadFile(file, "property/documents/$propertyId", fileType, docName, 'PUT');
+    final response = await _provider.uploadFile(
+        file, "property/documents/$propertyId", fileType, docName, 'PUT');
     return UploadIdResponse.fromJson(response);
   }
 
-  Future<UploadIdResponse> uploadPropPictures(File file, String fileType, String docName, int propertyId) async {
+  Future<UploadIdResponse> uploadPropPictures(
+      File file, String fileType, String docName, int propertyId) async {
     print('Main$propertyId');
-    final response =
-        await _provider.uploadFile(file, "property/photos/$propertyId", fileType, docName, 'PUT');
+    final response = await _provider.uploadFile(
+        file, "property/photos/$propertyId", fileType, docName, 'PUT');
     return UploadIdResponse.fromJson(response);
   }
 

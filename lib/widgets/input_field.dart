@@ -11,6 +11,7 @@ class InputFieldWidget extends StatelessWidget {
   final bool enableField;
   final String cPassword;
   final Function onChange;
+  final int lines;
 
   InputFieldWidget(this.label, this.keyType, this.isPasswordField,
       {this.capitalizationType: TextCapitalization.words,
@@ -18,12 +19,13 @@ class InputFieldWidget extends StatelessWidget {
       this.color: Colors.white,
       this.errorMsg,
       this.enableField: true,
-      this.cPassword, this.onChange});
+      this.cPassword, this.onChange, this.lines:1});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: TextFormField(
+        maxLines: lines,
         onChanged: onChange,
         enabled: enableField,
         controller: controller,

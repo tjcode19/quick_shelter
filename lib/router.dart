@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:quick_shelter/screens/dashboard/change_password.dart';
+import 'package:quick_shelter/screens/dashboard/dashboard_add_property2.dart';
 import 'package:quick_shelter/screens/dashboard/file_upload.dart';
 import 'package:quick_shelter/screens/dashboard/search_result.dart';
+import 'package:quick_shelter/screens/forgot_password.dart';
 import 'screens/dashboard/add_property_step_2.dart';
 import 'screens/dashboard/add_property_step_3.dart';
 import 'screens/dashboard/basic_info.dart';
@@ -9,6 +12,7 @@ import 'screens/dashboard/dashboard_add_property.dart';
 import 'screens/dashboard/profile.dart';
 import 'screens/dashboard/property_details.dart';
 import 'screens/dashboard/search_property.dart';
+import 'screens/dashboard/transaction_details.dart';
 import 'screens/identity_card.dart';
 import 'screens/dashboard/dashboard.dart';
 import 'screens/reg_complete.dart';
@@ -40,17 +44,20 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => Dashboard());
     case addPropertyRoute:
       return MaterialPageRoute(builder: (context) => DashboardAddProp());
+      case addProperty2Route:
+      var propDetails = settings.arguments;
+      return MaterialPageRoute(builder: (context) => DashboardAddProp2(propData: propDetails,));
     case addPropertyStep2Route:
       var propertyID = settings.arguments;
       return MaterialPageRoute(
           builder: (context) => AddPropStep2(
-                propertyID: propertyID,
+                propertyData: propertyID,
               ));
     case addPropertyStep3Route:
       var propertyID = settings.arguments;
       return MaterialPageRoute(
           builder: (context) => AddPropStep3(
-                propertyID: propertyID,
+                propertyData: propertyID,
               ));
     case profileRoute:
       return MaterialPageRoute(builder: (context) => Profile());
@@ -60,6 +67,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           builder: (context) => PropertyDetails(
                 propertyDetails: propertyDetails,
               ));
+    case transactionDetailsRoute:
+      var propertyDetails = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => TransactionDetails(
+                propertyDetails: propertyDetails,
+              ));
     case collPropDetailsRoute:
       return MaterialPageRoute(builder: (context) => CollPropertyDetails());
     case personalInfoRoute:
@@ -67,20 +80,17 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case searchPropRoute:
       return MaterialPageRoute(builder: (context) => SearchProp());
     case searchResultRoute:
-    var propertyList = settings.arguments;
-      return MaterialPageRoute(builder: (context) => SearchResult(propertyList: propertyList,));
+      var propertyList = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => SearchResult(
+                propertyList: propertyList,
+              ));
     case fileUploadRoute:
       return MaterialPageRoute(builder: (context) => FileUpload());
-    // case loanRequestTwoRoute:
-    //   return MaterialPageRoute(builder: (context) => LoanRequestTwo());
-    // case loanRequestThreeRoute:
-    //   return MaterialPageRoute(builder: (context) => LoanRequestThree());
-    // case loanRequestFourRoute:
-    //   return MaterialPageRoute(builder: (context) => LoanRequestFour());
-    // case loginPassRoute:
-    //   return MaterialPageRoute(builder: (context) => LoginPass());
-    // case loginRoute:
-    //   return MaterialPageRoute(builder: (context) => Login());
+    case changePasswordRoute:
+      return MaterialPageRoute(builder: (context) => ChangePassword());
+    case forgotPasswordRoute:
+      return MaterialPageRoute(builder: (context) => ForgotPassword());
     default:
       return MaterialPageRoute(builder: (context) => WelcomePage());
   }

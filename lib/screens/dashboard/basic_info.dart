@@ -34,10 +34,10 @@ class _BasicInfoState extends State<BasicInfo> {
 
     _apiCall.then((value) {
       print(value);
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.code != '200') {
         snackBar(value.message, _scaffoldKey);
-      } else {
-        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      } else {        
         _settingModalBottomSheet(context);
       }
     });

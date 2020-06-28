@@ -12,8 +12,6 @@ class ApiProvider {
   final String _baseUrl = "https://quick-shelter.herokuapp.com/api/";
   SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
 
-  
-
   String token;
   Map<String, String> headers;
 

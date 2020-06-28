@@ -19,16 +19,11 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  final _sellingPriceController = TextEditingController();
-  final _noOfBedroomsController = TextEditingController();
-  final _noOfBathroomsController = TextEditingController();
-  final _propertyTypeController = TextEditingController();
+  final _propTypeController = TextEditingController();
+  final _propTitleController = TextEditingController();
   final _propStateController = TextEditingController();
   final _propLocationController = TextEditingController();
-  final _propLandAreaController = TextEditingController();
   final _propDescController = TextEditingController();
-  final _propAvailableDateController = TextEditingController();
-  final _propAddressController = TextEditingController();
   //final _propCountryController = TextEditingController();
 
   String listingType = "";
@@ -38,53 +33,16 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
   String stateSelection = "";
 
   void _addProperty() {
-    if (_sellingPriceController.text.isEmpty) {
+    if (_propTitleController.text.isEmpty) {
       snackBar('Please fill all fields', _scaffoldKey);
       return;
     }
+    Map propData = {'propType':_propTypeController.text, 'propTitle': _propTitleController.text, 'propState': _propStateController.text,
+    'propLocation': _propLocationController.text, 'propDesc':_propDescController.text, 'listingType': listingType};
 
-    showLoadingDialog(context, _keyLoader);
-    Map data = {
-      'Type': _propertyTypeController.text,
-      'Location': _propLocationController.text,
-      'Adddress': _propAddressController.text,
-      'Description': _propDescController.text,
-      'State': _propStateController.text,
-      'Country': 'Nigeria',
-      'LandArea': _propLandAreaController.text,
-      'Price': _sellingPriceController.text,
-      "Specifications": {
-        "NO_OF_LIVINGROOMS": 2,
-        "NO_OF_BEDROOMS": _noOfBedroomsController.text,
-        "NO_OF_BATHROOMS": _noOfBathroomsController,
-        "NO_OF_FLOORS": 3,
-        "HAS_SWIMMING_POOL": false
-      },
-      "addListing": true,
-      "Listing": {
-        "ListingType": listingType,
-        "IS_AVAILABLE": true,
-        "MinPeriod": "3",
-        "PeriodUnits": "YEAR",
-        "Price": _sellingPriceController.text
-      }
-    };
+    Navigator.pushNamed(context, addProperty2Route,
+              arguments: propData);
 
-    var _apiCall = repo.addProperty(data);
-
-    _apiCall.then(
-      (value) {
-        print(value.message);
-        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-        if (value.code == '200') {
-          Navigator.pushNamed(context, addPropertyStep2Route,
-              arguments: value.propertyID);
-        } else {
-          snackBar('Adding or property failed', _scaffoldKey);
-        }
-        //snackBar(value.message, _scaffoldKey);
-      },
-    );
   }
 
   @override
@@ -126,12 +84,12 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  'Step 1 of 3',
+                  'Step 1 of 4',
                   style: TextStyle(color: Colors.white, fontSize: 15.0),
                   textAlign: TextAlign.center,
                 )
               ]),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
@@ -153,12 +111,12 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
               ),
               const SizedBox(height: 20),
               saleRentButton(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   Container(
                     child: Text(
-                      'Selling Price',
+                      'Property Title',
                       style: TextStyle(
                         fontSize: 15,
                         color: Colors.white,
@@ -169,67 +127,26 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 ],
               ),
               const SizedBox(height: 8),
-              InputFieldWidget('Selling Price', TextInputType.number, false,
-                  controller: _sellingPriceController, onChange: (content) {
-                setState(() {
-                  print(content);
-                });
-              }),
+              InputFieldWidget('Property Title', TextInputType.text, false,
+                  controller: _propTitleController),
               const SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: screeSize.width / 2 - 30,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          child: Text(
-                            'Bedrooms',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        InputFieldWidget(
-                          'ex. 3',
-                          TextInputType.number,
-                          false,
-                          controller: _noOfBedroomsController,
-                        ),
-                      ],
+                    child: Text(
+                      'Property Type',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.left,
                     ),
                   ),
-                  Container(
-                    width: screeSize.width / 2 - 30,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          child: Text(
-                            'Bathroom',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        InputFieldWidget(
-                          'ex. 2',
-                          TextInputType.number,
-                          false,
-                          controller: _noOfBathroomsController,
-                        ),
-                      ],
-                    ),
-                  )
                 ],
               ),
+              const SizedBox(height: 8),
+              InputFieldWidget('Property Type', TextInputType.text, false,
+                  controller: _propTypeController),
               const SizedBox(height: 20),
               Row(
                 children: [
@@ -246,7 +163,8 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 ],
               ),
               const SizedBox(height: 8),
-              InputFieldMultiLineWidget('Property description', 3),
+              InputFieldWidget('Property Description', TextInputType.text, false,
+                  controller: _propDescController, lines: 3,),
               const SizedBox(height: 20),
               Row(
                 children: [
@@ -293,59 +211,10 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                       )),
                 ],
               ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Container(
-                    child: Text(
-                      'Land Area',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              InputFieldWidget(
-                'ex. 77 km2',
-                TextInputType.text,
-                false,
-                controller: _propLandAreaController,
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Container(
-                    child: Text(
-                      'Available Date',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              InkWell(
-                onTap: () {
-                  _selectDate(context);
-                },
-                child: InputFieldWidget(
-                  '30 May, 2020',
-                  TextInputType.text,
-                  false,
-                  controller: _propAvailableDateController,
-                  enableField: false,
-                ),
-              ),
+              
               const SizedBox(height: 40),
               RaisedButtonWidget(
-                addPropertyStep2Route,
+                addProperty2Route,
                 'Continue',
                 true,
                 action: _addProperty,
@@ -392,22 +261,6 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
     });
   }
 
-  DateTime selectedDate = DateTime.now();
-
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2020, 1),
-        lastDate: DateTime(2025));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-        // DateTime now = DateTime.now();
-        String formattedDate = DateFormat('dd MMM, yyyy').format(selectedDate);
-        _propAvailableDateController.text = formattedDate;
-      });
-  }
 
   Widget saleRentButton() {
     final screeSize = MediaQuery.of(context).size;

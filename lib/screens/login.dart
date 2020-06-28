@@ -38,8 +38,6 @@ class _LoginState extends State<Login> {
   //   });
   // }
 
-
-
   getLoginPref() async {
     _prefEmail = await _sharedPreferenceQS.getSharedPrefs(String, 'Email');
     bool _rem = await _sharedPreferenceQS.getSharedPrefs(bool, 'rememberMe');
@@ -61,7 +59,6 @@ class _LoginState extends State<Login> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -69,8 +66,9 @@ class _LoginState extends State<Login> {
     getLoginPref();
   }
 
-  void _submitData() async{
+  void _submitData() async {
     print('loginRes');
+    FocusScope.of(context).requestFocus(new FocusNode());
 
     final userEmail = _emailController.text;
     final userPassword = _passwordController.text;
@@ -80,7 +78,7 @@ class _LoginState extends State<Login> {
       return;
     }
 
-  rememberMe = (rememberMe == null) ? false : rememberMe;
+    rememberMe = (rememberMe == null) ? false : rememberMe;
 
     if (rememberMe) {
       print('Remembered');
@@ -94,28 +92,31 @@ class _LoginState extends State<Login> {
 
     var _loginRes = repo.loginData(userEmail.trim(), userPassword);
 
-    _loginRes.then((value) async {
+    await _loginRes.then((value) async {
       print('donnned ${value.auth}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.code == '200') {
+      if (value.code == '200' && value.auth == true) {
         _sharedPreferenceQS.setData('String', 'accessToken', value.accessToken);
         _sharedPreferenceQS.setData('String', 'userFN', value.user.firstName);
-        await _resetDetails().runtimeType;                
+        await _resetDetails().runtimeType;
         await _getUserProfile().runtimeType;
         Navigator.pushNamed(context, dashboardRoute);
       } else {
         showInSnackBar(value.message);
       }
+    }, onError: (error) {
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      showInSnackBar("Login Failed");
     });
     print('######');
   }
 
-  _resetDetails(){
-        _sharedPreferenceQS.setData('String', 'userLN', '');
-        _sharedPreferenceQS.setData('String', 'userPN', '');
-        _sharedPreferenceQS.setData('String', 'userEm', '');
-        _sharedPreferenceQS.setData('bool', 'detailsLoaded', false);
-        print('User details cleared');
+  _resetDetails() {
+    _sharedPreferenceQS.setData('String', 'userLN', '');
+    _sharedPreferenceQS.setData('String', 'userPN', '');
+    _sharedPreferenceQS.setData('String', 'userEm', '');
+    _sharedPreferenceQS.setData('bool', 'detailsLoaded', false);
+    print('User details cleared');
   }
 
   _getUserProfile() {
@@ -123,15 +124,13 @@ class _LoginState extends State<Login> {
     var _apiCall = repo.getProfile();
 
     _apiCall.then((value) {
-        _sharedPreferenceQS.setData('String', 'userLN', value.surName);
-        _sharedPreferenceQS.setData('String', 'userPN', value.phoneNumber);
-        _sharedPreferenceQS.setData('String', 'userEm', value.email);
-        _sharedPreferenceQS.setData('bool', 'detailsLoaded', true);
+      _sharedPreferenceQS.setData('String', 'userLN', value.surName);
+      _sharedPreferenceQS.setData('String', 'userPN', value.phoneNumber);
+      _sharedPreferenceQS.setData('String', 'userEm', value.email);
+      _sharedPreferenceQS.setData('bool', 'detailsLoaded', true);
 
-        print('User details set');
-
+      print('User details set');
     });
-
   }
 
   void showInSnackBar(String value) {
@@ -255,9 +254,15 @@ class _LoginState extends State<Login> {
                                 ),
                               ],
                             ),
-                            Text(
-                              'Forgot Password',
-                              style: TextStyle(color: Colors.white),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, forgotPasswordRoute);
+                              },
+                              child: Text(
+                                'Forgot Password',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ],
                         ),

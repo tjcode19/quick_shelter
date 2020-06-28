@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
+import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/utils/commonFunctions.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -16,8 +17,10 @@ class PropertyDetails extends StatefulWidget {
 }
 
 class _PropertyDetailsState extends State<PropertyDetails> {
+  final QuickShelterRepository repo = QuickShelterRepository();
   bool rememberMe = false;
   ListingM _propertyDetails;
+  bool _isSaved = false;
 
   // List<Object> imageList = [
   //   {
@@ -58,6 +61,26 @@ class _PropertyDetailsState extends State<PropertyDetails> {
       }
       print('SetStateLater: $_currentPosition');
     });
+  }
+
+  _saveProperty(){
+    if(_isSaved){
+      var _apiCall = repo.addSavedProperty(_propertyDetails.property.id);
+
+    _apiCall.then((value) async {
+      print('donnned');
+      if (value.code == '200') {
+       // Navigator.pushNamed(context, dashboardRoute);
+      } else {
+        //showInSnackBar(value.message);
+        print('Saving property failed');
+      }
+    });
+
+    }
+    else{
+
+    }
   }
 
   @override
@@ -225,16 +248,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                             )
                           : null,
                       child:
-                          //Image.asset(e.path),
-                          //     FadeInImage.memoryNetwork(
-                          //   width: 55,
-                          //   height: 55,
-                          //   placeholder: kTransparentImage,
-                          //   image: (_propertyDetails.photos.isNotEmpty)
-                          //       ? e.path
-                          //       : 'https://picsum.photos/250?image=9',
-                          //   fit: BoxFit.cover,
-                          // ),
+                          
                           Stack(alignment: Alignment.center, children: [
                         Container(child: CircularProgressIndicator()),
                         FadeInImage.memoryNetwork(
@@ -379,16 +393,20 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                           children: <Widget>[
                             ClipOval(
                               child: Material(
-                                color: appColorSecondary, // button color
+                                color: (_isSaved)?appColorSecondary: Colors.grey, // button color
                                 child: InkWell(
                                   splashColor: Colors.orange, // inkwell color
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.share,
+                                    child: Icon(Icons.favorite,
                                         size: 25, color: Colors.white),
                                   ),
                                   onTap: () {
                                     // Navigator.pushNamed(context, profileRoute);
+                                    setState(() {
+                                      _isSaved =! _isSaved;
+                                      _saveProperty();
+                                    });
                                   },
                                 ),
                               ),

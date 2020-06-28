@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:quick_shelter/constants.dart';
 import 'package:quick_shelter/screens/get_started.dart';
 
 class WelcomePage extends StatelessWidget {

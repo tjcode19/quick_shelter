@@ -4,16 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quick_shelter/colors.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
-import 'package:quick_shelter/utils/sharedPreference.dart';
 import 'package:quick_shelter/widgets/commonUtils.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
 
 import '../../constants.dart';
 
 class AddPropStep2 extends StatefulWidget {
-  final propertyID;
+  final propertyData;
 
-  const AddPropStep2({Key key, this.propertyID}) : super(key: key);
+  const AddPropStep2({Key key, this.propertyData}) : super(key: key);
 
   @override
   _AddPropStep2State createState() => _AddPropStep2State();
@@ -38,14 +37,11 @@ class _AddPropStep2State extends State<AddPropStep2> {
 
     if (_images.isEmpty) {
       snackBar('Please select a file to upload', _scaffoldKey);
-      //return;
+      return;
     }
-    //showLoadingDialog(context, _keyLoader);
-
-    print(widget.propertyID);
 
     var _apiCall =
-        repo.uploadPropPictures(image, '', 'Sitting Area', widget.propertyID);
+        repo.uploadPropPictures(image, '', 'Sitting Area', widget.propertyData['propID']);
 
     print(_apiCall);
 
@@ -124,7 +120,7 @@ class _AddPropStep2State extends State<AddPropStep2> {
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        'Step 2 of 3',
+                        'Step 3 of 4',
                         style: TextStyle(color: Colors.white70, fontSize: 14.0),
                         textAlign: TextAlign.center,
                       )
@@ -187,7 +183,7 @@ class _AddPropStep2State extends State<AddPropStep2> {
                         addPropertyStep3Route,
                         'Continue',
                         true,
-                        argsPushName: widget.propertyID,
+                        argsPushName: widget.propertyData,
                       )
                     : RaisedButtonWidget(
                         addPropertyStep3Route,
@@ -312,7 +308,7 @@ class _AddPropStep2State extends State<AddPropStep2> {
       print(_images);
     });
 
-    Navigator.of(context).pop(widget.propertyID);
+    Navigator.of(context).pop(widget.propertyData['propID']);
 
     //_uploadFile();
   }
@@ -328,9 +324,7 @@ class _AddPropStep2State extends State<AddPropStep2> {
       print(pickedFile.path);
     });
 
-    print(widget.propertyID);
-
-    Navigator.of(context).pop(widget.propertyID);
+    Navigator.of(context).pop(widget.propertyData['propID']);
     //_uploadFile();
   }
 

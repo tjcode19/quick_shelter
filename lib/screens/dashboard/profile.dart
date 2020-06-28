@@ -136,6 +136,49 @@ class Profile extends StatelessWidget {
                 ),
               ),
             ),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, changePasswordRoute);
+              },
+              child: Container(
+                padding: EdgeInsets.fromLTRB(10, 14, 10, 14),
+                margin: EdgeInsets.only(bottom: 10.0, top: 10.0),
+                decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius:
+                        BorderRadius.only(topRight: Radius.circular(10)),
+                    border: Border.all(color: appTextColorPrimary2)),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.lock,
+                              color: appTextColorPrimary,
+                            ),
+                            SizedBox(
+                              width: 5.0,
+                            ),
+                            Text(
+                              'Change Password',
+                              style: TextStyle(
+                                  color: appTextColorPrimary, fontSize: 15),
+                            ),
+                          ],
+                        ),
+                        Icon(
+                          Icons.arrow_drop_down_circle,
+                          color: appTextColorPrimary2,
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
