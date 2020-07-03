@@ -6,6 +6,7 @@ import 'package:quick_shelter/models/AddPropertyResponse.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/models/GetProfileResponse.dart';
 import 'package:quick_shelter/models/GetPropertyListingReq.dart';
+import 'package:quick_shelter/models/GetSavedProperties.dart';
 import 'package:quick_shelter/models/GetSingleProperty.dart';
 import 'package:quick_shelter/models/GetSinglePropertyListing.dart';
 import 'package:quick_shelter/models/GetUserProperties.dart';
@@ -149,18 +150,18 @@ class QuickShelterRepository {
     return GetProfileResponse.fromJson(response);
   }
 
-  Future<GetAllProperties> getSavedProperties(int page, int noPerPage) async {
+  Future<GetSavedPropertiesList> getSavedProperties(var page, var noPerPage) async {
     final response = await _provider.get(
-      "saved-properties/$page/$noPerPage",
+      "saved-listings/$page/$noPerPage",
     );
-    return GetAllProperties.fromJson(response);
+    return GetSavedPropertiesList.fromJson(response);
   }
 
-  Future<GetUserPropertiesM> getUserProperties() async {
+  Future<GetUserPropertiesList> getUserProperties() async {
     final response = await _provider.get(
       "user-properties",
     );
-    return GetUserPropertiesM.fromJson(response);
+    return GetUserPropertiesList.fromJson(response);
   }
 
   Future<GetAllProperties> getAllProperties() async {

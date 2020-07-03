@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:quick_shelter/widgets/raised_button.dart';
+import 'package:quick_shelter/models/GetSavedProperties.dart';
+import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 
 import '../../colors.dart';
 import '../../constants.dart';
@@ -11,9 +12,46 @@ class DashboardCollections extends StatefulWidget {
 }
 
 class _DashboardCollectionsState extends State<DashboardCollections> {
-   String listingType = "";
+  final QuickShelterRepository repo = QuickShelterRepository();
+  List<GetSavedProperties> _propertyList = List<GetSavedProperties>();
+  String listingType = "";
   bool sale = true;
   bool rent = false;
+  
+  ScrollController _controller;
+  String message = "";
+  bool _isVisible = true;
+  String _prefUserFN;
+  
+  bool _isPropLoaded = false;
+
+  void _getSavedProperties() async {
+    print('Get User Properties');
+    //showLoadingDialog(context, _keyLoader);
+    var _apiCall = repo.getSavedProperties('0','10');
+
+    await _apiCall.then((value) {
+      print('donnned $value');
+      //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (value != null) {
+        setState(() => {
+          _propertyList = value.getSavedProps,
+          print(_propertyList[0].listingType)
+        });
+      } else {
+        //showInSnackBar(value.message);
+        print('Failed to load properties');
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getSavedProperties();
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -98,10 +136,12 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
                         childAspectRatio: ((itemWidth) / (itemHeight)),
                         mainAxisSpacing: 1,
                         crossAxisCount: 2,
-                        children: <Widget>[
-                          _propertItem(context),
-                          _propertItem(context),
-                        ],
+                        children: 
+                        _propertyList.map((e) => _propertItem(context)).toList(),
+                        // <Widget>[
+                        //   _propertItem(context),
+                        //   _propertItem(context),
+                        // ],
                       ),
                     ),
                   ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
+import 'package:quick_shelter/models/GetUserProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 
 import '../../colors.dart';
@@ -21,23 +22,25 @@ class _DashboardListingsState extends State<DashboardListings> {
   String message = "";
   bool _isVisible = true;
   String _prefUserFN;
-  List<ListingM> _propertyList = List<ListingM>();
+  List<GetUserProperties> _propertyList = List<GetUserProperties>();
   bool _isPropLoaded = false;
   String listingType = "";
   bool sale = true;
   bool rent = false;
 
-  void _getAllProperties() {
-    print('Get Properties');
+  void _getUserProperties() async {
+    print('Get User Properties');
     //showLoadingDialog(context, _keyLoader);
-    var _apiCall = repo.getAllProperties();
+    var _apiCall = repo.getUserProperties();
 
-    _apiCall.then((value) {
-      print('donnned ${value.data.listing}');
+    await _apiCall.then((value) {
+      print('donnned $value');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.data.listing != null) {
-        setState(() => {_propertyList = value.data.listing});
-        _isPropLoaded = true;
+      if (value != null) {
+        setState(() => {
+          _propertyList = value.getUserProps,
+          print(_propertyList[1].title)
+        });
       } else {
         //showInSnackBar(value.message);
         print('Failed to load properties');
@@ -49,15 +52,13 @@ class _DashboardListingsState extends State<DashboardListings> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    _propertyList = widget.userPropListing;
+    _getUserProperties();
+    //_propertyList = widget.userPropListing;
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
-    /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
     return Scaffold(
@@ -134,11 +135,11 @@ class _DashboardListingsState extends State<DashboardListings> {
                         mainAxisSpacing: 1,
                         crossAxisCount: 2,
                         children: 
-                       // _propertyList.map((e) => _propertItem(context)).toList(),
-                        <Widget>[
-                          _propertItem(context),
-                          _propertItem(context),
-                        ],
+                        _propertyList.map((e) => _propertItem(context)).toList(),
+//                        <Widget>[
+//                          _propertItem(context),
+//                          _propertItem(context),
+//                        ],
                       ),
                     ),
                   ],

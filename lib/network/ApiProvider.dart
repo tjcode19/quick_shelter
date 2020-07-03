@@ -25,8 +25,6 @@ class ApiProvider {
     };
   }
 
-
-
   Future<dynamic> get(String url) async {
     var responseJson;
     await getTokenPref();

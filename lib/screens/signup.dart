@@ -35,7 +35,7 @@ class _SignUpState extends State<SignUp> {
     final userEmail = _emailController.text;
     final userPhone = _phoneController.text;
     final userPassword = _passwordController.text;
-    final confirmPassword = _passwordController.text;
+    //final confirmPassword = _passwordController.text;
 
     if (userEmail.isEmpty || userPassword.isEmpty) {
       snackBar('All fields must be filled', _scaffoldKey);

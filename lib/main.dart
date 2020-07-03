@@ -30,8 +30,6 @@ class MyApp extends StatelessWidget {
         disabledColor: Color.fromRGBO(226, 208, 195, 1),
         
         textTheme: TextTheme(
-          
-          
           button: TextStyle(
             color: Colors.white,
             fontSize: 18.0,
@@ -39,10 +37,8 @@ class MyApp extends StatelessWidget {
           headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
           headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
           bodyText2: TextStyle(fontSize: 14.0, ),
-          bodyText1: TextStyle(fontSize: 15.0, color:Colors.white,),
-        
-        ),
-        
+          bodyText1: TextStyle(fontSize: 15.0, color:Colors.white,),        
+        ),        
       ),
 
       onGenerateRoute: router.generateRoute,

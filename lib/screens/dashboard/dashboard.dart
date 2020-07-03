@@ -18,7 +18,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   final QuickShelterRepository repo = QuickShelterRepository();
-  static GetUserPropertiesM _propertyList; //= List<GetUserPropertiesM>();
+  //static List<GetUserPropertiesList> _propertyList = List<GetUserPropertiesList>();
   int _selectedIndex = 0;
   
 
@@ -31,7 +31,9 @@ class _DashboardState extends State<Dashboard> {
       print('donnned $value');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value != null) {
-        setState(() => {_propertyList = value});
+        setState(() => {
+         // _propertyList = value as List
+        });
         
         // _isPropLoaded = true;
       } else {
@@ -44,7 +46,7 @@ class _DashboardState extends State<Dashboard> {
   static List<Widget> _widgetOptions = <Widget>[
           DashboardHome(),
           DashboardListings(
-            userPropListing: _propertyList,
+            //userPropListing: _propertyList,
           ),
           DashboardCollections(),
           DashboardTransactions(),

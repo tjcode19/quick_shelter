@@ -1,4 +1,73 @@
-class GetUserProperties {
+class GetSavedProperties {
+  int iD;
+  String listingType;
+  var availableFrom;
+  int minPeriod;
+  String periodUnits;
+  var specifications;
+  String listingDate;
+  int price;
+  bool iSAVAILABLE;
+  String createdAt;
+  String updatedAt;
+  int propertyID;
+  Property property;
+
+  GetSavedProperties(
+      {this.iD,
+      this.listingType,
+      this.availableFrom,
+      this.minPeriod,
+      this.periodUnits,
+      this.specifications,
+      this.listingDate,
+      this.price,
+      this.iSAVAILABLE,
+      this.createdAt,
+      this.updatedAt,
+      this.propertyID,
+      this.property});
+
+  GetSavedProperties.fromJson(Map<String, dynamic> json) {
+    iD = json['ID'];
+    listingType = json['ListingType'];
+    availableFrom = json['AvailableFrom'];
+    minPeriod = json['MinPeriod'];
+    periodUnits = json['PeriodUnits'];
+    specifications = json['Specifications'];
+    listingDate = json['ListingDate'];
+    price = json['Price'];
+    iSAVAILABLE = json['IS_AVAILABLE'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    propertyID = json['PropertyID'];
+    property = json['property'] != null
+        ? new Property.fromJson(json['property'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ID'] = this.iD;
+    data['ListingType'] = this.listingType;
+    data['AvailableFrom'] = this.availableFrom;
+    data['MinPeriod'] = this.minPeriod;
+    data['PeriodUnits'] = this.periodUnits;
+    data['Specifications'] = this.specifications;
+    data['ListingDate'] = this.listingDate;
+    data['Price'] = this.price;
+    data['IS_AVAILABLE'] = this.iSAVAILABLE;
+    data['createdAt'] = this.createdAt;
+    data['updatedAt'] = this.updatedAt;
+    data['PropertyID'] = this.propertyID;
+    if (this.property != null) {
+      data['property'] = this.property.toJson();
+    }
+    return data;
+  }
+}
+
+class Property {
   int iD;
   String title;
   String description;
@@ -11,14 +80,13 @@ class GetUserProperties {
   String units;
   Specifications specifications;
   int addedBy;
-  bool iSPUBLISHED;
+  String iSPUBLISHED;
   String addedDate;
   String createdAt;
   String updatedAt;
   List<Photos> photos;
-  List<Listings> listings;
 
-  GetUserProperties(
+  Property(
       {this.iD,
       this.title,
       this.description,
@@ -35,10 +103,9 @@ class GetUserProperties {
       this.addedDate,
       this.createdAt,
       this.updatedAt,
-      this.photos,
-      this.listings});
+      this.photos});
 
-  GetUserProperties.fromJson(Map<String, dynamic> json) {
+  Property.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];
     title = json['Title'];
     description = json['Description'];
@@ -61,12 +128,6 @@ class GetUserProperties {
       photos = new List<Photos>();
       json['Photos'].forEach((v) {
         photos.add(new Photos.fromJson(v));
-      });
-    }
-    if (json['Listings'] != null) {
-      listings = new List<Listings>();
-      json['Listings'].forEach((v) {
-        listings.add(new Listings.fromJson(v));
       });
     }
   }
@@ -94,36 +155,33 @@ class GetUserProperties {
     if (this.photos != null) {
       data['Photos'] = this.photos.map((v) => v.toJson()).toList();
     }
-    if (this.listings != null) {
-      data['Listings'] = this.listings.map((v) => v.toJson()).toList();
-    }
     return data;
   }
 }
 
 class Specifications {
+  int nOOFROOMS;
   int nOOFFLOORS;
-  int nOOFBEDROOMS;
   bool hASSWIMMINGPOOL;
   int nOOFLIVINGROOMS;
 
   Specifications(
-      {this.nOOFFLOORS,
-      this.nOOFBEDROOMS,
+      {this.nOOFROOMS,
+      this.nOOFFLOORS,
       this.hASSWIMMINGPOOL,
       this.nOOFLIVINGROOMS});
 
   Specifications.fromJson(Map<String, dynamic> json) {
+    nOOFROOMS = json['NO_OF_ROOMS'];
     nOOFFLOORS = json['NO_OF_FLOORS'];
-    nOOFBEDROOMS = json['NO_OF_BEDROOMS'];
     hASSWIMMINGPOOL = json['HAS_SWIMMING_POOL'];
     nOOFLIVINGROOMS = json['NO_OF_LIVINGROOMS'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['NO_OF_ROOMS'] = this.nOOFROOMS;
     data['NO_OF_FLOORS'] = this.nOOFFLOORS;
-    data['NO_OF_BEDROOMS'] = this.nOOFBEDROOMS;
     data['HAS_SWIMMING_POOL'] = this.hASSWIMMINGPOOL;
     data['NO_OF_LIVINGROOMS'] = this.nOOFLIVINGROOMS;
     return data;
@@ -137,8 +195,8 @@ class Photos {
   String name;
   String path;
   String description;
-  Null isValid;
-  Null dateAdded;
+  String isValid;
+  String dateAdded;
   String createdAt;
   String updatedAt;
 
@@ -183,79 +241,18 @@ class Photos {
   }
 }
 
-class Listings {
-  int iD;
-  String listingType;
-  Null availableFrom;
-  int minPeriod;
-  String periodUnits;
-  Null specifications;
-  String listingDate;
-  int price;
-  bool iSAVAILABLE;
-  String createdAt;
-  String updatedAt;
-  int propertyID;
+class GetSavedPropertiesList{
+  final List<GetSavedProperties> getSavedProps;
 
-  Listings(
-      {this.iD,
-      this.listingType,
-      this.availableFrom,
-      this.minPeriod,
-      this.periodUnits,
-      this.specifications,
-      this.listingDate,
-      this.price,
-      this.iSAVAILABLE,
-      this.createdAt,
-      this.updatedAt,
-      this.propertyID});
+  GetSavedPropertiesList({this.getSavedProps});
 
-  Listings.fromJson(Map<String, dynamic> json) {
-    iD = json['ID'];
-    listingType = json['ListingType'];
-    availableFrom = json['AvailableFrom'];
-    minPeriod = json['MinPeriod'];
-    periodUnits = json['PeriodUnits'];
-    specifications = json['Specifications'];
-    listingDate = json['ListingDate'];
-    price = json['Price'];
-    iSAVAILABLE = json['IS_AVAILABLE'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    propertyID = json['PropertyID'];
-  }
+  factory GetSavedPropertiesList.fromJson(List<dynamic> parsedJson) {
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ID'] = this.iD;
-    data['ListingType'] = this.listingType;
-    data['AvailableFrom'] = this.availableFrom;
-    data['MinPeriod'] = this.minPeriod;
-    data['PeriodUnits'] = this.periodUnits;
-    data['Specifications'] = this.specifications;
-    data['ListingDate'] = this.listingDate;
-    data['Price'] = this.price;
-    data['IS_AVAILABLE'] = this.iSAVAILABLE;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['PropertyID'] = this.propertyID;
-    return data;
-  }
-}
+    List<GetSavedProperties> getSavedProps = new List<GetSavedProperties>();
+    getSavedProps = parsedJson.map((i)=>GetSavedProperties.fromJson(i)).toList();
 
-class GetUserPropertiesList{
-  final List<GetUserProperties> getUserProps;
-
-  GetUserPropertiesList({this.getUserProps});
-
-  factory GetUserPropertiesList.fromJson(List<dynamic> parsedJson) {
-
-    List<GetUserProperties> getUserProps = new List<GetUserProperties>();
-    getUserProps = parsedJson.map((i)=>GetUserProperties.fromJson(i)).toList();
-
-    return new GetUserPropertiesList(
-       getUserProps: getUserProps,
+    return new GetSavedPropertiesList(
+       getSavedProps: getSavedProps,
     );
   }
 }
