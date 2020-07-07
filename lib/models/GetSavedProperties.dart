@@ -84,7 +84,7 @@ class Property {
   String addedDate;
   String createdAt;
   String updatedAt;
-  List<Photos> photos;
+  List<SavedPropPhotos> photos;
 
   Property(
       {this.iD,
@@ -125,9 +125,9 @@ class Property {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     if (json['Photos'] != null) {
-      photos = new List<Photos>();
+      photos = new List<SavedPropPhotos>();
       json['Photos'].forEach((v) {
-        photos.add(new Photos.fromJson(v));
+        photos.add(new SavedPropPhotos.fromJson(v));
       });
     }
   }
@@ -188,7 +188,7 @@ class Specifications {
   }
 }
 
-class Photos {
+class SavedPropPhotos {
   int iD;
   int refID;
   String type;
@@ -200,7 +200,7 @@ class Photos {
   String createdAt;
   String updatedAt;
 
-  Photos(
+  SavedPropPhotos(
       {this.iD,
       this.refID,
       this.type,
@@ -212,7 +212,7 @@ class Photos {
       this.createdAt,
       this.updatedAt});
 
-  Photos.fromJson(Map<String, dynamic> json) {
+  SavedPropPhotos.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];
     refID = json['RefID'];
     type = json['Type'];

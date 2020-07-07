@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/models/GetSavedProperties.dart';
+import 'package:quick_shelter/models/GetUserProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
+import 'package:quick_shelter/utils/commonFunctions.dart';
+import 'package:quick_shelter/utils/sharedPreference.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../../colors.dart';
 import '../../constants.dart';
@@ -13,31 +17,53 @@ class DashboardCollections extends StatefulWidget {
 
 class _DashboardCollectionsState extends State<DashboardCollections> {
   final QuickShelterRepository repo = QuickShelterRepository();
+  SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
   List<GetSavedProperties> _propertyList = List<GetSavedProperties>();
+  List<GetSavedProperties> _propertyRentList = List<GetSavedProperties>();
+  List<GetSavedProperties> saleList = List<GetSavedProperties>();
+  List<GetSavedProperties> rentList = List<GetSavedProperties>();
   String listingType = "";
   bool sale = true;
   bool rent = false;
-  
-  ScrollController _controller;
-  String message = "";
-  bool _isVisible = true;
   String _prefUserFN;
-  
-  bool _isPropLoaded = false;
+
+  String message = "";
 
   void _getSavedProperties() async {
     print('Get User Properties');
     //showLoadingDialog(context, _keyLoader);
-    var _apiCall = repo.getSavedProperties('0','10');
+    var _apiCall = repo.getSavedProperties('0', '10');
 
     await _apiCall.then((value) {
       print('donnned $value');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value != null) {
+        
+        for (int l = 0; l < value.getSavedProps.length; l++)
+                {
+                  if (value.getSavedProps[l].listingType != 'FOR RENT')
+                    {
+                      saleList.add(value.getSavedProps[l]);
+                      print('${saleList[l].listingType} Sales');
+                    }
+                  else
+                    {
+                      rentList.add(value.getSavedProps[l]);
+                      print('${rentList[l].listingType} Rent');
+                    }
+                }
+                
+
         setState(() => {
-          _propertyList = value.getSavedProps,
-          print(_propertyList[0].listingType)
-        });
+          _propertyList = saleList,
+          _propertyRentList = rentList,
+         if( _propertyList.length < 1){
+           sale = false, rent = true,
+         },
+
+          print(_propertyRentList[0].price)
+              
+            });
       } else {
         //showInSnackBar(value.message);
         print('Failed to load properties');
@@ -45,11 +71,18 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
     });
   }
 
+  Future _getUserProfile() async {
+    _prefUserFN = await _sharedPreferenceQS.getSharedPrefs(String, 'userFN');
+    setState(() {
+      _prefUserFN = _prefUserFN;
+    });
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _getSavedProperties();
+    _getUserProfile();
   }
 
   @override
@@ -98,7 +131,7 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
             style: TextStyle(fontSize: 16, color: appTextColorPrimary),
             children: <TextSpan>[
               TextSpan(
-                text: 'Tolulope',
+                text: '$_prefUserFN',
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 16,
@@ -118,12 +151,14 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
                 alignment: Alignment.topLeft,
                 child: Text(
                   'My Collections',
-                  style: TextStyle(color: appSecondaryColor, fontSize: 20.0, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: appSecondaryColor,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(height: 20),
               saleRentButton(),
-              
               Container(
                 height: 400,
                 child: CustomScrollView(
@@ -136,12 +171,15 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
                         childAspectRatio: ((itemWidth) / (itemHeight)),
                         mainAxisSpacing: 1,
                         crossAxisCount: 2,
-                        children: 
-                        _propertyList.map((e) => _propertItem(context)).toList(),
-                        // <Widget>[
-                        //   _propertItem(context),
-                        //   _propertItem(context),
-                        // ],
+                        children: (sale)
+                            ? _propertyList
+                                .map((e) =>
+                                    _propertItem(_propertyList.indexOf(e)))
+                                .toList()
+                            : _propertyRentList
+                                .map((e) =>
+                                    _propertItem(_propertyRentList.indexOf(e)))
+                                .toList(),
                       ),
                     ),
                   ],
@@ -154,26 +192,47 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
     );
   }
 
-  Widget _propertItem(ctxt) {
+  Widget _propertItem(index) {
     return Card(
       elevation: 2.0,
       child: InkWell(
         splashColor: Colors.orange.withAlpha(30),
         onTap: () {
-          print('Card tapped.');
-          Navigator.pushNamed(ctxt, collPropDetailsRoute);
+          print('Transaction tapped.');
+          
+          Navigator.pushNamed(context, collPropDetailsRoute, arguments: (sale)?_propertyList[index]: _propertyRentList[index] );
         },
         child: Container(
           margin: EdgeInsets.all(2),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Image.asset(
-                'assets/images/prop.png',
-                width: 175,
-                height: 123,
-                fit: BoxFit.cover,
-              ),
+              (sale)?
+              Stack(alignment: Alignment.center, children: [
+                Container(child: CircularProgressIndicator()),
+                FadeInImage.memoryNetwork(
+                  width: 175,
+                  height: 123,
+                  placeholder: kTransparentImage,
+                  image: (_propertyList[index].property.photos.isNotEmpty)
+                      ? _propertyList[index].property.photos[0].path
+                      : 'https://picsum.photos/250?image=9',
+                  fit: BoxFit.cover,
+                ),
+              ]):
+              Stack(alignment: Alignment.center, children: [
+                Container(child: CircularProgressIndicator()),
+                FadeInImage.memoryNetwork(
+                  width: 175,
+                  height: 123,
+                  placeholder: kTransparentImage,
+                  image: (_propertyRentList[index].property.photos.isNotEmpty)
+                      ? _propertyRentList[index].property.photos[0].path
+                      : 'https://picsum.photos/250?image=9',
+                  fit: BoxFit.cover,
+                ),
+              ])
+              ,
               Container(
                 width: 172,
                 padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -181,10 +240,46 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     const SizedBox(height: 10),
-                    Text(
-                      'N55,000,000',
-                      style:
-                          TextStyle(fontSize: 15, color: appTextColorPrimary),
+                    RichText(
+                      text: TextSpan(
+                        text: '₦ ',
+                        style: TextStyle(
+                            fontSize: 13, color: appSecondaryColorLight),
+                        children: <TextSpan>[
+                          (sale)?TextSpan(
+                            text: (_propertyList[index].price != null)
+                                ? formatMoney(
+                                        _propertyList[index].price.toDouble())
+                                    .withoutFractionDigits
+                                : '0',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: appTextColorPrimary,
+                            ),
+                          ):
+                          TextSpan(
+                            text: (_propertyRentList[index].price != null)
+                                ? formatMoney(
+                                        _propertyRentList[index].price.toDouble())
+                                    .withoutFractionDigits
+                                : '0',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: appTextColorPrimary,
+                            ),
+                          ),
+                          TextSpan(
+                            text: '.00',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 13,
+                              color: appSecondaryColorLight,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 5),
                     Text(
@@ -207,7 +302,7 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
                         Container(
                           child: Expanded(
                             child: Text(
-                              '23 Cross, HRBR layout, bangalore',
+                              (sale)?_propertyList[index].property.location:_propertyRentList[index].property.location,
                               softWrap: true,
                               style: TextStyle(
                                   fontSize: 10, color: Colors.black87),

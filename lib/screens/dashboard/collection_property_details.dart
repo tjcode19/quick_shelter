@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:quick_shelter/models/GetSavedProperties.dart';
+import 'package:quick_shelter/utils/commonFunctions.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../../colors.dart';
 
 class CollPropertyDetails extends StatefulWidget {
+  final propDetails;
+
+  CollPropertyDetails({Key key, this.propDetails}):super(key:key);
   @override
   _CollPropertyDetailsState createState() => _CollPropertyDetailsState();
 }
 
 class _CollPropertyDetailsState extends State<CollPropertyDetails> {
   bool rememberMe = false;
+  GetSavedProperties _propertyDetails;
+  List<SavedPropPhotos> propPhotos = List<SavedPropPhotos>();
+
+
 
   var ls = [
     ImageList('assets/images/1_thumbnail.png', 'assets/images/1_big.png'),
@@ -38,6 +48,14 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    _propertyDetails = widget.propDetails;
+    propPhotos = _propertyDetails.property.photos;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screeSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -54,13 +72,21 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
           ),
           IndexedStack(
             index: _currentPosition,
-            children: ls
+            children: propPhotos
                 .map(
                   (e) => Container(
                     height: screeSize.height / 2 + 50,
                     constraints: BoxConstraints.loose(Size.infinite),
-                    child: Image.asset(
-                      e.bigPix,
+                    child: 
+                    // Image.asset(
+                    //   e.path,
+                    //   fit: BoxFit.cover,
+                    // ),
+                    FadeInImage.memoryNetwork(
+                      placeholder: kTransparentImage,
+                      image: (propPhotos.isNotEmpty)
+                          ? e.path
+                          : 'https://picsum.photos/250?image=9',
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -91,7 +117,7 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(6)),
                     ),
-                    child: Text('For Sale')),
+                    child: Text(_propertyDetails.listingType)),
               ],
             ),
           ),
@@ -153,8 +179,8 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: ls.map((e) {
-                  int indexL = ls.indexOf(e);
+                children: propPhotos.map((e) {
+                  int indexL = propPhotos.indexOf(e);
                   return GestureDetector(
                     onTap: () {
                       print(indexL);
@@ -173,7 +199,18 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                               ),
                             )
                           : null,
-                      child: Image.asset(e.thumbnail),
+                      child: Stack(alignment: Alignment.center, children: [
+                        Container(child: CircularProgressIndicator()),
+                        FadeInImage.memoryNetwork(
+                          width: 55,
+                          height: 55,
+                          placeholder: kTransparentImage,
+                          image: (propPhotos.isNotEmpty)
+                              ? e.path
+                              : 'https://picsum.photos/250?image=9',
+                          fit: BoxFit.cover,
+                        ),
+                      ]),
                     ),
                   );
                 }).toList(),
@@ -217,7 +254,12 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                               fontSize: 22, color: appTextColorPrimary2),
                           children: <TextSpan>[
                             TextSpan(
-                              text: '55,000,000.',
+                              text:
+                              (_propertyDetails.price != null)
+                                ? formatMoney(
+                                        _propertyDetails.price.toDouble())
+                                    .withoutFractionDigits
+                                : '0',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
@@ -310,7 +352,7 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                                   splashColor: Colors.orange, // inkwell color
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.share,
+                                    child: Icon(Icons.favorite,
                                         size: 25, color: Colors.white),
                                   ),
                                   onTap: () {
@@ -336,12 +378,12 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                     const SizedBox(height: 10),
                     _rowCont(
                         'Location',
-                        '23 Cross, Herbert Layout, Ikoyi, Victoria Island.',
+                        _propertyDetails.property.location,
                         Icons.location_on),
                     Divider(color: Colors.white38, thickness: 1.0),
-                    _rowCont('State', 'Lagos State', Icons.pin_drop),
+                    _rowCont('State', _propertyDetails.property.state, Icons.pin_drop),
                     Divider(color: Colors.white38, thickness: 1.0),
-                    _rowCont('Land Area', '77km', Icons.landscape),
+                    _rowCont('Land Area', '${_propertyDetails.property.landArea} KM', Icons.landscape),
                     Divider(color: Colors.white38, thickness: 1.0),
                     _rowCont(
                         'Available date', '20th May, 2020', Icons.date_range),
@@ -400,7 +442,7 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                                 Container(
                                   padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                                   child: Text(
-                                    'Edit or Save Property',
+                                    'Edit Property',
                                     style: TextStyle(
                                         color: appTextColorPrimary2,
                                         fontSize: 15),

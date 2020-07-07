@@ -44,9 +44,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => Dashboard());
     case addPropertyRoute:
       return MaterialPageRoute(builder: (context) => DashboardAddProp());
-      case addProperty2Route:
+    case addProperty2Route:
       var propDetails = settings.arguments;
-      return MaterialPageRoute(builder: (context) => DashboardAddProp2(propData: propDetails,));
+      return MaterialPageRoute(
+          builder: (context) => DashboardAddProp2(
+                propData: propDetails,
+              ));
     case addPropertyStep2Route:
       var propertyID = settings.arguments;
       return MaterialPageRoute(
@@ -74,7 +77,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 propertyDetails: propertyDetails,
               ));
     case collPropDetailsRoute:
-      return MaterialPageRoute(builder: (context) => CollPropertyDetails());
+      var propertyDetails = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => CollPropertyDetails(
+                propDetails: propertyDetails,
+              ));
     case personalInfoRoute:
       return MaterialPageRoute(builder: (context) => BasicInfo());
     case searchPropRoute:

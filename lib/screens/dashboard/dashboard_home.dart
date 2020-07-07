@@ -53,7 +53,7 @@ class _DashboardHomeState extends State<DashboardHome> {
   void _getAllProperties() {
     print('Get Properties');
     //showLoadingDialog(context, _keyLoader);
-    var _apiCall = repo.getAllProperties();
+    var _apiCall = repo.getAllProperties('0', '10');
 
     _apiCall.then((value) {
       print('donnned ${value.data.listing}');

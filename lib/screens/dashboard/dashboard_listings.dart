@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/models/GetUserProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
+import 'package:quick_shelter/utils/commonFunctions.dart';
+import 'package:quick_shelter/utils/sharedPreference.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../../colors.dart';
 import '../../constants.dart';
@@ -10,7 +12,7 @@ import '../../constants.dart';
 class DashboardListings extends StatefulWidget {
   final userPropListing;
 
-  DashboardListings({Key key, this.userPropListing}):super(key:key);
+  DashboardListings({Key key, this.userPropListing}) : super(key: key);
 
   @override
   _DashboardListingsState createState() => _DashboardListingsState();
@@ -18,15 +20,14 @@ class DashboardListings extends StatefulWidget {
 
 class _DashboardListingsState extends State<DashboardListings> {
   final QuickShelterRepository repo = QuickShelterRepository();
-  ScrollController _controller;
+  SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
   String message = "";
-  bool _isVisible = true;
-  String _prefUserFN;
   List<GetUserProperties> _propertyList = List<GetUserProperties>();
-  bool _isPropLoaded = false;
+  List<GetUserProperties> _propertyRentList = List<GetUserProperties>();
   String listingType = "";
   bool sale = true;
   bool rent = false;
+  String _prefUserFN;
 
   void _getUserProperties() async {
     print('Get User Properties');
@@ -38,9 +39,9 @@ class _DashboardListingsState extends State<DashboardListings> {
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value != null) {
         setState(() => {
-          _propertyList = value.getUserProps,
-          print(_propertyList[1].title)
-        });
+              _propertyList = value.getUserProps,
+              print(_propertyList[1].title)
+            });
       } else {
         //showInSnackBar(value.message);
         print('Failed to load properties');
@@ -48,12 +49,18 @@ class _DashboardListingsState extends State<DashboardListings> {
     });
   }
 
+  Future _getUserProfile() async {
+    _prefUserFN = await _sharedPreferenceQS.getSharedPrefs(String, 'userFN');
+    setState(() {
+      _prefUserFN = _prefUserFN;
+    });
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _getUserProperties();
-    //_propertyList = widget.userPropListing;
+    _getUserProfile();
   }
 
   @override
@@ -86,10 +93,13 @@ class _DashboardListingsState extends State<DashboardListings> {
           ),
         ),
         actions: <Widget>[
-          Container(
-              margin: EdgeInsets.symmetric(horizontal: 5),
-              alignment: Alignment.center,
-              child: Text('Edit', style: TextStyle(color: appColorSecondary),))
+          // Container(
+          //     margin: EdgeInsets.symmetric(horizontal: 5),
+          //     alignment: Alignment.center,
+          //     child: Text(
+          //       'Edit',
+          //       style: TextStyle(color: appColorSecondary),
+          //     ))
         ],
         title: RichText(
           text: TextSpan(
@@ -97,7 +107,7 @@ class _DashboardListingsState extends State<DashboardListings> {
             style: TextStyle(fontSize: 16, color: appTextColorPrimary),
             children: <TextSpan>[
               TextSpan(
-                text: 'Tolulope',
+                text: '$_prefUserFN',
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 16,
@@ -117,7 +127,10 @@ class _DashboardListingsState extends State<DashboardListings> {
                 alignment: Alignment.topLeft,
                 child: Text(
                   'My Listings',
-                  style: TextStyle(color: appSecondaryColor, fontSize: 20.0, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: appSecondaryColor,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(height: 20),
@@ -131,11 +144,12 @@ class _DashboardListingsState extends State<DashboardListings> {
                       padding: const EdgeInsets.all(0),
                       sliver: SliverGrid.count(
                         crossAxisSpacing: 5,
-                        childAspectRatio: ( (itemWidth) / (itemHeight)),
+                        childAspectRatio: ((itemWidth) / (itemHeight)),
                         mainAxisSpacing: 1,
                         crossAxisCount: 2,
-                        children: 
-                        _propertyList.map((e) => _propertItem(context)).toList(),
+                        children: _propertyList
+                            .map((e) => _propertItem(_propertyList.indexOf(e)))
+                            .toList(),
 //                        <Widget>[
 //                          _propertItem(context),
 //                          _propertItem(context),
@@ -152,95 +166,136 @@ class _DashboardListingsState extends State<DashboardListings> {
     );
   }
 
-  Widget _propertItem(ctxt){ return Card(
-    elevation: 2.0,
-    child: InkWell(
-      splashColor: Colors.orange.withAlpha(30),
-      onTap: () {
-        print('Card tapped.');
-        Navigator.pushNamed(ctxt, collPropDetailsRoute);
-      },
-      child: Container(
-        margin: EdgeInsets.all(2),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Image.asset(
-              'assets/images/prop.png',
-              width: 175,
-              height: 123,
-              fit: BoxFit.cover,
-            ),
-            Container(
-              width: 172,
-              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const SizedBox(height: 10),
-                  Text(
-                    'N55,000,000',
-                    style: TextStyle(fontSize: 15, color: appTextColorPrimary),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    'Studio Apartment',
-                    style: TextStyle(fontSize: 13, color: appTextColorPrimary),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(right: 2.0),
-                        child: Icon(
-                          Icons.location_on,
-                          size: 10,
-                          color: Colors.orange,
-                        ),
+  Widget _propertItem(index) {
+    return Card(
+      elevation: 2.0,
+      child: InkWell(
+        splashColor: Colors.orange.withAlpha(30),
+        onTap: () {
+          print('Card tapped.');
+          // Navigator.pushNamed(
+          //   context,
+          //   collPropDetailsRoute,
+          //  // arguments: _propertyList,
+          // );
+        },
+        child: Container(
+          margin: EdgeInsets.all(2),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Stack(alignment: Alignment.center, children: [
+                Container(child: CircularProgressIndicator()),
+                FadeInImage.memoryNetwork(
+                  width: 175,
+                  height: 123,
+                  placeholder: kTransparentImage,
+                  image: (_propertyList[index].photos.isNotEmpty)
+                      ? _propertyList[index].photos[0].path
+                      : 'https://picsum.photos/250?image=9',
+                  fit: BoxFit.cover,
+                ),
+              ]),
+              Container(
+                width: 172,
+                padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(height: 10),
+                    RichText(
+                      text: TextSpan(
+                        text: '₦ ',
+                        style: TextStyle(
+                            fontSize: 13, color: appSecondaryColorLight),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text:
+                                (_propertyList[index].listings[0].price != null)
+                                    ? formatMoney(_propertyList[index]
+                                            .listings[0]
+                                            .price
+                                            .toDouble())
+                                        .withoutFractionDigits
+                                    : '0',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: appTextColorPrimary,
+                            ),
+                          ),
+                          TextSpan(
+                            text: '.00',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 13,
+                              color: appSecondaryColorLight,
+                            ),
+                          )
+                        ],
                       ),
-                      Container(
-                        child: Expanded(
-                          child: Text(
-                            '23 Cross, HRBR layout, bangalore',
-                            softWrap: true,
-                            style:
-                                TextStyle(fontSize: 10, color: Colors.black87),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Studio Apartment',
+                      style:
+                          TextStyle(fontSize: 13, color: appTextColorPrimary),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(right: 2.0),
+                          child: Icon(
+                            Icons.location_on,
+                            size: 10,
+                            color: Colors.orange,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 25),
-                  Row(
-                    children: <Widget>[
-                      SvgPicture.asset(
-                        'assets/icons/bed.svg',
-                        color: Colors.orange,
-                      ),
-                      const SizedBox(width: 5),
-                      Text('3 Bed',
-                          style:
-                              TextStyle(color: Colors.black87, fontSize: 12.0)),
-                      const SizedBox(width: 15),
-                      SvgPicture.asset(
-                        'assets/icons/bath.svg',
-                        color: Colors.orange,
-                      ),
-                      const SizedBox(width: 5),
-                      Text('2 Bath',
-                          style:
-                              TextStyle(color: Colors.black87, fontSize: 12.0)),
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
+                        Container(
+                          child: Expanded(
+                            child: Text(
+                              _propertyList[index].location,
+                              softWrap: true,
+                              style: TextStyle(
+                                  fontSize: 10, color: Colors.black87),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 25),
+                    Row(
+                      children: <Widget>[
+                        SvgPicture.asset(
+                          'assets/icons/bed.svg',
+                          color: Colors.orange,
+                        ),
+                        const SizedBox(width: 5),
+                        Text('3 Bed',
+                            style: TextStyle(
+                                color: Colors.black87, fontSize: 12.0)),
+                        const SizedBox(width: 15),
+                        SvgPicture.asset(
+                          'assets/icons/bath.svg',
+                          color: Colors.orange,
+                        ),
+                        const SizedBox(width: 5),
+                        Text('2 Bath',
+                            style: TextStyle(
+                                color: Colors.black87, fontSize: 12.0)),
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
-    ),
-  );}
+    );
+  }
 
   Widget saleRentButton() {
     final screeSize = MediaQuery.of(context).size;
@@ -267,8 +322,8 @@ class _DashboardListingsState extends State<DashboardListings> {
                       padding: EdgeInsets.fromLTRB(10, 3, 4, 4),
                       child: Text(
                         'For Rent',
-                        style: TextStyle(
-                            color: appTextColorPrimary, fontSize: 13),
+                        style:
+                            TextStyle(color: appTextColorPrimary, fontSize: 13),
                       ),
                     ),
                     onPressed: () {
@@ -303,7 +358,8 @@ class _DashboardListingsState extends State<DashboardListings> {
                         padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                         child: Text(
                           'For Sale',
-                          style: TextStyle(color: appTextColorPrimary2, fontSize: 15),
+                          style: TextStyle(
+                              color: appTextColorPrimary2, fontSize: 15),
                         ),
                       ),
                     ],
@@ -376,7 +432,8 @@ class _DashboardListingsState extends State<DashboardListings> {
                           padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                           child: Text(
                             'For Rent',
-                            style: TextStyle(color: appTextColorPrimary2, fontSize: 15),
+                            style: TextStyle(
+                                color: appTextColorPrimary2, fontSize: 15),
                           ),
                         ),
                       ],

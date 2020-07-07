@@ -12,6 +12,7 @@ import 'package:quick_shelter/models/GetSinglePropertyListing.dart';
 import 'package:quick_shelter/models/GetUserProperties.dart';
 import 'package:quick_shelter/models/LoginResponse.dart';
 import 'package:quick_shelter/models/SignUpResponse.dart';
+import 'package:quick_shelter/models/TransactionListResponse.dart';
 import 'package:quick_shelter/models/UpdateProfileResponse.dart';
 import 'package:quick_shelter/models/UploadIdResponse.dart';
 import 'package:quick_shelter/models/ValidatePhone.dart';
@@ -164,9 +165,9 @@ class QuickShelterRepository {
     return GetUserPropertiesList.fromJson(response);
   }
 
-  Future<GetAllProperties> getAllProperties() async {
-    final response = await _provider.post(
-      "search-listing",
+  Future<GetAllProperties> getAllProperties(var page, var noPerPage) async {
+    final response = await _provider.put(
+      "search-listing/$page/$noPerPage",
       <String, String>{
         'ListingType': 'FOR RENT',
       },
@@ -180,6 +181,13 @@ class QuickShelterRepository {
       "get-property/$propID",
     );
     return GetSingleProperty.fromJson(response);
+  }
+
+  Future<GetTransactionList> getTransactionList(var page, var pageSize) async {
+    final response = await _provider.get(
+      "paid-listings/$page/$pageSize",
+    );
+    return GetTransactionList.fromJson(response);
   }
 
   Future<GetSinglePropertyListing> getSinglePropertyListing(

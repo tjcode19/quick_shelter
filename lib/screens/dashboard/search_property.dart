@@ -28,7 +28,7 @@ class _SearchPropState extends State<SearchProp> {
   void _getAllProperties() async{
     print('Get Properties');
     showLoadingDialog(context, _keyLoader);
-    var _apiCall = repo.getAllProperties();
+    var _apiCall = repo.getAllProperties('0','10');
 
     await _apiCall.then((value) {
       print('donnned ${value.data.listing}');
