@@ -151,18 +151,18 @@ class QuickShelterRepository {
     return GetProfileResponse.fromJson(response);
   }
 
-  Future<GetSavedPropertiesList> getSavedProperties(var page, var noPerPage) async {
+  Future<GetSavedProperties> getSavedProperties(var page, var noPerPage) async {
     final response = await _provider.get(
       "saved-listings/$page/$noPerPage",
     );
-    return GetSavedPropertiesList.fromJson(response);
+    return GetSavedProperties.fromJson(response);
   }
 
-  Future<GetUserPropertiesList> getUserProperties() async {
+  Future<GetUserProperties> getUserProperties() async {
     final response = await _provider.get(
       "user-properties",
     );
-    return GetUserPropertiesList.fromJson(response);
+    return GetUserProperties.fromJson(response);
   }
 
   Future<GetAllProperties> getAllProperties(var page, var noPerPage) async {

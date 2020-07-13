@@ -19,7 +19,7 @@ class PropertyDetails extends StatefulWidget {
 class _PropertyDetailsState extends State<PropertyDetails> {
   final QuickShelterRepository repo = QuickShelterRepository();
   bool rememberMe = false;
-  ListingM _propertyDetails;
+  GetAllPropData _propertyDetails;
   bool _isSaved = false;
 
   // List<Object> imageList = [
@@ -65,7 +65,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
 
   _saveProperty(){
     if(_isSaved){
-      var _apiCall = repo.addSavedProperty(_propertyDetails.property.id);
+      var _apiCall = repo.addSavedProperty(_propertyDetails.propertyID);
 
     _apiCall.then((value) async {
       print('donnned');
@@ -124,7 +124,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
 
           IndexedStack(
             index: _currentPosition,
-            children: _propertyDetails.photos
+            children: _propertyDetails.property.photos
                 .map(
                   (e) => Container(
                     height: screeSize.height / 2 + 50,
@@ -132,7 +132,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                     child:
                         FadeInImage.memoryNetwork(
                       placeholder: kTransparentImage,
-                      image: (_propertyDetails.photos.isNotEmpty)
+                      image: (_propertyDetails.property.photos.isNotEmpty)
                           ? e.path
                           : 'https://picsum.photos/250?image=9',
                       fit: BoxFit.cover,
@@ -197,7 +197,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                   ),
                 ),
                 Visibility(
-                  visible: (_currentPosition < (_propertyDetails.photos.length - 1) ? true : false),
+                  visible: (_currentPosition < (_propertyDetails.property.photos.length - 1) ? true : false),
                   child: ClipOval(
                     child: Material(
                       color: Colors.white, // button color
@@ -227,8 +227,8 @@ class _PropertyDetailsState extends State<PropertyDetails> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: _propertyDetails.photos.map((e) {
-                  int indexL = _propertyDetails.photos.indexOf(e);
+                children: _propertyDetails.property.photos.map((e) {
+                  int indexL = _propertyDetails.property.photos.indexOf(e);
                   return GestureDetector(
                     onTap: () {
                       print(indexL);
@@ -255,7 +255,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                           width: 55,
                           height: 55,
                           placeholder: kTransparentImage,
-                          image: (_propertyDetails.photos.isNotEmpty)
+                          image: (_propertyDetails.property.photos.isNotEmpty)
                               ? e.path
                               : 'https://picsum.photos/250?image=9',
                           fit: BoxFit.cover,
@@ -297,7 +297,8 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                         )),
                     const SizedBox(height: 10),
                     Container(
-                      child: RichText(
+                      child: 
+                      RichText(
                         text: TextSpan(
                           text: '₦',
                           style: TextStyle(
@@ -332,7 +333,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              _propertyDetails.property.specifications.noOfRooms
+                              _propertyDetails.property.specifications.nOOFBEDROOMS
                                   .toString(),
                               style:
                                   TextStyle(color: Colors.white, fontSize: 15),

@@ -21,7 +21,7 @@ class _DashboardHomeState extends State<DashboardHome> {
   String message = "";
   bool _isVisible = true;
   String _prefUserFN;
-  List<ListingM> _propertyList = List<ListingM>();
+  List<GetAllPropData> _propertyList = List<GetAllPropData>();
   bool _isPropLoaded = false;
 
   _scrollListener() {
@@ -56,10 +56,10 @@ class _DashboardHomeState extends State<DashboardHome> {
     var _apiCall = repo.getAllProperties('0', '10');
 
     _apiCall.then((value) {
-      print('donnned ${value.data.listing}');
+      print('donnned ${value.data}');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.data.listing != null) {
-        setState(() => {_propertyList = value.data.listing});
+      if (value.responseCode == 'M000') {
+        setState(() => {_propertyList = value.data});
         _isPropLoaded = true;
       } else {
         //showInSnackBar(value.message);
@@ -259,8 +259,8 @@ class _DashboardHomeState extends State<DashboardHome> {
                     width: 175,
                     height: 123,
                     placeholder: kTransparentImage,
-                    image: (_propertyList[index].photos.isNotEmpty)
-                        ? _propertyList[index].photos[0].path
+                    image: (_propertyList[index].property.photos.isNotEmpty)
+                        ? _propertyList[index].property.photos[0].path
                         : 'https://picsum.photos/250?image=9',
                     fit: BoxFit.cover,
                   ),
@@ -285,9 +285,11 @@ class _DashboardHomeState extends State<DashboardHome> {
                               fontSize: 13, color: appSecondaryColorLight),
                           children: <TextSpan>[
                             TextSpan(
-                              text: (_propertyList[index].price!=null)?formatMoney(
-                                      _propertyList[index].price.toDouble())
-                                  .withoutFractionDigits:'0',
+                              text: (_propertyList[index].price != null)
+                                  ? formatMoney(
+                                          _propertyList[index].price.toDouble())
+                                      .withoutFractionDigits
+                                  : '0',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
@@ -351,13 +353,13 @@ class _DashboardHomeState extends State<DashboardHome> {
                               ((_propertyList[index]
                                               .property
                                               .specifications
-                                              .noOfRooms ==
+                                              .nOOFBEDROOMS ==
                                           null)
                                       ? 'NA'
                                       : _propertyList[index]
                                           .property
                                           .specifications
-                                          .noOfRooms)
+                                          .nOOFBEDROOMS)
                                   .toString(),
                               style: TextStyle(
                                   color: Colors.black87, fontSize: 12.0)),

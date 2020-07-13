@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:quick_shelter/models/GetSavedProperties.dart';
+import 'package:quick_shelter/models/GetUserProperties.dart';
 import 'package:quick_shelter/utils/commonFunctions.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../../colors.dart';
 
-class CollPropertyDetails extends StatefulWidget {
+class PropertyListingDetails extends StatefulWidget {
   final propDetails;
 
-  CollPropertyDetails({Key key, this.propDetails}):super(key:key);
+  PropertyListingDetails({Key key, this.propDetails}) : super(key: key);
   @override
-  _CollPropertyDetailsState createState() => _CollPropertyDetailsState();
+  _PropertyListingDetailsState createState() => _PropertyListingDetailsState();
 }
 
-class _CollPropertyDetailsState extends State<CollPropertyDetails> {
+class _PropertyListingDetailsState extends State<PropertyListingDetails> {
   bool rememberMe = false;
-  Data _propertyDetails;
+  GetUserPropData _propertyDetails;
   List<Photos> propPhotos = List<Photos>();
+  String lDate, lType;
+  int price;
 
-
-
-  // var ls = [
-  //   ImageList('assets/images/1_thumbnail.png', 'assets/images/1_big.png'),
-  //   ImageList('assets/images/2_thumbnail.png', 'assets/images/2_big.png'),
-  //   ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
-  //   ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
-  // ];
+  var ls = [
+    ImageList('assets/images/1_thumbnail.png', 'assets/images/1_big.png'),
+    ImageList('assets/images/2_thumbnail.png', 'assets/images/2_big.png'),
+    ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
+    ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
+  ];
 
   int imageNum = 0;
   int _currentPosition = 0;
@@ -51,8 +50,11 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
   void initState() {
     super.initState();
 
-    _propertyDetails = widget.propDetails;
-    propPhotos = _propertyDetails.property.photos;
+    _propertyDetails = widget.propDetails['pData'];
+    price = widget.propDetails['price'];
+    lType = widget.propDetails['lType'];
+    lDate = widget.propDetails['lDate'];
+    propPhotos = _propertyDetails.photos;
   }
 
   @override
@@ -77,12 +79,7 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                   (e) => Container(
                     height: screeSize.height / 2 + 50,
                     constraints: BoxConstraints.loose(Size.infinite),
-                    child: 
-                    // Image.asset(
-                    //   e.path,
-                    //   fit: BoxFit.cover,
-                    // ),
-                    FadeInImage.memoryNetwork(
+                    child: FadeInImage.memoryNetwork(
                       placeholder: kTransparentImage,
                       image: (propPhotos.isNotEmpty)
                           ? e.path
@@ -117,7 +114,7 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(6)),
                     ),
-                    child: Text(_propertyDetails.listingType)),
+                    child: Text(lType)),
               ],
             ),
           ),
@@ -149,7 +146,7 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                   ),
                 ),
                 Visibility(
-                  visible: (_currentPosition < (propPhotos.length - 1) ? true : false),
+                  visible: (_currentPosition < (ls.length - 1) ? true : false),
                   child: ClipOval(
                     child: Material(
                       color: Colors.white, // button color
@@ -198,7 +195,15 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                                 Radius.circular(5.0),
                               ),
                             )
-                          : null,
+                          : BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.white54,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5.0),
+                              ),
+                            ),
                       child: Stack(alignment: Alignment.center, children: [
                         Container(child: CircularProgressIndicator()),
                         FadeInImage.memoryNetwork(
@@ -236,157 +241,33 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Container(
-                        margin: EdgeInsets.only(top: 10),
-                        child: Text(
-                          'Studio Apartment, Fully Furnished',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold),
-                        )),
                     const SizedBox(height: 10),
                     Container(
-                      child: RichText(
-                        text: TextSpan(
-                          text: '₦',
-                          style: TextStyle(
-                              fontSize: 22, color: appTextColorPrimary2),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text:
-                              (_propertyDetails.price != null)
-                                ? formatMoney(
-                                        _propertyDetails.price.toDouble())
-                                    .withoutFractionDigits
-                                : '0',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 30,
-                                color: Colors.white,
-                              ),
-                            ),
-                            TextSpan(
-                              text: '00',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 22,
-                                color: appTextColorPrimary2,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              _propertyDetails.property.specifications.nOOFROOMS.toString(),
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                            SizedBox(
-                              height: 5.0,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                SvgPicture.asset(
-                                  'assets/icons/bed.svg',
-                                  color: Colors.white,
-                                  width: 25,
-                                ),
-                                SizedBox(
-                                  width: 5.0,
-                                ),
-                                Text(
-                                  'Bedrooms',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 13),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        // SizedBox(width: 20.0),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              _propertyDetails.property.specifications.nOOFROOMS.toString(),
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                            SizedBox(height: 5.0),
-                            Row(
-                              children: <Widget>[
-                                SvgPicture.asset(
-                                  'assets/icons/bath.svg',
-                                  color: Colors.white,
-                                  width: 25,
-                                ),
-                                SizedBox(
-                                  width: 5.0,
-                                ),
-                                Text(
-                                  'Bathroom',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 13),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: <Widget>[
-                            ClipOval(
-                              child: Material(
-                                color: appColorSecondary, // button color
-                                child: InkWell(
-                                  splashColor: Colors.orange, // inkwell color
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.favorite,
-                                        size: 25, color: Colors.white),
-                                  ),
-                                  onTap: () {
-                                    // Navigator.pushNamed(context, profileRoute);
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 25),
-                    Container(
                       child: Text(
-                        'Property Details',
+                        'Listing Details',
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 18.0,
+                            fontSize: 20.0,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 30),
+                    Divider(color: Colors.white38, thickness: 1.0),
                     _rowCont(
-                        'Location',
-                        _propertyDetails.property.location,
+                        'Price',
+                        formatMoney(price.toDouble()).withoutFractionDigits,
                         Icons.location_on),
                     Divider(color: Colors.white38, thickness: 1.0),
-                    _rowCont('State', _propertyDetails.property.state, Icons.pin_drop),
+                    _rowCont('Location', _propertyDetails.location,
+                        Icons.location_on),
                     Divider(color: Colors.white38, thickness: 1.0),
-                    _rowCont('Land Area', _propertyDetails.property.landArea, Icons.landscape),
+                    _rowCont('State', _propertyDetails.state, Icons.pin_drop),
+                    Divider(color: Colors.white38, thickness: 1.0),
+                    _rowCont('Land Area', _propertyDetails.landArea,
+                        Icons.landscape),
                     Divider(color: Colors.white38, thickness: 1.0),
                     _rowCont(
-                        'Available date', formatDate(_propertyDetails.listingDate), Icons.date_range),
+                        'Listing Date', formatDate(lDate), Icons.date_range),
                     Divider(color: Colors.white38, thickness: 1.0),
                     const SizedBox(height: 20),
                     Row(
@@ -396,20 +277,25 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                           width: MediaQuery.of(context).size.width / 2 - 50,
                           margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
                           child: OutlineButton(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(12),
                             color: Colors.white,
                             highlightedBorderColor: Colors.white,
                             borderSide: BorderSide(color: appTextColorPrimary2),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(15))),
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(15),
+                                topLeft: Radius.circular(3),
+                                bottomRight: Radius.circular(3),
+                                bottomLeft: Radius.circular(3),
+                              ),
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Container(
                                   padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                                   child: Text(
-                                    'Delete Property',
+                                    'Edit Listing',
                                     style: TextStyle(
                                         color: appTextColorPrimary2,
                                         fontSize: 15),
@@ -426,23 +312,28 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                           width: MediaQuery.of(context).size.width / 2 - 20,
                           margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
                           child: RaisedButton(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(12),
                             highlightElevation: 5.0,
                             elevation: 3.0,
                             splashColor: Colors.orange[100],
                             highlightColor: Colors.orange[100],
                             color: appColorSecondary,
                             shape: RoundedRectangleBorder(
-                                //borderRadius: new BorderRadius.circular(10.0),
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(20))),
+                              //borderRadius: new BorderRadius.circular(10.0),
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(15),
+                                topLeft: Radius.circular(3),
+                                bottomRight: Radius.circular(3),
+                                bottomLeft: Radius.circular(3),
+                              ),
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Container(
                                   padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                                   child: Text(
-                                    'Edit Property',
+                                    'View Transactions',
                                     style: TextStyle(
                                         color: appTextColorPrimary2,
                                         fontSize: 15),
@@ -457,6 +348,38 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                         ),
                       ],
                     ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      child: OutlineButton(
+                        padding: EdgeInsets.all(12),
+                        color: Colors.white,
+                        highlightedBorderColor: Colors.white,
+                        borderSide: BorderSide(color: appTextColorPrimary2),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(15),
+                          topLeft: Radius.circular(3),
+                          bottomRight: Radius.circular(3),
+                          bottomLeft: Radius.circular(3),
+                        )),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                              child: Text(
+                                'Delete Listing',
+                                style: TextStyle(
+                                    color: appTextColorPrimary2, fontSize: 15),
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
                     const SizedBox(height: 20),
                   ],
                 ),
@@ -470,7 +393,7 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
 
   _rowCont(String title, String subTitle, iconNew) {
     return Container(
-      margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+      margin: EdgeInsets.fromLTRB(0, 6, 0, 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -485,18 +408,43 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
             ),
             Text(
               title,
-              style: TextStyle(color: appTextColorPrimary2),
+              style: TextStyle(color: appTextColorPrimary2, fontSize: 15.0),
             ),
           ]),
-          Container(
-            width: 170.0,
-            child: Text(
-              subTitle,
-              softWrap: true,
-              style: TextStyle(color: appTextColorPrimary2),
-              textAlign: TextAlign.right,
-            ),
-          ),
+          (title != 'Price')
+              ? Container(
+                  width: 170.0,
+                  child: Text(
+                    subTitle,
+                    softWrap: true,
+                    style: TextStyle(color: appTextColorPrimary2),
+                    textAlign: TextAlign.right,
+                  ),
+                )
+              : RichText(
+                  text: TextSpan(
+                    text: '₦',
+                    style: TextStyle(fontSize: 15, color: appTextColorPrimary2),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: subTitle,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                          color: Colors.white,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '.00',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                          color: appTextColorPrimary2,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
         ],
       ),
     );

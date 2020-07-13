@@ -1,4 +1,38 @@
 class GetUserProperties {
+  int count;
+  List<GetUserPropData> dataVal;
+  String responseMessage;
+  String responseCode;
+
+  GetUserProperties(
+      {this.count, this.dataVal, this.responseMessage, this.responseCode});
+
+  GetUserProperties.fromJson(Map<String, dynamic> json) {
+    count = json['count'];
+    if (json['data'] != null) {
+      dataVal = new List<GetUserPropData>();
+      json['data'].forEach((v) {
+        dataVal.add(new GetUserPropData.fromJson(v));
+      });
+    }
+    responseMessage = json['responseMessage'];
+    responseCode = json['responseCode'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['count'] = this.count;
+    if (this.dataVal != null) {
+      data['data'] = this.dataVal.map((v) => v.toJson()).toList();
+    }
+    data['responseMessage'] = this.responseMessage;
+    data['responseCode'] = this.responseCode;
+    return data;
+  }
+}
+
+class GetUserPropData
+ {
   int iD;
   String title;
   String description;
@@ -16,9 +50,10 @@ class GetUserProperties {
   String createdAt;
   String updatedAt;
   List<Photos> photos;
-  List<Listings> listings;
+  List<GetUserListings> listings;
 
-  GetUserProperties(
+  GetUserPropData
+  (
       {this.iD,
       this.title,
       this.description,
@@ -38,7 +73,7 @@ class GetUserProperties {
       this.photos,
       this.listings});
 
-  GetUserProperties.fromJson(Map<String, dynamic> json) {
+  GetUserPropData.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];
     title = json['Title'];
     description = json['Description'];
@@ -64,9 +99,9 @@ class GetUserProperties {
       });
     }
     if (json['Listings'] != null) {
-      listings = new List<Listings>();
+      listings = new List<GetUserListings>();
       json['Listings'].forEach((v) {
-        listings.add(new Listings.fromJson(v));
+        listings.add(new GetUserListings.fromJson(v));
       });
     }
   }
@@ -102,28 +137,28 @@ class GetUserProperties {
 }
 
 class Specifications {
+  int nOOFROOMS;
   int nOOFFLOORS;
-  int nOOFBEDROOMS;
   bool hASSWIMMINGPOOL;
   int nOOFLIVINGROOMS;
 
   Specifications(
-      {this.nOOFFLOORS,
-      this.nOOFBEDROOMS,
+      {this.nOOFROOMS,
+      this.nOOFFLOORS,
       this.hASSWIMMINGPOOL,
       this.nOOFLIVINGROOMS});
 
   Specifications.fromJson(Map<String, dynamic> json) {
+    nOOFROOMS = json['NO_OF_ROOMS'];
     nOOFFLOORS = json['NO_OF_FLOORS'];
-    nOOFBEDROOMS = json['NO_OF_BEDROOMS'];
     hASSWIMMINGPOOL = json['HAS_SWIMMING_POOL'];
     nOOFLIVINGROOMS = json['NO_OF_LIVINGROOMS'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['NO_OF_ROOMS'] = this.nOOFROOMS;
     data['NO_OF_FLOORS'] = this.nOOFFLOORS;
-    data['NO_OF_BEDROOMS'] = this.nOOFBEDROOMS;
     data['HAS_SWIMMING_POOL'] = this.hASSWIMMINGPOOL;
     data['NO_OF_LIVINGROOMS'] = this.nOOFLIVINGROOMS;
     return data;
@@ -137,8 +172,8 @@ class Photos {
   String name;
   String path;
   String description;
-  Null isValid;
-  Null dateAdded;
+  bool isValid;
+  String dateAdded;
   String createdAt;
   String updatedAt;
 
@@ -183,13 +218,13 @@ class Photos {
   }
 }
 
-class Listings {
+class GetUserListings {
   int iD;
   String listingType;
-  Null availableFrom;
+  String availableFrom;
   int minPeriod;
   String periodUnits;
-  Null specifications;
+  String specifications;
   String listingDate;
   int price;
   bool iSAVAILABLE;
@@ -197,7 +232,7 @@ class Listings {
   String updatedAt;
   int propertyID;
 
-  Listings(
+  GetUserListings(
       {this.iD,
       this.listingType,
       this.availableFrom,
@@ -211,7 +246,7 @@ class Listings {
       this.updatedAt,
       this.propertyID});
 
-  Listings.fromJson(Map<String, dynamic> json) {
+  GetUserListings.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];
     listingType = json['ListingType'];
     availableFrom = json['AvailableFrom'];
@@ -244,18 +279,19 @@ class Listings {
   }
 }
 
-class GetUserPropertiesList{
-  final List<GetUserProperties> getUserProps;
 
-  GetUserPropertiesList({this.getUserProps});
+// class GetUserPropertiesList{
+//   final List<GetUserProperties> getUserProps;
 
-  factory GetUserPropertiesList.fromJson(List<dynamic> parsedJson) {
+//   GetUserPropertiesList({this.getUserProps});
 
-    List<GetUserProperties> getUserProps = new List<GetUserProperties>();
-    getUserProps = parsedJson.map((i)=>GetUserProperties.fromJson(i)).toList();
+//   factory GetUserPropertiesList.fromJson(List<dynamic> parsedJson) {
 
-    return new GetUserPropertiesList(
-       getUserProps: getUserProps,
-    );
-  }
-}
+//     List<GetUserProperties> getUserProps = new List<GetUserProperties>();
+//     getUserProps = parsedJson.map((i)=>GetUserProperties.fromJson(i)).toList();
+
+//     return new GetUserPropertiesList(
+//        getUserProps: getUserProps,
+//     );
+//   }
+// }

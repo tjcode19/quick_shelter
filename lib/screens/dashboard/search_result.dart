@@ -16,7 +16,7 @@ class SearchResult extends StatefulWidget {
 
 class _SearchResultState extends State<SearchResult> {
 
-List<ListingM> searchedPropList;  
+List<GetAllPropData> searchedPropList;  
   
   @override
   void initState() {

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:quick_shelter/screens/dashboard/change_password.dart';
 import 'package:quick_shelter/screens/dashboard/dashboard_add_property2.dart';
 import 'package:quick_shelter/screens/dashboard/file_upload.dart';
+import 'package:quick_shelter/screens/dashboard/property_listing_details.dart';
+import 'package:quick_shelter/screens/dashboard/property_listings.dart';
 import 'package:quick_shelter/screens/dashboard/search_result.dart';
 import 'package:quick_shelter/screens/forgot_password.dart';
 import 'screens/dashboard/add_property_step_2.dart';
@@ -82,6 +84,20 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           builder: (context) => CollPropertyDetails(
                 propDetails: propertyDetails,
               ));
+    case propertyListingsRoute:
+      var propertyDetails = settings.arguments;
+      return MaterialPageRoute(
+        builder: (context) => PropertyListings(
+          propDetails: propertyDetails,
+        ),
+      );
+    case propertyListingDetailsRoute:
+      var propertyDetails = settings.arguments;
+      return MaterialPageRoute(
+        builder: (context) => PropertyListingDetails(
+          propDetails: propertyDetails,
+        ),
+      );
     case personalInfoRoute:
       return MaterialPageRoute(builder: (context) => BasicInfo());
     case searchPropRoute:

@@ -109,19 +109,20 @@ class _DashboardTransactionsState extends State<DashboardTransactions> {
               ),
             ),
             const SizedBox(height: 20),
-            (_propertyList.length>0)?
+           // (_propertyList.length>0)?
             Expanded(
               flex: 1,
               child: ListView.builder(
                 itemBuilder: _buildItemsForListView,
-                itemCount: _propertyList.length,
+                itemCount: 3,
                 scrollDirection: Axis.vertical,
               ),
-            ):
-             Expanded(
-              flex: 1,
-              child: Text('No Record Found'),
             )
+            // :
+            //  Expanded(
+            //   flex: 1,
+            //   child: Text('No Record Found'),
+            // )
           ],
         ),
       ),
@@ -146,7 +147,7 @@ class _DashboardTransactionsState extends State<DashboardTransactions> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(_propertyList[index].listing.property.title, style: TextStyle(color: appTextColorPrimary),),
+              Text('_propertyList[index].listing.property.title', style: TextStyle(color: appTextColorPrimary),),
               Icon(Icons.keyboard_arrow_right, color: appTextColorPrimary,),
             ],
           ),

@@ -23,7 +23,7 @@ class _SearchPropState extends State<SearchProp> {
   bool rent = false;
   String listingType = 'FOR RENT';
 
-  List<ListingM> _propertyList = List<ListingM>();
+  List<GetAllPropData> _propertyList = List<GetAllPropData>();
 
   void _getAllProperties() async{
     print('Get Properties');
@@ -31,10 +31,10 @@ class _SearchPropState extends State<SearchProp> {
     var _apiCall = repo.getAllProperties('0','10');
 
     await _apiCall.then((value) {
-      print('donnned ${value.data.listing}');
+      print('donnned ${value.data}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.data.listing != null) {
-        setState(() => {_propertyList = value.data.listing});
+      if (value.responseCode == 'M000') {
+        setState(() => {_propertyList = value.data});
         Navigator.pushNamed(context, searchResultRoute, arguments: _propertyList);
         //_isPropLoaded = true;
       } else {

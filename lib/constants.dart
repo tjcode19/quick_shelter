@@ -20,3 +20,5 @@ const String searchResultRoute = '/searchResult';
 const String fileUploadRoute = '/fileUpload';
 const String changePasswordRoute = '/changePassword';
 const String transactionDetailsRoute = '/transactionDetails';
+const String propertyListingsRoute = '/propertyListings';
+const String propertyListingDetailsRoute = '/propertyListingDetails';

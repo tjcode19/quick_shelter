@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/models/GetSavedProperties.dart';
-import 'package:quick_shelter/models/GetUserProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/utils/commonFunctions.dart';
 import 'package:quick_shelter/utils/sharedPreference.dart';
@@ -18,10 +17,10 @@ class DashboardCollections extends StatefulWidget {
 class _DashboardCollectionsState extends State<DashboardCollections> {
   final QuickShelterRepository repo = QuickShelterRepository();
   SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
-  List<GetSavedProperties> _propertyList = List<GetSavedProperties>();
-  List<GetSavedProperties> _propertyRentList = List<GetSavedProperties>();
-  List<GetSavedProperties> saleList = List<GetSavedProperties>();
-  List<GetSavedProperties> rentList = List<GetSavedProperties>();
+  List<Data> _propertyList = List<Data>();
+  List<Data> _propertyRentList = List<Data>();
+  List<Data> saleList = List<Data>();
+  List<Data> rentList = List<Data>();
   String listingType = "";
   bool sale = true;
   bool rent = false;
@@ -39,16 +38,16 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value != null) {
         
-        for (int l = 0; l < value.getSavedProps.length; l++)
+        for (int l = 0; l < value.data.length; l++)
                 {
-                  if (value.getSavedProps[l].listingType != 'FOR RENT')
+                  if (value.data[l].listingType != 'FOR RENT')
                     {
-                      saleList.add(value.getSavedProps[l]);
+                      saleList.add(value.data[l]);
                       print('${saleList[l].listingType} Sales');
                     }
                   else
                     {
-                      rentList.add(value.getSavedProps[l]);
+                      rentList.add(value.data[l]);
                       print('${rentList[l].listingType} Rent');
                     }
                 }

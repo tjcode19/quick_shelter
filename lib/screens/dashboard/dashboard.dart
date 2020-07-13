@@ -120,7 +120,7 @@ class _DashboardState extends State<Dashboard> {
             ),
             BottomNavigationBarItem(
               icon: Icon(MdiIcons.hospitalBuilding),
-              title: Text('Listing'),
+              title: Text('Property'),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.favorite),

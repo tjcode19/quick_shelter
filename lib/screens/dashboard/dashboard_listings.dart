@@ -22,7 +22,7 @@ class _DashboardListingsState extends State<DashboardListings> {
   final QuickShelterRepository repo = QuickShelterRepository();
   SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
   String message = "";
-  List<GetUserProperties> _propertyList = List<GetUserProperties>();
+  List<GetUserPropData> _propertyList = List<GetUserPropData>();
   List<GetUserProperties> _propertyRentList = List<GetUserProperties>();
   String listingType = "";
   bool sale = true;
@@ -35,12 +35,12 @@ class _DashboardListingsState extends State<DashboardListings> {
     var _apiCall = repo.getUserProperties();
 
     await _apiCall.then((value) {
-      print('donnned $value');
+      print('donnned ${value.responseCode}');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value != null) {
+      if (value.responseCode == 'M000') {
         setState(() => {
-              _propertyList = value.getUserProps,
-              print(_propertyList[1].title)
+              _propertyList = value.dataVal,
+              print(_propertyList[0])
             });
       } else {
         //showInSnackBar(value.message);
@@ -134,30 +134,34 @@ class _DashboardListingsState extends State<DashboardListings> {
                 ),
               ),
               const SizedBox(height: 20),
-              saleRentButton(),
+             // saleRentButton(),
               Container(
-                height: 400,
-                child: CustomScrollView(
-                  primary: false,
-                  slivers: <Widget>[
-                    SliverPadding(
-                      padding: const EdgeInsets.all(0),
-                      sliver: SliverGrid.count(
-                        crossAxisSpacing: 5,
-                        childAspectRatio: ((itemWidth) / (itemHeight)),
-                        mainAxisSpacing: 1,
-                        crossAxisCount: 2,
-                        children: _propertyList
-                            .map((e) => _propertItem(_propertyList.indexOf(e)))
-                            .toList(),
+                height: size.height,
+                child: (_propertyList.length > 0)
+                    ? CustomScrollView(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        slivers: <Widget>[
+                          SliverPadding(
+                            padding: const EdgeInsets.all(0),
+                            sliver: SliverGrid.count(
+                              crossAxisSpacing: 5,
+                              childAspectRatio: ((itemWidth) / (itemHeight)),
+                              mainAxisSpacing: 1,
+                              crossAxisCount: 2,
+                              children: _propertyList
+                                  .map((e) =>
+                                      _propertItem(_propertyList.indexOf(e)))
+                                  .toList(),
 //                        <Widget>[
 //                          _propertItem(context),
 //                          _propertItem(context),
 //                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Text('No record found'),
               ),
             ],
           ),
@@ -173,11 +177,11 @@ class _DashboardListingsState extends State<DashboardListings> {
         splashColor: Colors.orange.withAlpha(30),
         onTap: () {
           print('Card tapped.');
-          // Navigator.pushNamed(
-          //   context,
-          //   collPropDetailsRoute,
-          //  // arguments: _propertyList,
-          // );
+          Navigator.pushNamed(
+            context,
+            propertyListingsRoute,
+            arguments: _propertyList[index],
+          );
         },
         child: Container(
           margin: EdgeInsets.all(2),
@@ -188,7 +192,7 @@ class _DashboardListingsState extends State<DashboardListings> {
                 Container(child: CircularProgressIndicator()),
                 FadeInImage.memoryNetwork(
                   width: 175,
-                  height: 123,
+                  height: 128,
                   placeholder: kTransparentImage,
                   image: (_propertyList[index].photos.isNotEmpty)
                       ? _propertyList[index].photos[0].path
@@ -203,45 +207,44 @@ class _DashboardListingsState extends State<DashboardListings> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     const SizedBox(height: 10),
-                    RichText(
-                      text: TextSpan(
-                        text: '₦ ',
-                        style: TextStyle(
-                            fontSize: 13, color: appSecondaryColorLight),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text:
-                                (_propertyList[index].listings[0].price != null)
-                                    ? formatMoney(_propertyList[index]
-                                            .listings[0]
-                                            .price
-                                            .toDouble())
-                                        .withoutFractionDigits
-                                    : '0',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: appTextColorPrimary,
-                            ),
-                          ),
-                          TextSpan(
-                            text: '.00',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 13,
-                              color: appSecondaryColorLight,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 5),
+                    // RichText(
+                    //   text: TextSpan(
+                    //     text: '₦ ',
+                    //     style: TextStyle(
+                    //         fontSize: 13, color: appSecondaryColorLight),
+                    //     children: <TextSpan>[
+                    //       TextSpan(
+                    //         text:
+                    //             (_propertyList[index].listings[0].price != null)
+                    //                 ? formatMoney(_propertyList[index]
+                    //                         .listings[0]
+                    //                         .price
+                    //                         .toDouble())
+                    //                     .withoutFractionDigits
+                    //                 : '0',
+                    //         style: TextStyle(
+                    //           fontWeight: FontWeight.bold,
+                    //           fontSize: 15,
+                    //           color: appTextColorPrimary,
+                    //         ),
+                    //       ),
+                    //       TextSpan(
+                    //         text: '.00',
+                    //         style: TextStyle(
+                    //           fontWeight: FontWeight.w800,
+                    //           fontSize: 13,
+                    //           color: appSecondaryColorLight,
+                    //         ),
+                    //       )
+                    //     ],
+                    //   ),
+                    // ),
                     Text(
                       'Studio Apartment',
                       style:
                           TextStyle(fontSize: 13, color: appTextColorPrimary),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -265,7 +268,7 @@ class _DashboardListingsState extends State<DashboardListings> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 20),
                     Row(
                       children: <Widget>[
                         SvgPicture.asset(

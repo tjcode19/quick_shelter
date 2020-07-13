@@ -15,7 +15,7 @@ class TransactionDetails extends StatefulWidget {
 class _TransactionDetailsState extends State<TransactionDetails> {
   final QuickShelterRepository repo = QuickShelterRepository();
   bool rememberMe = false;
-  ListingM _propertyDetails;
+  GetAllPropData _propertyDetails;
   bool _isSaved = false;
 
   // List<Object> imageList = [
