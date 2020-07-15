@@ -29,26 +29,26 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
   String message = "";
 
   void _getSavedProperties() async {
-    print('Get User Properties');
+    print('Get Saved Properties');
     //showLoadingDialog(context, _keyLoader);
     var _apiCall = repo.getSavedProperties('0', '10');
 
     await _apiCall.then((value) {
-      print('donnned $value');
+     // print('donnned $value');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value != null) {
+      if (value.responseCode == 'M000') {
         
         for (int l = 0; l < value.data.length; l++)
                 {
                   if (value.data[l].listingType != 'FOR RENT')
                     {
                       saleList.add(value.data[l]);
-                      print('${saleList[l].listingType} Sales');
+                     // print('${saleList[l].listingType} Sales');
                     }
                   else
                     {
                       rentList.add(value.data[l]);
-                      print('${rentList[l].listingType} Rent');
+                      //print('${rentList[l].listingType} Rent');
                     }
                 }
                 
@@ -116,13 +116,13 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
           ),
         ),
         actions: <Widget>[
-          Container(
-              margin: EdgeInsets.symmetric(horizontal: 5),
-              alignment: Alignment.center,
-              child: Text(
-                'Edit',
-                style: TextStyle(color: appColorSecondary),
-              ))
+          // Container(
+          //     margin: EdgeInsets.symmetric(horizontal: 5),
+          //     alignment: Alignment.center,
+          //     child: Text(
+          //       'Edit',
+          //       style: TextStyle(color: appColorSecondary),
+          //     ))
         ],
         title: RichText(
           text: TextSpan(
@@ -158,6 +158,7 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
               ),
               const SizedBox(height: 20),
               saleRentButton(),
+              (_propertyList != null)?
               Container(
                 height: 400,
                 child: CustomScrollView(
@@ -183,7 +184,7 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
                     ),
                   ],
                 ),
-              ),
+              ):Text('No Record Found'),
             ],
           ),
         ),

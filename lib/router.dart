@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:quick_shelter/screens/dashboard/add_property_listing.dart';
 import 'package:quick_shelter/screens/dashboard/change_password.dart';
 import 'package:quick_shelter/screens/dashboard/dashboard_add_property2.dart';
+import 'package:quick_shelter/screens/dashboard/edit_property_details.dart';
+import 'package:quick_shelter/screens/dashboard/edit_property_listing.dart';
 import 'package:quick_shelter/screens/dashboard/file_upload.dart';
-import 'package:quick_shelter/screens/dashboard/property_listing_details.dart';
+import 'package:quick_shelter/screens/dashboard/property_edit_main.dart';
+import 'package:quick_shelter/screens/dashboard/user_property_details.dart';
 import 'package:quick_shelter/screens/dashboard/property_listings.dart';
 import 'package:quick_shelter/screens/dashboard/search_result.dart';
 import 'package:quick_shelter/screens/forgot_password.dart';
@@ -91,10 +95,29 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           propDetails: propertyDetails,
         ),
       );
-    case propertyListingDetailsRoute:
+    case userPropertyDetailsRoute:
       var propertyDetails = settings.arguments;
       return MaterialPageRoute(
-        builder: (context) => PropertyListingDetails(
+        builder: (context) => UserPropertyDetails(
+          propDetails: propertyDetails,
+        ),
+      );
+    case editPropDetailsRoute:
+      var propertyDetails = settings.arguments;
+      return MaterialPageRoute(
+        builder: (context) => EditPropDetails(
+          propDetails: propertyDetails,
+        ),
+      );
+    case editPropListingRoute:
+      //var propertyDetails = settings.arguments;
+      return MaterialPageRoute(
+        builder: (context) => EditPropListing(),
+      );
+    case editPropMainRoute:
+      var propertyDetails = settings.arguments;
+      return MaterialPageRoute(
+        builder: (context) => PropertyEditMain(
           propDetails: propertyDetails,
         ),
       );
@@ -108,6 +131,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           builder: (context) => SearchResult(
                 propertyList: propertyList,
               ));
+    case addPropertyListingRoute:
+      var propertyList = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => AddPropListing(propDetails: propertyList, ));
     case fileUploadRoute:
       return MaterialPageRoute(builder: (context) => FileUpload());
     case changePasswordRoute:

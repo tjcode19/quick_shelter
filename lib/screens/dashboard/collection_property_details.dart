@@ -287,7 +287,7 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              _propertyDetails.property.specifications.nOOFROOMS.toString(),
+                              _propertyDetails.property.specifications.nOOFBEDROOMS.toString(),
                               style:
                                   TextStyle(color: Colors.white, fontSize: 15),
                             ),
@@ -319,7 +319,7 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              _propertyDetails.property.specifications.nOOFROOMS.toString(),
+                              _propertyDetails.property.specifications.nOOFBATHROOMS.toString(),
                               style:
                                   TextStyle(color: Colors.white, fontSize: 15),
                             ),

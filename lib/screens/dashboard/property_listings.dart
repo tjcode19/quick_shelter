@@ -21,6 +21,8 @@ class _PropertyListingsState extends State<PropertyListings> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  ScrollController _controller;
+
   final _propTypeController = TextEditingController();
   final _propTitleController = TextEditingController();
   final _propStateController = TextEditingController();
@@ -35,6 +37,23 @@ class _PropertyListingsState extends State<PropertyListings> {
   bool rent = false;
 
   String stateSelection = "";
+  bool _isVisible = true;
+
+  _scrollListener() {
+    if (_controller.offset >= _controller.position.maxScrollExtent &&
+        !_controller.position.outOfRange) {
+      setState(() {
+        _isVisible = false;
+      });
+    }
+    if (_controller.offset <= _controller.position.minScrollExtent &&
+        !_controller.position.outOfRange) {
+      setState(() {
+        _isVisible = true;
+       // _prefUserFN = _prefUserFN;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -74,6 +93,19 @@ class _PropertyListingsState extends State<PropertyListings> {
                     fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, editPropDetailsRoute);
+                },
+                child: Text(
+                  'Edit',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ]),
             const SizedBox(height: 30),
             Expanded(
@@ -88,6 +120,30 @@ class _PropertyListingsState extends State<PropertyListings> {
           ],
         ),
       ),
+       floatingActionButton: AnimatedOpacity(
+        opacity: _isVisible ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 500),
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.pushNamed(context, addPropertyListingRoute, arguments: _propertyList);
+          },
+          // child: Icon(
+          //   Icons.add,
+          //   color: Colors.white,
+          // ),
+          // backgroundColor: Theme.of(context).primaryColor,
+          label: Text(
+            'Add Listing',
+            style: TextStyle(fontSize: 14.0, color: Colors.white),
+          ),
+          icon: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          tooltip: 'Listing',
+        ),
+      ),
     );
   }
 
@@ -99,16 +155,11 @@ class _PropertyListingsState extends State<PropertyListings> {
     return InkWell(
       splashColor: Colors.orange.withAlpha(30),
       onTap: () {
-        //print('Transaction tapped');
+        print('Transaction tapped');
         Navigator.pushNamed(
           ctxt,
-          propertyListingDetailsRoute,
-          arguments: {
-            'pData': _propertyList,
-            'price': _propertyList.listings[index].price,
-            'lType': _propertyList.listings[index].listingType,
-            'lDate':_propertyList.listings[index].listingDate
-          },
+          addPropertyListingRoute,
+          arguments: {_propertyList},
         );
       },
       child: Container(

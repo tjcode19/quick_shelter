@@ -9,16 +9,17 @@ import 'package:transparent_image/transparent_image.dart';
 import '../../colors.dart';
 import '../../constants.dart';
 
-class DashboardListings extends StatefulWidget {
+class DashboardUserProperties extends StatefulWidget {
   final userPropListing;
 
-  DashboardListings({Key key, this.userPropListing}) : super(key: key);
+  DashboardUserProperties({Key key, this.userPropListing}) : super(key: key);
 
   @override
-  _DashboardListingsState createState() => _DashboardListingsState();
+  _DashboardUserPropertiesState createState() =>
+      _DashboardUserPropertiesState();
 }
 
-class _DashboardListingsState extends State<DashboardListings> {
+class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
   final QuickShelterRepository repo = QuickShelterRepository();
   SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
   String message = "";
@@ -29,6 +30,13 @@ class _DashboardListingsState extends State<DashboardListings> {
   bool rent = false;
   String _prefUserFN;
 
+  refresh() {
+    print('refresh');
+   // setState(() {
+      _getUserProperties();
+    //});
+  }
+
   void _getUserProperties() async {
     print('Get User Properties');
     //showLoadingDialog(context, _keyLoader);
@@ -38,10 +46,8 @@ class _DashboardListingsState extends State<DashboardListings> {
       print('donnned ${value.responseCode}');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.responseCode == 'M000') {
-        setState(() => {
-              _propertyList = value.dataVal,
-              print(_propertyList[0])
-            });
+        setState(
+            () => {_propertyList = value.dataVal, print(_propertyList[0])});
       } else {
         //showInSnackBar(value.message);
         print('Failed to load properties');
@@ -126,7 +132,7 @@ class _DashboardListingsState extends State<DashboardListings> {
               Container(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  'My Listings',
+                  'My Properties',
                   style: TextStyle(
                       color: appSecondaryColor,
                       fontSize: 20.0,
@@ -134,7 +140,7 @@ class _DashboardListingsState extends State<DashboardListings> {
                 ),
               ),
               const SizedBox(height: 20),
-             // saleRentButton(),
+              // saleRentButton(),
               Container(
                 height: size.height,
                 child: (_propertyList.length > 0)
@@ -176,11 +182,10 @@ class _DashboardListingsState extends State<DashboardListings> {
       child: InkWell(
         splashColor: Colors.orange.withAlpha(30),
         onTap: () {
-          print('Card tapped.');
           Navigator.pushNamed(
             context,
-            propertyListingsRoute,
-            arguments: _propertyList[index],
+            userPropertyDetailsRoute,
+            arguments: {'data':_propertyList[index], 'refFunc':refresh},
           );
         },
         child: Container(
@@ -207,40 +212,10 @@ class _DashboardListingsState extends State<DashboardListings> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     const SizedBox(height: 10),
-                    // RichText(
-                    //   text: TextSpan(
-                    //     text: '₦ ',
-                    //     style: TextStyle(
-                    //         fontSize: 13, color: appSecondaryColorLight),
-                    //     children: <TextSpan>[
-                    //       TextSpan(
-                    //         text:
-                    //             (_propertyList[index].listings[0].price != null)
-                    //                 ? formatMoney(_propertyList[index]
-                    //                         .listings[0]
-                    //                         .price
-                    //                         .toDouble())
-                    //                     .withoutFractionDigits
-                    //                 : '0',
-                    //         style: TextStyle(
-                    //           fontWeight: FontWeight.bold,
-                    //           fontSize: 15,
-                    //           color: appTextColorPrimary,
-                    //         ),
-                    //       ),
-                    //       TextSpan(
-                    //         text: '.00',
-                    //         style: TextStyle(
-                    //           fontWeight: FontWeight.w800,
-                    //           fontSize: 13,
-                    //           color: appSecondaryColorLight,
-                    //         ),
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
                     Text(
-                      'Studio Apartment',
+                      (_propertyList[index].title != null)
+                          ? _propertyList[index].title
+                          : 'NA',
                       style:
                           TextStyle(fontSize: 13, color: appTextColorPrimary),
                     ),
@@ -276,7 +251,8 @@ class _DashboardListingsState extends State<DashboardListings> {
                           color: Colors.orange,
                         ),
                         const SizedBox(width: 5),
-                        Text('3 Bed',
+                        Text(
+                            '${_propertyList[index].specifications.nOOFROOMS} Bed',
                             style: TextStyle(
                                 color: Colors.black87, fontSize: 12.0)),
                         const SizedBox(width: 15),
@@ -285,7 +261,8 @@ class _DashboardListingsState extends State<DashboardListings> {
                           color: Colors.orange,
                         ),
                         const SizedBox(width: 5),
-                        Text('2 Bath',
+                        Text(
+                            '${_propertyList[index].specifications.nOOFBATHROOMS} Bath',
                             style: TextStyle(
                                 color: Colors.black87, fontSize: 12.0)),
                       ],

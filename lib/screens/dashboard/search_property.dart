@@ -10,7 +10,6 @@ import '../../widgets/raised_button.dart';
 import '../../constants.dart';
 
 class SearchProp extends StatefulWidget {
-
   @override
   _SearchPropState createState() => _SearchPropState();
 }
@@ -25,17 +24,18 @@ class _SearchPropState extends State<SearchProp> {
 
   List<GetAllPropData> _propertyList = List<GetAllPropData>();
 
-  void _getAllProperties() async{
+  void _getAllProperties() async {
     print('Get Properties');
     showLoadingDialog(context, _keyLoader);
-    var _apiCall = repo.getAllProperties('0','10');
+    var _apiCall = repo.getAllProperties('0', '10', '2020-01-01', '2020-07-11');
 
     await _apiCall.then((value) {
       print('donnned ${value.data}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.responseCode == 'M000') {
         setState(() => {_propertyList = value.data});
-        Navigator.pushNamed(context, searchResultRoute, arguments: _propertyList);
+        Navigator.pushNamed(context, searchResultRoute,
+            arguments: _propertyList);
         //_isPropLoaded = true;
       } else {
         //showInSnackBar(value.message);
@@ -88,7 +88,12 @@ class _SearchPropState extends State<SearchProp> {
               InputFieldWidget(
                   'Fully Detached Duplex', TextInputType.text, false),
               const SizedBox(height: 40),
-              RaisedButtonWidget(searchResultRoute, 'Search', true, action: _getAllProperties,),
+              RaisedButtonWidget(
+                searchResultRoute,
+                'Search',
+                true,
+                action: _getAllProperties,
+              ),
               const SizedBox(height: 20),
             ],
           ),
@@ -157,7 +162,8 @@ class _SearchPropState extends State<SearchProp> {
                         padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                         child: Text(
                           'For Sale',
-                          style: TextStyle(color: appTextColorPrimary, fontSize: 15),
+                          style: TextStyle(
+                              color: appTextColorPrimary, fontSize: 15),
                         ),
                       ),
                     ],
@@ -228,7 +234,8 @@ class _SearchPropState extends State<SearchProp> {
                           padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                           child: Text(
                             'For Rent',
-                            style: TextStyle(color: appTextColorPrimary, fontSize: 15),
+                            style: TextStyle(
+                                color: appTextColorPrimary, fontSize: 15),
                           ),
                         ),
                       ],

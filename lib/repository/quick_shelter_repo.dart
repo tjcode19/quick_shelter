@@ -3,6 +3,7 @@ import 'dart:io';
 //import 'package:http/http.dart' as http;
 
 import 'package:quick_shelter/models/AddPropertyResponse.dart';
+import 'package:quick_shelter/models/AddSavedListing.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/models/GetProfileResponse.dart';
 import 'package:quick_shelter/models/GetPropertyListingReq.dart';
@@ -71,6 +72,16 @@ class QuickShelterRepository {
     return LoginResponse.fromJson(response);
   }
 
+  Future<AddSavedListing> addSavedListing(int prodID) async {
+    final response = await _provider.post(
+      "save-listing",
+      <String, dynamic>{
+        'listingID': prodID,
+      },
+    );
+    return AddSavedListing.fromJson(response);
+  }
+
   Future<AddPropertyResponse> addProperty(Map data) async {
     final response = await _provider.post(
       "add-property",
@@ -83,33 +94,68 @@ class QuickShelterRepository {
         'Country': data['Country'],
         'LandArea': data['LandArea'],
         "Specifications": {
-          "NO_OF_LIVINGROOMS": 2,
-          "NO_OF_ROOMS": 3,
-          "NO_OF_FLOORS": 3,
-          "HAS_SWIMMING_POOL": true
+          "NO_OF_LIVINGROOMS": data['Specifications']['NO_OF_LIVINGROOMS'],
+          "NO_OF_ROOMS": data['Specifications']['NO_OF_ROOMS'],
+          "NO_OF_FLOORS": data['Specifications']['NO_OF_FLOORS'],
+          "NO_OF_BATHROOMS": data['Specifications']['NO_OF_BATHROOMS'],
+          "HAS_SWIMMING_POOL": data['Specifications']['HAS_SWIMMING_POOL']
         },
         "addListing": data['addListing'],
         "Listing": {
-          "ListingType": data['addListing'],
-          "IS_AVAILABLE": data['IS_AVAILABLE'],
-          "MinPeriod": data['addListing'],
-          "PeriodUnits": data['addListing']
+          "ListingType": data['Listing']['ListingType'],
+          "IS_AVAILABLE": data['Listing']['IS_AVAILABLE'],
+          "MinPeriod": data['Listing']['MinPeriod'],
+          "PeriodUnits": data['Listing']['PeriodUnits']
         }
       },
     );
     return AddPropertyResponse.fromJson(response);
   }
 
+  Future<AddPropertyResponse> editProperty(Map data, String propertyID) async {
+    final response = await _provider.put(
+      "edit-property/$propertyID",
+      <String, Object>{
+        'Type': data['Type'],
+        "Title": data['Title'],
+        'Location': data['Location'],
+        'Address': data['Address'],
+        'Description': data['Description'],
+        'State': data['State'],
+        'Country': data['Country'],
+        'LandArea': data['LandArea'],
+        "Units": data['Units'],
+        "Specifications": {
+          "NO_OF_LIVINGROOMS": data['Specifications']['NO_OF_LIVINGROOMS'],
+          "NO_OF_BEDROOMS": data['Specifications']['NO_OF_BEDROOMS'],
+          "NO_OF_FLOORS": data['Specifications']['NO_OF_FLOORS'],
+          "NO_OF_BATHROOMS": data['Specifications']['NO_OF_BATHROOMS'],
+          "HAS_SWIMMING_POOL": data['Specifications']['HAS_SWIMMING_POOL']
+        },
+        // "addListing": data['addListing'],
+        // "Listing": {
+        //   "ListingType": data['addListing'],
+        //   "IS_AVAILABLE": data['IS_AVAILABLE'],
+        //   "MinPeriod": data['addListing'],
+        //   "PeriodUnits": data['addListing']
+        // }
+      },
+    );
+    return AddPropertyResponse.fromJson(response);
+  }
+
   Future<AddPropertyResponse> addPropertyListing(
-      String lType, String availableFrom, String minP, String pUnits) async {
+      Map data, String propertyID) async {
     final response = await _provider.post(
       "add-listing",
       <String, Object>{
-        'PropertyID': 0,
-        'ListingType': lType,
-        'AvailableFrom': availableFrom,
-        'MinPeriod': minP,
-        'PeriodUnits': pUnits,
+        'PropertyID': propertyID,
+        'ListingType': data['ListingType'],
+        'AvailableFrom': data['AvailableFrom'],
+        'MinPeriod': data['MinPeriod'],
+        'PeriodUnits': data['PeriodUnits'],
+        'Price': data['Price'],
+        'IS_AVAILABLE': data['IS_AVAILABLE']
       },
     );
     return AddPropertyResponse.fromJson(response);
@@ -165,11 +211,13 @@ class QuickShelterRepository {
     return GetUserProperties.fromJson(response);
   }
 
-  Future<GetAllProperties> getAllProperties(var page, var noPerPage) async {
+  Future<GetAllProperties> getAllProperties(
+      var page, var noPerPage, String startDate, String endDate) async {
     final response = await _provider.put(
       "search-listing/$page/$noPerPage",
-      <String, String>{
-        'ListingType': 'FOR RENT',
+      <String, dynamic>{
+        "ListingDate": {"startDate": startDate, "endDate": endDate},
+        "IS_AVAILABLE": true
       },
     );
     print(response);
@@ -178,7 +226,7 @@ class QuickShelterRepository {
 
   Future<GetSingleProperty> getSingleProperty(String propID) async {
     final response = await _provider.get(
-      "get-property/$propID",
+      "get-property/$propID", 
     );
     return GetSingleProperty.fromJson(response);
   }

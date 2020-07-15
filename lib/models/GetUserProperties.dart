@@ -137,30 +137,33 @@ class GetUserPropData
 }
 
 class Specifications {
-  int nOOFROOMS;
-  int nOOFFLOORS;
+  var nOOFROOMS;
+  var nOOFFLOORS;
   bool hASSWIMMINGPOOL;
-  int nOOFLIVINGROOMS;
+  var nOOFLIVINGROOMS;
+  var nOOFBATHROOMS;
 
   Specifications(
       {this.nOOFROOMS,
       this.nOOFFLOORS,
       this.hASSWIMMINGPOOL,
-      this.nOOFLIVINGROOMS});
+      this.nOOFLIVINGROOMS, this.nOOFBATHROOMS});
 
   Specifications.fromJson(Map<String, dynamic> json) {
-    nOOFROOMS = json['NO_OF_ROOMS'];
+    nOOFROOMS = json['NO_OF_BEDROOMS'];
     nOOFFLOORS = json['NO_OF_FLOORS'];
     hASSWIMMINGPOOL = json['HAS_SWIMMING_POOL'];
     nOOFLIVINGROOMS = json['NO_OF_LIVINGROOMS'];
+    nOOFBATHROOMS = json['NO_OF_BATHROOMS'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['NO_OF_ROOMS'] = this.nOOFROOMS;
+    data['NO_OF_BEDROOMS'] = this.nOOFROOMS;
     data['NO_OF_FLOORS'] = this.nOOFFLOORS;
     data['HAS_SWIMMING_POOL'] = this.hASSWIMMINGPOOL;
     data['NO_OF_LIVINGROOMS'] = this.nOOFLIVINGROOMS;
+    data['NO_OF_BATHROOMS'] = this.nOOFBATHROOMS;
     return data;
   }
 }

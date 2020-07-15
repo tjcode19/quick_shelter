@@ -22,27 +22,6 @@ class _PropertyDetailsState extends State<PropertyDetails> {
   GetAllPropData _propertyDetails;
   bool _isSaved = false;
 
-  // List<Object> imageList = [
-  //   {
-  //     'thumbnail': 'assets/images/1_thumbnail.png',
-  //     'big': 'assets/images/1_big.png',
-  //   },
-  //   {
-  //     'thumbnail': 'assets/images/1_thumbnail.png',
-  //     'big': 'assets/images/1_big.png',
-  //   },
-  //   {
-  //     'thumbnail': 'assets/images/1_thumbnail.png',
-  //     'big': 'assets/images/1_big.png',
-  //   }
-  // ];
-
-  // var ls = [
-  //   ImageList('assets/images/1_thumbnail.png', 'assets/images/1_big.png'),
-  //   ImageList('assets/images/2_thumbnail.png', 'assets/images/2_big.png'),
-  //   ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
-  //   ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
-  // ];
 
   int imageNum = 0;
   int _currentPosition = 0;
@@ -65,11 +44,11 @@ class _PropertyDetailsState extends State<PropertyDetails> {
 
   _saveProperty(){
     if(_isSaved){
-      var _apiCall = repo.addSavedProperty(_propertyDetails.propertyID);
+      var _apiCall = repo.addSavedListing(_propertyDetails.propertyID);
 
     _apiCall.then((value) async {
       print('donnned');
-      if (value.code == '200') {
+      if (value.message != null) {
        // Navigator.pushNamed(context, dashboardRoute);
       } else {
         //showInSnackBar(value.message);
@@ -366,7 +345,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              '2',
+                              _propertyDetails.property.specifications.nOOFBATHROOMS.toString(),
                               style:
                                   TextStyle(color: Colors.white, fontSize: 15),
                             ),
@@ -430,15 +409,17 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                     _rowCont('Location', _propertyDetails.property.location,
                         Icons.location_on),
                     Divider(color: Colors.white38, thickness: 1.0),
-                    _rowCont('State', 'Lagos State', Icons.pin_drop),
+                    _rowCont('State', _propertyDetails.property.state, Icons.pin_drop),
                     Divider(color: Colors.white38, thickness: 1.0),
-                    _rowCont('Land Area', '77km', Icons.landscape),
+                    _rowCont('Land Area', _propertyDetails.property.landArea, Icons.landscape),
                     Divider(color: Colors.white38, thickness: 1.0),
                     _rowCont(
-                        'Available date', '20th May, 2020', Icons.date_range),
+                        'Available date', (_propertyDetails.listingDate != null)? formatDate(_propertyDetails.listingDate): 'NA', Icons.date_range),
                     Divider(color: Colors.white38, thickness: 1.0),
                     const SizedBox(height: 20),
-                    RaisedButtonWidget(dashboardRoute, 'Buy Property', true),
+                    (_propertyDetails.listingType =='FOR SALE')?
+                    RaisedButtonWidget('pop', 'Buy Property', true):
+                    RaisedButtonWidget('pop', 'Rent Property', true),
                     const SizedBox(height: 20),
                   ],
                 ),

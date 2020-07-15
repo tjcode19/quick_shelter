@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:quick_shelter/constants.dart';
 import 'package:quick_shelter/models/GetUserProperties.dart';
+import 'package:quick_shelter/screens/dashboard/property_details.dart';
 import 'package:quick_shelter/utils/commonFunctions.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../../colors.dart';
 
-class PropertyListingDetails extends StatefulWidget {
+class UserPropertyDetails extends StatefulWidget {
   final propDetails;
 
-  PropertyListingDetails({Key key, this.propDetails}) : super(key: key);
+  UserPropertyDetails({Key key, this.propDetails}) : super(key: key);
   @override
-  _PropertyListingDetailsState createState() => _PropertyListingDetailsState();
+  _UserPropertyDetailsState createState() => _UserPropertyDetailsState();
 }
 
-class _PropertyListingDetailsState extends State<PropertyListingDetails> {
+class _UserPropertyDetailsState extends State<UserPropertyDetails> {
   bool rememberMe = false;
   GetUserPropData _propertyDetails;
   List<Photos> propPhotos = List<Photos>();
@@ -50,10 +53,10 @@ class _PropertyListingDetailsState extends State<PropertyListingDetails> {
   void initState() {
     super.initState();
 
-    _propertyDetails = widget.propDetails['pData'];
-    price = widget.propDetails['price'];
-    lType = widget.propDetails['lType'];
-    lDate = widget.propDetails['lDate'];
+    _propertyDetails = widget.propDetails['data'];
+    price = 1;
+    lType = 'j';
+    //lDate = _propertyDetails.listings[0].listingDate;
     propPhotos = _propertyDetails.photos;
   }
 
@@ -244,19 +247,81 @@ class _PropertyListingDetailsState extends State<PropertyListingDetails> {
                     const SizedBox(height: 10),
                     Container(
                       child: Text(
-                        'Listing Details',
+                        (_propertyDetails.title != null)?_propertyDetails.title: 'NA',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                    const SizedBox(height: 30),
-                    Divider(color: Colors.white38, thickness: 1.0),
-                    _rowCont(
-                        'Price',
-                        formatMoney(price.toDouble()).withoutFractionDigits,
-                        Icons.location_on),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              _propertyDetails.specifications.nOOFROOMS
+                                  .toString(),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                            SizedBox(height: 5.0),
+                            Row(
+                              children: <Widget>[
+                                SvgPicture.asset(
+                                  'assets/icons/bed.svg',
+                                  color: Colors.white,
+                                  width: 25,
+                                ),
+                                SizedBox(
+                                  width: 5.0,
+                                ),
+                                Text(
+                                  'Bedrooms',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 13),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(width: 20.0),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              _propertyDetails.specifications.nOOFBATHROOMS
+                                  .toString(),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                            SizedBox(height: 5.0),
+                            Row(
+                              children: <Widget>[
+                                SvgPicture.asset(
+                                  'assets/icons/bath.svg',
+                                  color: Colors.white,
+                                  width: 25,
+                                ),
+                                SizedBox(
+                                  width: 5.0,
+                                ),
+                                Text(
+                                  'Bathroom',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 13),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
                     Divider(color: Colors.white38, thickness: 1.0),
                     _rowCont('Location', _propertyDetails.location,
                         Icons.location_on),
@@ -267,7 +332,7 @@ class _PropertyListingDetailsState extends State<PropertyListingDetails> {
                         Icons.landscape),
                     Divider(color: Colors.white38, thickness: 1.0),
                     _rowCont(
-                        'Listing Date', formatDate(lDate), Icons.date_range),
+                        'Available Date', (lDate != null)?formatDate(lDate):'NA', Icons.date_range),
                     Divider(color: Colors.white38, thickness: 1.0),
                     const SizedBox(height: 20),
                     Row(
@@ -295,7 +360,7 @@ class _PropertyListingDetailsState extends State<PropertyListingDetails> {
                                 Container(
                                   padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                                   child: Text(
-                                    'Edit Listing',
+                                    'Edit Property',
                                     style: TextStyle(
                                         color: appTextColorPrimary2,
                                         fontSize: 15),
@@ -304,7 +369,7 @@ class _PropertyListingDetailsState extends State<PropertyListingDetails> {
                               ],
                             ),
                             onPressed: () {
-                              Navigator.pop(context);
+                              Navigator.pushNamed(context, editPropMainRoute, arguments: {'data':_propertyDetails, 'refFunc':widget.propDetails['refFunc']});
                             },
                           ),
                         ),
@@ -333,7 +398,7 @@ class _PropertyListingDetailsState extends State<PropertyListingDetails> {
                                 Container(
                                   padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                                   child: Text(
-                                    'View Transactions',
+                                    'List Property',
                                     style: TextStyle(
                                         color: appTextColorPrimary2,
                                         fontSize: 15),
@@ -343,6 +408,7 @@ class _PropertyListingDetailsState extends State<PropertyListingDetails> {
                             ),
                             onPressed: () {
                               // _settingModalBottomSheet(context);
+                              Navigator.pushNamed(context, propertyListingsRoute, arguments: _propertyDetails);
                             },
                           ),
                         ),
@@ -368,7 +434,7 @@ class _PropertyListingDetailsState extends State<PropertyListingDetails> {
                             Container(
                               padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                               child: Text(
-                                'Delete Listing',
+                                'Delete Property',
                                 style: TextStyle(
                                     color: appTextColorPrimary2, fontSize: 15),
                               ),

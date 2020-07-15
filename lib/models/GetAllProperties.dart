@@ -204,20 +204,23 @@ class Property {
 }
 
 class Specifications {
-  int nOOFFLOORS;
-  int nOOFBEDROOMS;
+  var nOOFFLOORS;
+  var nOOFBEDROOMS;
   bool hASSWIMMINGPOOL;
-  int nOOFLIVINGROOMS;
+  var nOOFLIVINGROOMS;
+  var nOOFBATHROOMS;
 
   Specifications(
       {this.nOOFFLOORS,
       this.nOOFBEDROOMS,
       this.hASSWIMMINGPOOL,
-      this.nOOFLIVINGROOMS});
+      this.nOOFLIVINGROOMS,
+      this.nOOFBATHROOMS});
 
   Specifications.fromJson(Map<String, dynamic> json) {
     nOOFFLOORS = json['NO_OF_FLOORS'];
     nOOFBEDROOMS = json['NO_OF_BEDROOMS'];
+    nOOFBATHROOMS = json['NO_OF_BATHROOMS'];
     hASSWIMMINGPOOL = json['HAS_SWIMMING_POOL'];
     nOOFLIVINGROOMS = json['NO_OF_LIVINGROOMS'];
   }
@@ -228,6 +231,7 @@ class Specifications {
     data['NO_OF_BEDROOMS'] = this.nOOFBEDROOMS;
     data['HAS_SWIMMING_POOL'] = this.hASSWIMMINGPOOL;
     data['NO_OF_LIVINGROOMS'] = this.nOOFLIVINGROOMS;
+    data['NO_OF_BATHROOMS'] = this.nOOFBATHROOMS;
     return data;
   }
 }

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:quick_shelter/colors.dart';
-import 'package:quick_shelter/models/GetAllProperties.dart';
-import 'package:quick_shelter/models/GetUserProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/screens/dashboard/dashboard_collections.dart';
-import 'package:quick_shelter/screens/dashboard/dashboard_listings.dart';
+import 'package:quick_shelter/screens/dashboard/dashboard_user_properties.dart';
 import 'package:quick_shelter/screens/get_started.dart';
 
 import 'dashboard_home.dart';
@@ -45,7 +43,7 @@ class _DashboardState extends State<Dashboard> {
 
   static List<Widget> _widgetOptions = <Widget>[
           DashboardHome(),
-          DashboardListings(
+          DashboardUserProperties(
             //userPropListing: _propertyList,
           ),
           DashboardCollections(),
