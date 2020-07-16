@@ -20,7 +20,7 @@ class AddPropStep2 extends StatefulWidget {
 
 class _AddPropStep2State extends State<AddPropStep2> {
   final QuickShelterRepository repo = QuickShelterRepository();
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+ // final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   File _image;
@@ -46,8 +46,8 @@ class _AddPropStep2State extends State<AddPropStep2> {
     print(_apiCall);
 
     await _apiCall.then((value) {
-      print(value.message);
-      if (value.code == '200') {
+      print(value.responseCode);
+      if (value.responseCode == globalSuccessResponseCode) {
         setState(() {
           _isLoading[index] = false;
         });

@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:quick_shelter/models/AddPropertyResponse.dart';
 import 'package:quick_shelter/models/AddSavedListing.dart';
+import 'package:quick_shelter/models/EditPropertyResponse.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/models/GetProfileResponse.dart';
 import 'package:quick_shelter/models/GetPropertyListingReq.dart';
@@ -87,6 +88,7 @@ class QuickShelterRepository {
       "add-property",
       <String, Object>{
         'Type': data['Type'],
+        "Title": data['Title'],
         'Location': data['Location'],
         'Adddress': data['Adddress'],
         'Description': data['Description'],
@@ -95,24 +97,24 @@ class QuickShelterRepository {
         'LandArea': data['LandArea'],
         "Specifications": {
           "NO_OF_LIVINGROOMS": data['Specifications']['NO_OF_LIVINGROOMS'],
-          "NO_OF_ROOMS": data['Specifications']['NO_OF_ROOMS'],
+          "NO_OF_BEDROOMS": data['Specifications']['NO_OF_BEDROOMS'],
           "NO_OF_FLOORS": data['Specifications']['NO_OF_FLOORS'],
           "NO_OF_BATHROOMS": data['Specifications']['NO_OF_BATHROOMS'],
           "HAS_SWIMMING_POOL": data['Specifications']['HAS_SWIMMING_POOL']
-        },
-        "addListing": data['addListing'],
-        "Listing": {
-          "ListingType": data['Listing']['ListingType'],
-          "IS_AVAILABLE": data['Listing']['IS_AVAILABLE'],
-          "MinPeriod": data['Listing']['MinPeriod'],
-          "PeriodUnits": data['Listing']['PeriodUnits']
         }
+        // "addListing": data['addListing'],
+        // "Listing": {
+        //   "ListingType": data['Listing']['ListingType'],
+        //   "IS_AVAILABLE": data['Listing']['IS_AVAILABLE'],
+        //   "MinPeriod": data['Listing']['MinPeriod'],
+        //   "PeriodUnits": data['Listing']['PeriodUnits']
+        // }
       },
     );
     return AddPropertyResponse.fromJson(response);
   }
 
-  Future<AddPropertyResponse> editProperty(Map data, String propertyID) async {
+  Future<EditPropertyResponse> editProperty(Map data, String propertyID) async {
     final response = await _provider.put(
       "edit-property/$propertyID",
       <String, Object>{
@@ -141,7 +143,7 @@ class QuickShelterRepository {
         // }
       },
     );
-    return AddPropertyResponse.fromJson(response);
+    return EditPropertyResponse.fromJson(response);
   }
 
   Future<AddPropertyResponse> addPropertyListing(
@@ -231,11 +233,11 @@ class QuickShelterRepository {
     return GetSingleProperty.fromJson(response);
   }
 
-  Future<GetTransactionList> getTransactionList(var page, var pageSize) async {
+  Future<TransactionListResponse> getTransactionList(var page, var pageSize) async {
     final response = await _provider.get(
       "paid-listings/$page/$pageSize",
     );
-    return GetTransactionList.fromJson(response);
+    return TransactionListResponse.fromJson(response);
   }
 
   Future<GetSinglePropertyListing> getSinglePropertyListing(

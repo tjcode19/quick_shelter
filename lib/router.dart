@@ -6,6 +6,7 @@ import 'package:quick_shelter/screens/dashboard/edit_property_details.dart';
 import 'package:quick_shelter/screens/dashboard/edit_property_listing.dart';
 import 'package:quick_shelter/screens/dashboard/file_upload.dart';
 import 'package:quick_shelter/screens/dashboard/property_edit_main.dart';
+import 'package:quick_shelter/screens/dashboard/property_listings_details.dart';
 import 'package:quick_shelter/screens/dashboard/user_property_details.dart';
 import 'package:quick_shelter/screens/dashboard/property_listings.dart';
 import 'package:quick_shelter/screens/dashboard/search_result.dart';
@@ -95,6 +96,13 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           propDetails: propertyDetails,
         ),
       );
+    case propertyListingDetailsRoute:
+      var propertyDetails = settings.arguments;
+      return MaterialPageRoute(
+        builder: (context) => PropertyListingDeatils(
+          propDetails: propertyDetails,
+        ),
+      );
     case userPropertyDetailsRoute:
       var propertyDetails = settings.arguments;
       return MaterialPageRoute(
@@ -134,7 +142,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case addPropertyListingRoute:
       var propertyList = settings.arguments;
       return MaterialPageRoute(
-          builder: (context) => AddPropListing(propDetails: propertyList, ));
+          builder: (context) => AddPropListing(
+                propDetails: propertyList,
+              ));
     case fileUploadRoute:
       return MaterialPageRoute(builder: (context) => FileUpload());
     case changePasswordRoute:

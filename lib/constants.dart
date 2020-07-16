@@ -1,12 +1,12 @@
 const String welcomeRoute = '/welcome';
 const String loginRoute = '/login';
 const String forgotPasswordRoute = '/forgotPassword';
-const String getStartedRoute= '/getStarted';
-const String signUpRoute= '/signUp';
-const String verifyPhoneRoute= '/verifyPhone';
-const String identityCardRoute= '/identityCard';
-const String regCompletedRoute= '/regCompleted';
-const String dashboardRoute= '/dashboard';
+const String getStartedRoute = '/getStarted';
+const String signUpRoute = '/signUp';
+const String verifyPhoneRoute = '/verifyPhone';
+const String identityCardRoute = '/identityCard';
+const String regCompletedRoute = '/regCompleted';
+const String dashboardRoute = '/dashboard';
 const String addPropertyRoute = '/addProperty';
 const String addPropertyListingRoute = '/addPropertyListing';
 const String addProperty2Route = '/addProperty2';
@@ -22,7 +22,17 @@ const String fileUploadRoute = '/fileUpload';
 const String changePasswordRoute = '/changePassword';
 const String transactionDetailsRoute = '/transactionDetails';
 const String propertyListingsRoute = '/propertyListings';
+const String propertyListingDetailsRoute = '/propertyListingDetails';
 const String userPropertyDetailsRoute = '/userPropertyDetails';
 const String editPropDetailsRoute = '/editPropDetails';
 const String editPropListingRoute = '/editPropListing';
 const String editPropMainRoute = '/editPropMain';
+
+const String globalSuccessResponseCode = 'M200';
+const String globalSuccessGetResponseCode = 'M000';
+const String globalFailedResponseCode = 'M500';
+
+final states = ['Lagos', 'Abuja', 'Rivers', 'Oyo'];
+final propType = ['ENTIRE HOUSE', 'APARTMENT', 'SHARED APARTMENT'];
+final noList = ['1', '2', '3', '4', '5', '6', '7'];
+final landUnit = ["METRE SQUARE", "ACRE", "HECTARE"];

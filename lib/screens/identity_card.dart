@@ -36,13 +36,15 @@ class _IdentityCardState extends State<IdentityCard> {
     print(_apiCall);
 
     _apiCall.then((value) {
-      print(value.message);
+      print(value.responseCode);
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      // if (value.accessToken != null) {        
+     if (value.responseCode == globalSuccessResponseCode) {        
       Navigator.pushNamed(context, regCompletedRoute);
-      // } else {
-      //   snackBar('Registration Failed \t ${value.message}', _scaffoldKey);
-      // }
+    
+      } else {
+       // snackBar('Registration Failed \t ${value.responseMessage}', _scaffoldKey);
+        print('ID upload failed');
+      }
       //snackBar(value.message, _scaffoldKey);
     });
 

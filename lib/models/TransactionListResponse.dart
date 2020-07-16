@@ -1,20 +1,57 @@
 class TransactionListResponse {
+  int count;
+  List<Data> data;
+  String responseMessage;
+  String responseCode;
+
+  TransactionListResponse(
+      {this.count, this.data, this.responseMessage, this.responseCode});
+
+  TransactionListResponse.fromJson(Map<String, dynamic> json) {
+    count = json['count'];
+    if (json['data'] != null) {
+      data = new List<Data>();
+      json['data'].forEach((v) {
+        data.add(new Data.fromJson(v));
+      });
+    }
+    responseMessage = json['responseMessage'];
+    responseCode = json['responseCode'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['count'] = this.count;
+    if (this.data != null) {
+      data['data'] = this.data.map((v) => v.toJson()).toList();
+    }
+    data['responseMessage'] = this.responseMessage;
+    data['responseCode'] = this.responseCode;
+    return data;
+  }
+}
+
+class Data {
   int iD;
   int listingID;
   Listing listing;
   int userID;
+  int sellerID;
+  Seller seller;
   String startDate;
   String endDate;
-  String paid;
-  String outstanding;
+  int paid;
+  int outstanding;
   String createdAt;
   String updatedAt;
 
-  TransactionListResponse(
+  Data(
       {this.iD,
       this.listingID,
       this.listing,
       this.userID,
+      this.sellerID,
+      this.seller,
       this.startDate,
       this.endDate,
       this.paid,
@@ -22,12 +59,15 @@ class TransactionListResponse {
       this.createdAt,
       this.updatedAt});
 
-  TransactionListResponse.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];
     listingID = json['ListingID'];
     listing =
         json['Listing'] != null ? new Listing.fromJson(json['Listing']) : null;
     userID = json['UserID'];
+    sellerID = json['SellerID'];
+    seller =
+        json['Seller'] != null ? new Seller.fromJson(json['Seller']) : null;
     startDate = json['StartDate'];
     endDate = json['EndDate'];
     paid = json['Paid'];
@@ -44,6 +84,10 @@ class TransactionListResponse {
       data['Listing'] = this.listing.toJson();
     }
     data['UserID'] = this.userID;
+    data['SellerID'] = this.sellerID;
+    if (this.seller != null) {
+      data['Seller'] = this.seller.toJson();
+    }
     data['StartDate'] = this.startDate;
     data['EndDate'] = this.endDate;
     data['Paid'] = this.paid;
@@ -297,19 +341,100 @@ class Specifications {
   }
 }
 
+class Seller {
+  int iD;
+  String dOB;
+  OTP oTP;
+  String email;
+  String surName;
+  String password;
+  String firstName;
+  String uSERTYPE;
+  String createdAt;
+  String updatedAt;
+  String middleName;
+  String nationalID;
+  String phoneNumber;
+  String profilePhoto;
+  bool isEmailVerified;
+  bool isProfileReviewed;
 
-class GetTransactionList{
-  final List<TransactionListResponse> getTransList;
+  Seller(
+      {this.iD,
+      this.dOB,
+      this.oTP,
+      this.email,
+      this.surName,
+      this.password,
+      this.firstName,
+      this.uSERTYPE,
+      this.createdAt,
+      this.updatedAt,
+      this.middleName,
+      this.nationalID,
+      this.phoneNumber,
+      this.profilePhoto,
+      this.isEmailVerified,
+      this.isProfileReviewed});
 
-  GetTransactionList({this.getTransList});
+  Seller.fromJson(Map<String, dynamic> json) {
+    iD = json['ID'];
+    dOB = json['DOB'];
+    oTP = json['OTP'] != null ? new OTP.fromJson(json['OTP']) : null;
+    email = json['Email'];
+    surName = json['SurName'];
+    password = json['Password'];
+    firstName = json['FirstName'];
+    uSERTYPE = json['USER_TYPE'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    middleName = json['MiddleName'];
+    nationalID = json['NationalID'];
+    phoneNumber = json['PhoneNumber'];
+    profilePhoto = json['ProfilePhoto'];
+    isEmailVerified = json['isEmailVerified'];
+    isProfileReviewed = json['isProfileReviewed'];
+  }
 
-  factory GetTransactionList.fromJson(List<dynamic> parsedJson) {
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ID'] = this.iD;
+    data['DOB'] = this.dOB;
+    if (this.oTP != null) {
+      data['OTP'] = this.oTP.toJson();
+    }
+    data['Email'] = this.email;
+    data['SurName'] = this.surName;
+    data['Password'] = this.password;
+    data['FirstName'] = this.firstName;
+    data['USER_TYPE'] = this.uSERTYPE;
+    data['createdAt'] = this.createdAt;
+    data['updatedAt'] = this.updatedAt;
+    data['MiddleName'] = this.middleName;
+    data['NationalID'] = this.nationalID;
+    data['PhoneNumber'] = this.phoneNumber;
+    data['ProfilePhoto'] = this.profilePhoto;
+    data['isEmailVerified'] = this.isEmailVerified;
+    data['isProfileReviewed'] = this.isProfileReviewed;
+    return data;
+  }
+}
 
-    List<TransactionListResponse> getTransList = new List<TransactionListResponse>();
-    getTransList = parsedJson.map((i)=>TransactionListResponse.fromJson(i)).toList();
+class OTP {
+  String email;
+  String phone;
 
-    return new GetTransactionList(
-       getTransList: getTransList,
-    );
+  OTP({this.email, this.phone});
+
+  OTP.fromJson(Map<String, dynamic> json) {
+    email = json['Email'];
+    phone = json['Phone'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['Email'] = this.email;
+    data['Phone'] = this.phone;
+    return data;
   }
 }

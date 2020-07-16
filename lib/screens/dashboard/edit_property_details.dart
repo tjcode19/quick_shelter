@@ -95,9 +95,9 @@ class _EditPropDetailsState extends State<EditPropDetails> {
 
     _apiCall.then(
       (value) {
-        print(value.message);
+        print(value.responseCode);
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-        if (value.code == '200') {
+        if (value.responseCode == globalSuccessResponseCode) {
           // Navigator.pushNamed(context, addPropertyStep2Route, arguments: {
           //   'propID': value.propertyID,
           // });
@@ -128,7 +128,8 @@ class _EditPropDetailsState extends State<EditPropDetails> {
     _noOfFloorsController.text =
         _propertyDet.specifications.nOOFFLOORS.toString();
     hasSwimming = _propertyDet.specifications.hASSWIMMINGPOOL;
-    _propLandUnitController.text = (_propertyDet.units != null)?_propertyDet.units: landUnit[0] ;
+    _propLandUnitController.text =
+        (_propertyDet.units != null) ? _propertyDet.units : landUnit[0];
 
     print('Property ID: ${_propertyDet.iD}');
   }
@@ -595,8 +596,8 @@ class _EditPropDetailsState extends State<EditPropDetails> {
 
   final states = ['Lagos', 'Abuja', 'Rivers', 'Oyo'];
   final propType = ['ENTIRE HOUSE', 'APARTMENT', 'SHARED APARTMENT'];
-  final noList = ['1', '2', '3', '4', '5', '6','7'];
-  final landUnit = ['Km2'];
+  final noList = ['1', '2', '3', '4', '5', '6', '7'];
+  final landUnit = ["METRE SQUARE", "ACRE", "HECTARE"];
 
   // replace this function with the examples above
   Future showAlertDialog(BuildContext context) async {

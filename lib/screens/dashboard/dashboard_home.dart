@@ -58,7 +58,7 @@ class _DashboardHomeState extends State<DashboardHome> {
     _apiCall.then((value) {
       print('donnned ${value.data}');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.responseCode == 'M000') {
+      if (value.responseCode == globalSuccessGetResponseCode) {
         setState(() => {_propertyList = value.data});
         _isPropLoaded = true;
       } else {

@@ -65,9 +65,8 @@ class _AddPropListingState extends State<AddPropListing> {
 
     _apiCall.then(
       (value) {
-        print(value.message);
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-        if (value.code == '200') {
+        if (value.responseCode == globalSuccessResponseCode) {
           // Navigator.pushNamed(context, addPropertyStep2Route, arguments: {
           //   'propID': value.propertyID,
           // });

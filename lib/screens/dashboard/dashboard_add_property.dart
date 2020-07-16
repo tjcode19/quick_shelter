@@ -14,7 +14,7 @@ class DashboardAddProp extends StatefulWidget {
 
 class _DashboardAddPropState extends State<DashboardAddProp> {
   final QuickShelterRepository repo = QuickShelterRepository();
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  // final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final _propTypeController = TextEditingController();
@@ -31,16 +31,20 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
   String stateSelection = "";
 
   void _addProperty() {
-    if (_propTitleController.text.isEmpty) {
-      snackBar('Please fill all fields', _scaffoldKey);
+    if (listingType.isEmpty) {
+      snackBar('Please select property category', _scaffoldKey);
       return;
     }
-    Map propData = {'propType':_propTypeController.text, 'propTitle': _propTitleController.text, 'propState': _propStateController.text,
-    'propLocation': _propLocationController.text, 'propDesc':_propDescController.text, 'listingType': listingType};
+    Map propData = {
+      'propType': _propTypeController.text,
+      'propTitle': _propTitleController.text,
+      'propState': _propStateController.text,
+      'propLocation': _propLocationController.text,
+      'propDesc': _propDescController.text,
+      'listingType': listingType
+    };
 
-    Navigator.pushNamed(context, addProperty2Route,
-              arguments: propData);
-
+    Navigator.pushNamed(context, addProperty2Route, arguments: propData);
   }
 
   @override
@@ -143,8 +147,18 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 ],
               ),
               const SizedBox(height: 8),
-              InputFieldWidget('Property Type', TextInputType.text, false,
-                  controller: _propTypeController),
+              Container(
+                child: GestureDetector(
+                  onTap: () {
+                    showPropertyTypeDialog(context);
+                  },
+                  child: AbsorbPointer(
+                    child: InputFieldWidget(
+                        'Property Type', TextInputType.text, false,
+                        controller: _propTypeController),
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
               Row(
                 children: [
@@ -161,8 +175,13 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                 ],
               ),
               const SizedBox(height: 8),
-              InputFieldWidget('Property Description', TextInputType.text, false,
-                  controller: _propDescController, lines: 3,),
+              InputFieldWidget(
+                'Property Description',
+                TextInputType.text,
+                false,
+                controller: _propDescController,
+                lines: 3,
+              ),
               const SizedBox(height: 20),
               Row(
                 children: [
@@ -209,7 +228,7 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                       )),
                 ],
               ),
-              
+
               const SizedBox(height: 40),
               RaisedButtonWidget(
                 addProperty2Route,
@@ -224,8 +243,6 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
       ),
     );
   }
-
-  final states = ['Lagos', 'Abuja', 'Rivers', 'Oyo'];
 
   // replace this function with the examples above
   Future showAlertDialog(BuildContext context) async {
@@ -255,11 +272,45 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
     );
 
     setState(() {
+      FocusScope.of(context).requestFocus(new FocusNode());
       _propStateController.text = dialogVal;
     });
   }
 
+  // replace this function with the examples above
+  Future showPropertyTypeDialog(BuildContext context) async {
+    // set up the SimpleDialog
+    SimpleDialog dialog = SimpleDialog(
+      title: const Text(
+        'Select Property Type',
+        style: TextStyle(fontSize: 17.0, fontStyle: FontStyle.normal),
+      ),
+      children: propType.map((e) {
+        return new SimpleDialogOption(
+          onPressed: () {
+            Navigator.pop(context,
+                e); //here passing the index to be return on item selection
+          },
+          child: new Text(e), //item value
+        );
+      }).toList(),
+    );
 
+    // show the dialog
+    String dialogVal = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return dialog;
+      },
+    );
+    setState(() {
+      FocusScope.of(context).requestFocus(new FocusNode());
+      _propTypeController.text = dialogVal;
+      //propertyType = dialogVal;
+    });
+  }
+
+  
   Widget saleRentButton() {
     final screeSize = MediaQuery.of(context).size;
     return (sale)
@@ -321,7 +372,8 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                         padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                         child: Text(
                           'For Sale',
-                          style: TextStyle(color: appTextColorPrimary, fontSize: 15),
+                          style: TextStyle(
+                              color: appTextColorPrimary, fontSize: 15),
                         ),
                       ),
                     ],
@@ -394,7 +446,8 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
                           padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                           child: Text(
                             'For Rent',
-                            style: TextStyle(color: appTextColorPrimary, fontSize: 15),
+                            style: TextStyle(
+                                color: appTextColorPrimary, fontSize: 15),
                           ),
                         ),
                       ],

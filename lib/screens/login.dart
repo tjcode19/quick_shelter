@@ -93,16 +93,16 @@ class _LoginState extends State<Login> {
     var _loginRes = repo.loginData(userEmail.trim(), userPassword);
 
     await _loginRes.then((value) async {
-      print('donnned ${value.auth}');
+      //print('donnned ${value.auth}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.code == '200' && value.auth == true) {
-        _sharedPreferenceQS.setData('String', 'accessToken', value.accessToken);
-        _sharedPreferenceQS.setData('String', 'userFN', value.user.firstName);
+      if (value.responseCode == globalSuccessResponseCode && value.data.auth == true) {
+        _sharedPreferenceQS.setData('String', 'accessToken', value.data.accessToken);
+        _sharedPreferenceQS.setData('String', 'userFN', value.data.user.firstName);
         await _resetDetails().runtimeType;
         await _getUserProfile().runtimeType;
         Navigator.pushNamed(context, dashboardRoute);
       } else {
-        showInSnackBar(value.message);
+        showInSnackBar(value.responseMessage);
       }
     }, onError: (error) {
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
@@ -124,9 +124,9 @@ class _LoginState extends State<Login> {
     var _apiCall = repo.getProfile();
 
     _apiCall.then((value) {
-      _sharedPreferenceQS.setData('String', 'userLN', value.surName);
-      _sharedPreferenceQS.setData('String', 'userPN', value.phoneNumber);
-      _sharedPreferenceQS.setData('String', 'userEm', value.email);
+      _sharedPreferenceQS.setData('String', 'userLN', value.data.surName);
+      _sharedPreferenceQS.setData('String', 'userPN', value.data.phoneNumber);
+      _sharedPreferenceQS.setData('String', 'userEm', value.data.email);
       _sharedPreferenceQS.setData('bool', 'detailsLoaded', true);
 
       print('User details set');

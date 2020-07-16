@@ -117,7 +117,7 @@ class _DashboardState extends State<Dashboard> {
               title: Text('Home'),
             ),
             BottomNavigationBarItem(
-              icon: Icon(MdiIcons.hospitalBuilding),
+              icon: Icon(Icons.business),
               title: Text('Property'),
             ),
             BottomNavigationBarItem(

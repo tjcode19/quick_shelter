@@ -1,18 +1,42 @@
 class GetSingleProperty {
-  Property property;
-  List<SinglePropertyPhotos> photos;
-  List<Listings> listings;
+  String responseMessage;
+  String responseCode;
+  Data data;
 
-  GetSingleProperty({this.property, this.photos, this.listings});
+  GetSingleProperty({this.responseMessage, this.responseCode, this.data});
 
   GetSingleProperty.fromJson(Map<String, dynamic> json) {
+    responseMessage = json['responseMessage'];
+    responseCode = json['responseCode'];
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['responseMessage'] = this.responseMessage;
+    data['responseCode'] = this.responseCode;
+    if (this.data != null) {
+      data['data'] = this.data.toJson();
+    }
+    return data;
+  }
+}
+
+class Data {
+  Property property;
+  List<Photos> photos;
+  List<Listings> listings;
+
+  Data({this.property, this.photos, this.listings});
+
+  Data.fromJson(Map<String, dynamic> json) {
     property = json['property'] != null
         ? new Property.fromJson(json['property'])
         : null;
     if (json['photos'] != null) {
-      photos = new List<SinglePropertyPhotos>();
+      photos = new List<Photos>();
       json['photos'].forEach((v) {
-        photos.add(new SinglePropertyPhotos.fromJson(v));
+        photos.add(new Photos.fromJson(v));
       });
     }
     if (json['listings'] != null) {
@@ -156,14 +180,14 @@ class Specifications {
   }
 }
 
-class SinglePropertyPhotos {
+class Photos {
   int iD;
   String path;
   String description;
 
-  SinglePropertyPhotos({this.iD, this.path, this.description});
+  Photos({this.iD, this.path, this.description});
 
-  SinglePropertyPhotos.fromJson(Map<String, dynamic> json) {
+  Photos.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];
     path = json['Path'];
     description = json['Description'];

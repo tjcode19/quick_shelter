@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quick_shelter/colors.dart';
+import 'package:quick_shelter/constants.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/widgets/commonUtils.dart';
 
@@ -38,9 +39,9 @@ class _FileUploadState extends State<FileUpload> {
     print(_apiCall);
 
     _apiCall.then((value) {
-      print(value.message);
+      print(value.responseCode);
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if(value.code == '200'){
+      if(value.responseCode == globalSuccessResponseCode){
         Navigator.of(context).pop({'id':widget.docTypeId, 'status':true});        
       }
       else{

@@ -11,7 +11,7 @@ import '../../constants.dart';
 class DashboardAddProp2 extends StatefulWidget {
   final propData;
 
-  DashboardAddProp2({Key key, this.propData}):super(key:key);
+  DashboardAddProp2({Key key, this.propData}) : super(key: key);
 
   @override
   _DashboardAddProp2State createState() => _DashboardAddProp2State();
@@ -43,12 +43,9 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
   String stateSelection = "";
 
   void _addProperty() {
-    // if (_sellingPriceController.text.isEmpty) {
-    //   snackBar('Please fill all fields', _scaffoldKey);
-    //   return;
-    // }
-
     var detailsOne = widget.propData;
+
+
 
     hasSwimming = (hasSwimming == null) ? false : hasSwimming;
 
@@ -62,38 +59,44 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
       'State': detailsOne['propState'],
       'Country': 'Nigeria',
       'LandArea': _propLandAreaController.text,
-      'Price': _sellingPriceController.text,
+     // 'Price': _sellingPriceController.text,
       "Specifications": {
-        "NO_OF_LIVINGROOMS": _noOfLivingController,
+        "NO_OF_LIVINGROOMS": _noOfLivingController.text,
         "NO_OF_BEDROOMS": _noOfBedroomsController.text,
         "NO_OF_BATHROOMS": _noOfBathroomsController.text,
         "NO_OF_FLOORS": _noOfFloorsController.text,
         "HAS_SWIMMING_POOL": hasSwimming
-      },
-      "addListing": true,
-      "Listing": {
-        "ListingType": listingType,
-        "IS_AVAILABLE": true,
-        "MinPeriod": "3",
-        "PeriodUnits": "YEAR",
-        "Price": _sellingPriceController.text
       }
+//      "addListing": false,
+//       "Listing": {
+//         "ListingType": listingType,
+//         "IS_AVAILABLE": true,
+//         "MinPeriod": "3",
+//         "PeriodUnits": "YEAR",
+//         "Price": _sellingPriceController.text
+//       }
     };
+
+    print(data);
 
     var _apiCall = repo.addProperty(data);
 
     _apiCall.then(
       (value) {
-        print(value.message);
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-        if (value.code == '200') {
-          Navigator.pushNamed(context, addPropertyStep2Route,
-              arguments: {'propID':value.propertyID, 'listingType':detailsOne['listingType']});
+        if (value.responseCode == globalSuccessResponseCode) {
+          Navigator.pushNamed(context, addPropertyStep2Route, arguments: {
+            'propID': value.data.propertyID,
+            'listingType': detailsOne['listingType']
+          });
         } else {
           snackBar('Adding or property failed', _scaffoldKey);
         }
         //snackBar(value.message, _scaffoldKey);
-      },
+      }, onError: (e){
+      //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+    },
     );
   }
 
@@ -101,7 +104,7 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
   void initState() {
     super.initState();
 
-    print(widget.propData);
+    //print(widget.propData);
   }
 
   @override
@@ -144,7 +147,6 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
                 )
               ]),
               const SizedBox(height: 20),
-              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,11 +166,19 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
                             textAlign: TextAlign.left,
                           ),
                         ),
-                        InputFieldWidget(
-                          'ex. 3',
-                          TextInputType.number,
-                          false,
-                          controller: _noOfLivingController,
+                        GestureDetector(
+                          onTap: () {
+                            showNumberDialog(
+                                context, _noOfLivingController, 'Livingrooms');
+                          },
+                          child: AbsorbPointer(
+                            child: InputFieldWidget(
+                              'ex. 3',
+                              TextInputType.number,
+                              false,
+                              controller: _noOfLivingController,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -180,7 +190,7 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
                       children: <Widget>[
                         Container(
                           child: Text(
-                            'Bedroom',
+                            'Bedrooms',
                             style: TextStyle(
                               fontSize: 15,
                               color: Colors.white,
@@ -188,17 +198,25 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
                             textAlign: TextAlign.left,
                           ),
                         ),
-                        InputFieldWidget(
-                          'ex. 2',
-                          TextInputType.number,
-                          false,
-                          controller: _noOfBedroomsController,
+                        GestureDetector(
+                          onTap: () {
+                            showNumberDialog(
+                                context, _noOfBedroomsController, 'Bedroom');
+                          },
+                          child: AbsorbPointer(
+                            child: InputFieldWidget(
+                              'ex. 2',
+                              TextInputType.number,
+                              false,
+                              controller: _noOfBedroomsController,
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   )
                 ],
-              ),         
+              ),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -219,11 +237,19 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
                             textAlign: TextAlign.left,
                           ),
                         ),
-                        InputFieldWidget(
-                          'ex. 3',
-                          TextInputType.number,
-                          false,
-                          controller: _noOfBathroomsController,
+                        GestureDetector(
+                          onTap: () {
+                            showNumberDialog(
+                                context, _noOfBathroomsController, 'Bathrooms');
+                          },
+                          child: AbsorbPointer(
+                            child: InputFieldWidget(
+                              'ex. 3',
+                              TextInputType.number,
+                              false,
+                              controller: _noOfBathroomsController,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -243,11 +269,19 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
                             textAlign: TextAlign.left,
                           ),
                         ),
-                        InputFieldWidget(
-                          'ex. 2',
-                          TextInputType.number,
-                          false,
-                          controller: _noOfFloorsController,
+                        GestureDetector(
+                          onTap: () {
+                            showNumberDialog(
+                                context, _noOfFloorsController, 'Floor');
+                          },
+                          child: AbsorbPointer(
+                            child: InputFieldWidget(
+                              'ex. 2',
+                              TextInputType.number,
+                              false,
+                              controller: _noOfFloorsController,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -256,35 +290,34 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
               ),
               const SizedBox(height: 20),
               Row(
-                              children: <Widget>[
-                                SizedBox(
-                                  width: 24.0,
-                                  height: 24.0,
-                                  child: Theme(
-                                    data: ThemeData(
-                                        unselectedWidgetColor: Colors.white,
-                                        selectedRowColor: Colors.amber),
-                                    child: Checkbox(
-                                      value: hasSwimming,
-                                      activeColor:
-                                          Theme.of(context).primaryColor,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          hasSwimming = value;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Text(
-                                  'Swimming pool',
-                                  style: TextStyle(color: Colors.white, fontSize: 18.0),
-                                ),
-                              ],
-                            ),
+                children: <Widget>[
+                  SizedBox(
+                    width: 24.0,
+                    height: 24.0,
+                    child: Theme(
+                      data: ThemeData(
+                          unselectedWidgetColor: Colors.white,
+                          selectedRowColor: Colors.amber),
+                      child: Checkbox(
+                        value: hasSwimming,
+                        activeColor: Theme.of(context).primaryColor,
+                        onChanged: (bool value) {
+                          setState(() {
+                            hasSwimming = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    'Swimming pool',
+                    style: TextStyle(color: Colors.white, fontSize: 18.0),
+                  ),
+                ],
+              ),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -306,8 +339,8 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
                           ),
                         ),
                         InputFieldWidget(
-                          'ex. 77 km2',
-                          TextInputType.text,
+                          'ex. 77',
+                          TextInputType.number,
                           false,
                           controller: _propLandAreaController,
                         ),
@@ -329,20 +362,25 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
                             textAlign: TextAlign.left,
                           ),
                         ),
-                        InputFieldWidget(
-                          'ex. meter square',
-                          TextInputType.text,
-                          false,
-                          controller: _propLandUnitController,
+                        GestureDetector(
+                          onTap: () {
+                            showLandUnitDialog(context);
+                          },
+                          child: AbsorbPointer(
+                            child: InputFieldWidget(
+                              'ex. meter square',
+                              TextInputType.text,
+                              false,
+                              controller: _propLandUnitController,
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   )
                 ],
-              ),  
+              ),
               const SizedBox(height: 20),
-              
-              
               const SizedBox(height: 40),
               RaisedButtonWidget(
                 addPropertyStep2Route,
@@ -358,17 +396,15 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
     );
   }
 
-  final states = ['Lagos', 'Abuja', 'Rivers', 'Oyo'];
-
   // replace this function with the examples above
-  Future showAlertDialog(BuildContext context) async {
+  Future showNumberDialog(BuildContext context, _controll, String lb) async {
     // set up the SimpleDialog
     SimpleDialog dialog = SimpleDialog(
-      title: const Text(
-        'Select State',
+      title: Text(
+        'Select Number Of $lb',
         style: TextStyle(fontSize: 17.0, fontStyle: FontStyle.normal),
       ),
-      children: states.map((e) {
+      children: noList.map((e) {
         return new SimpleDialogOption(
           onPressed: () {
             Navigator.pop(context,
@@ -388,25 +424,42 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
     );
 
     setState(() {
-      _propStateController.text = dialogVal;
+      FocusScope.of(context).requestFocus(new FocusNode());
+      _controll.text = dialogVal;
     });
   }
 
-  DateTime selectedDate = DateTime.now();
+  // replace this function with the examples above
+  Future showLandUnitDialog(BuildContext context) async {
+    // set up the SimpleDialog
+    SimpleDialog dialog = SimpleDialog(
+      title: Text(
+        'Select Land Unit',
+        style: TextStyle(fontSize: 17.0, fontStyle: FontStyle.normal),
+      ),
+      children: landUnit.map((e) {
+        return new SimpleDialogOption(
+          onPressed: () {
+            Navigator.pop(context,
+                e); //here passing the index to be return on item selection
+          },
+          child: new Text(e), //item value
+        );
+      }).toList(),
+    );
 
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2020, 1),
-        lastDate: DateTime(2025));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-        // DateTime now = DateTime.now();
-        String formattedDate = DateFormat('dd MMM, yyyy').format(selectedDate);
-        _propAvailableDateController.text = formattedDate;
-      });
+    // show the dialog
+    String dialogVal = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return dialog;
+      },
+    );
+
+    setState(() {
+      FocusScope.of(context).requestFocus(new FocusNode());
+      _propLandUnitController.text = dialogVal;
+    });
   }
 
   Widget saleRentButton() {
@@ -470,7 +523,8 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
                         padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                         child: Text(
                           'For Sale',
-                          style: TextStyle(color: appTextColorPrimary, fontSize: 15),
+                          style: TextStyle(
+                              color: appTextColorPrimary, fontSize: 15),
                         ),
                       ),
                     ],
@@ -543,7 +597,8 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
                           padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                           child: Text(
                             'For Rent',
-                            style: TextStyle(color: appTextColorPrimary, fontSize: 15),
+                            style: TextStyle(
+                                color: appTextColorPrimary, fontSize: 15),
                           ),
                         ),
                       ],

@@ -54,55 +54,6 @@ class _EditPropListingState extends State<EditPropListing> {
 
     Navigator.pushNamed(context, addProperty2Route, arguments: propData);
   }
-
-  void _editProperty() {
-    // if (_sellingPriceController.text.isEmpty) {
-    //   snackBar('Please fill all fields', _scaffoldKey);
-    //   return;
-    // }
-
-    //var detailsOne = widget.propData;
-  
-
-    hasSwimming = (hasSwimming == null) ? false : hasSwimming;
-
-    showLoadingDialog(context, _keyLoader);
-    Map data = {
-      'Type': _propTypeController.text,
-      'Title': _propTitleController.text,
-      'Location': _propLocationController.text,
-      'Adddress': _propAddressController.text,
-      'Description': _propDescController.text,
-      'State': _propStateController.text,
-      'Country': 'Nigeria',
-      'LandArea': _propLandAreaController.text,
-      "Specifications": {
-        "NO_OF_LIVINGROOMS": _noOfLivingController,
-        "NO_OF_BEDROOMS": _noOfBedroomsController.text,
-        "NO_OF_BATHROOMS": _noOfBathroomsController.text,
-        "NO_OF_FLOORS": _noOfFloorsController.text,
-        "HAS_SWIMMING_POOL": hasSwimming
-      },      
-    };
-
-    var _apiCall = repo.editProperty(data, '8');
-
-    _apiCall.then(
-      (value) {
-        print(value.message);
-        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-        if (value.code == '200') {
-          // Navigator.pushNamed(context, addPropertyStep2Route, arguments: {
-          //   'propID': value.propertyID,
-          // });
-        } else {
-          snackBar('Adding or property failed', _scaffoldKey);
-        }
-        //snackBar(value.message, _scaffoldKey);
-      },
-    );
-  }
-
   _getProperty() {
     print('get account types');
     var _apiCall = repo.getSingleProperty('1');
@@ -125,7 +76,7 @@ class _EditPropListingState extends State<EditPropListing> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _getProperty();
+     // _getProperty();
       await showLoadingDialog(context, _keyLoader);
 
     });

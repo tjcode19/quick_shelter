@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:quick_shelter/colors.dart';
 import 'package:quick_shelter/models/GetUserProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
-import 'package:quick_shelter/widgets/commonUtils.dart';
-import 'package:quick_shelter/widgets/input_field.dart';
-import 'package:quick_shelter/widgets/raised_button.dart';
 
 import '../../constants.dart';
 
@@ -22,13 +19,6 @@ class _PropertyListingsState extends State<PropertyListings> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   ScrollController _controller;
-
-  final _propTypeController = TextEditingController();
-  final _propTitleController = TextEditingController();
-  final _propStateController = TextEditingController();
-  final _propLocationController = TextEditingController();
-  final _propDescController = TextEditingController();
-  //final _propCountryController = TextEditingController();
 
   GetUserPropData _propertyList;
 
@@ -93,19 +83,7 @@ class _PropertyListingsState extends State<PropertyListings> {
                     fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, editPropDetailsRoute);
-                },
-                child: Text(
-                  'Edit',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-              ),
+              
             ]),
             const SizedBox(height: 30),
             Expanded(
@@ -155,11 +133,11 @@ class _PropertyListingsState extends State<PropertyListings> {
     return InkWell(
       splashColor: Colors.orange.withAlpha(30),
       onTap: () {
-        print('Transaction tapped');
+        print('Property Listing tapped');
         Navigator.pushNamed(
           ctxt,
-          addPropertyListingRoute,
-          arguments: {_propertyList},
+          propertyListingDetailsRoute,
+          arguments: _propertyList.listings[index],
         );
       },
       child: Container(

@@ -34,9 +34,9 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
     var _apiCall = repo.getSavedProperties('0', '10');
 
     await _apiCall.then((value) {
-     // print('donnned $value');
+      print('Saved Prop DONE ${value.responseCode}');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.responseCode == 'M000') {
+      if (value.responseCode == globalSuccessGetResponseCode) {
         
         for (int l = 0; l < value.data.length; l++)
                 {
@@ -60,7 +60,7 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
            sale = false, rent = true,
          },
 
-          print(_propertyRentList[0].price)
+          //print(_propertyRentList[0].price)
               
             });
       } else {

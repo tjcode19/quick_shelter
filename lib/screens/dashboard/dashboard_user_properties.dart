@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/models/GetUserProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
-import 'package:quick_shelter/utils/commonFunctions.dart';
 import 'package:quick_shelter/utils/sharedPreference.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -43,11 +42,13 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
     var _apiCall = repo.getUserProperties();
 
     await _apiCall.then((value) {
-      print('donnned ${value.responseCode}');
+      print('DONE Get User Prop ${value.responseCode}');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.responseCode == 'M000') {
+      if (value.responseCode == globalSuccessGetResponseCode) {
         setState(
-            () => {_propertyList = value.dataVal, print(_propertyList[0])});
+            () => {_propertyList = value.dataVal, 
+            // print(_propertyList[0])
+            });
       } else {
         //showInSnackBar(value.message);
         print('Failed to load properties');

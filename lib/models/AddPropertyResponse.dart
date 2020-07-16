@@ -1,11 +1,45 @@
 class AddPropertyResponse {
-  final String message;
-  final String code;
-  final int propertyID;
+  String responseMessage;
+  String responseCode;
+  Data data;
 
-  AddPropertyResponse({this.message, this.code, this.propertyID});
+  AddPropertyResponse({this.responseMessage, this.responseCode, this.data});
 
-  factory AddPropertyResponse.fromJson(Map<String, dynamic> json) {
-    return AddPropertyResponse(message: json['message'], code: json['code'], propertyID:json['propertyID'] );
+  AddPropertyResponse.fromJson(Map<String, dynamic> json) {
+    responseMessage = json['responseMessage'];
+    responseCode = json['responseCode'];
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['responseMessage'] = this.responseMessage;
+    data['responseCode'] = this.responseCode;
+    if (this.data != null) {
+      data['data'] = this.data.toJson();
+    }
+    return data;
+  }
+}
+
+class Data {
+  String code;
+  String message;
+  int propertyID;
+
+  Data({this.code, this.message, this.propertyID});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    code = json['code'];
+    message = json['message'];
+    propertyID = json['propertyID'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['code'] = this.code;
+    data['message'] = this.message;
+    data['propertyID'] = this.propertyID;
+    return data;
   }
 }

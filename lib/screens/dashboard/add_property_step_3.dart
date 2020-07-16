@@ -19,7 +19,7 @@ class _AddPropStep3State extends State<AddPropStep3> {
   final QuickShelterRepository repo = QuickShelterRepository();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
-  var _propertyListingReq = List<GetPropertyListingReqM>();
+  var _propertyListingReq = List<Data>();
   // Iterable list;
 
   int selectedItemId;
@@ -31,12 +31,12 @@ class _AddPropStep3State extends State<AddPropStep3> {
     var _apiCall = repo.getPropertyListingReq(widget.propertyData['listingType']);
 
     await _apiCall.then((value) {
-      print('donnned ${value.getPropertyReqs}');
+      print('donnned ${value.responseCode}');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value != null) {
+      if (value.responseCode == globalSuccessGetResponseCode) {
 
         setState(() => {
-              _propertyListingReq = value.getPropertyReqs,
+              _propertyListingReq = value.data,
             });
       } else {
         //showInSnackBar(value.message);

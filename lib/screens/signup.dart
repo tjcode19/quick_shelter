@@ -46,53 +46,49 @@ class _SignUpState extends State<SignUp> {
     var _signUp = repo.signUpData(
         userFirstName, userLastName, userPhone, userEmail, userPassword);
 
-        _sharedPreferenceQS.setData('String', 'surName', userLastName);
+    _sharedPreferenceQS.setData('String', 'surName', userLastName);
 
     _signUp.then((value) {
-      print(value.message);
+      print('Sign Up DONE ${value.responseCode}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.code =='200') {
-        _sharedPreferenceQS.setData('String', 'accessToken', value.accessToken);
+      if (value.responseCode == globalSuccessResponseCode) {
+        _sharedPreferenceQS.setData(
+            'String', 'accessToken', value.data.accessToken);
+        _sharedPreferenceQS.setData('String', 'userEmail', userEmail);
+        _sharedPreferenceQS.setData('String', 'userPassword', userPassword);
         _getUserProfile();
         Navigator.pushNamed(context, verifyPhoneRoute);
       } else {
-        snackBar('Registration Failed \n ${value.message}', _scaffoldKey);
+        snackBar(
+            'Registration Failed \n ${value.responseMessage}', _scaffoldKey);
       }
       //snackBar(value.message, _scaffoldKey);
     });
   }
 
-  _setValue(String _passVal){
+  _setValue(String _passVal) {
     setState(() {
-
       password = _passVal;
-      
     });
   }
 
-    _getUserProfile() {
+  _getUserProfile() {
     print('Get User Profile');
     var _apiCall = repo.getProfile();
 
     _apiCall.then((value) {
-      print(value);
-      // if(value.code != '200'){
-      //   _sharedPreferenceQS.setData(bool, 'detailsLoaded', false);
-      // }
-      // else{
-        //setState(() {
-        _sharedPreferenceQS.setData('String', 'userFN', value.firstName);
-        _sharedPreferenceQS.setData('String', 'userLN', value.surName);
-        _sharedPreferenceQS.setData('String', 'userPN', value.phoneNumber);
-        _sharedPreferenceQS.setData('String', 'userEm', value.email);
-        _sharedPreferenceQS.setData('bool', 'detailsLoaded', true);
-
-     // });
-
-     // }
-      
+      print(value.responseCode);
+      if (value.responseCode == globalSuccessGetResponseCode) {
+        setState(() {
+          _sharedPreferenceQS.setData('String', 'userFN', value.data.firstName);
+          _sharedPreferenceQS.setData('String', 'userLN', value.data.surName);
+          _sharedPreferenceQS.setData(
+              'String', 'userPN', value.data.phoneNumber);
+          _sharedPreferenceQS.setData('String', 'userEm', value.data.email);
+          _sharedPreferenceQS.setData('bool', 'detailsLoaded', true);
+        });
+      } else {}
     });
-
   }
 
   Future<bool> _onBackPressed() {
@@ -197,19 +193,15 @@ class _SignUpState extends State<SignUp> {
                             errorMsg: 'Phone number can not be empty',
                           ),
                           const SizedBox(height: 20),
-                          InputFieldWidget(
-                            'Password',
-                            TextInputType.text,
-                            true,
-                            controller: _passwordController,
-                            capitalizationType: TextCapitalization.none,
-                            errorMsg: 'Password can not be empty',
-                            onChange: (content){
-                              setState(() {
-                                password = content;
-                              });
-                              }
-                          ),
+                          InputFieldWidget('Password', TextInputType.text, true,
+                              controller: _passwordController,
+                              capitalizationType: TextCapitalization.none,
+                              errorMsg: 'Password can not be empty',
+                              onChange: (content) {
+                            setState(() {
+                              password = content;
+                            });
+                          }),
                           const SizedBox(height: 20),
                           InputFieldWidget(
                             'Confirm Password',
@@ -222,7 +214,13 @@ class _SignUpState extends State<SignUp> {
                           ),
                           const SizedBox(height: 30),
                           RaisedButtonWidget(
-                              verifyPhoneRoute, 'Continue', true, isValidatable: true, formKey: _formKey, action: _signUpFunc,),
+                            verifyPhoneRoute,
+                            'Continue',
+                            true,
+                            isValidatable: true,
+                            formKey: _formKey,
+                            action: _signUpFunc,
+                          ),
                           const SizedBox(height: 25),
                           GestureDetector(
                             onTap: () {

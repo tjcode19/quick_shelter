@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/constants.dart';
 import 'package:quick_shelter/models/GetUserProperties.dart';
-import 'package:quick_shelter/screens/dashboard/property_details.dart';
 import 'package:quick_shelter/utils/commonFunctions.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -55,7 +54,7 @@ class _UserPropertyDetailsState extends State<UserPropertyDetails> {
 
     _propertyDetails = widget.propDetails['data'];
     price = 1;
-    lType = 'j';
+    lType = "";
     //lDate = _propertyDetails.listings[0].listingDate;
     propPhotos = _propertyDetails.photos;
   }
@@ -111,13 +110,13 @@ class _UserPropertyDetailsState extends State<UserPropertyDetails> {
                     ),
                   ),
                 ),
-                Container(
-                    padding: EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 2.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(6)),
-                    ),
-                    child: Text(lType)),
+                // Container(
+                //     padding: EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 2.0),
+                //     decoration: BoxDecoration(
+                //       color: Colors.white,
+                //       borderRadius: BorderRadius.all(Radius.circular(6)),
+                //     ),
+                //     child: Text(lType)),
               ],
             ),
           ),

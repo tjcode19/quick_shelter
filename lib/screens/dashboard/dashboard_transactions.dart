@@ -2,55 +2,63 @@ import 'package:flutter/material.dart';
 import 'package:quick_shelter/models/TransactionListResponse.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/utils/sharedPreference.dart';
+import 'package:quick_shelter/widgets/commonUtils.dart';
 
 import '../../colors.dart';
 import '../../constants.dart';
 
 class DashboardTransactions extends StatefulWidget {
-    
   @override
   _DashboardTransactionsState createState() => _DashboardTransactionsState();
 }
 
 class _DashboardTransactionsState extends State<DashboardTransactions> {
-
   final QuickShelterRepository repo = QuickShelterRepository();
-  List<TransactionListResponse> _propertyList = List<TransactionListResponse>();
+  List<Data> _propertyList = List<Data>();
   SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   String _prefUserFN;
 
-   void _getTransactionList() async {
+  void _getTransactionList() async {
     print('Get Transaction List');
     //showLoadingDialog(context, _keyLoader);
-    var _apiCall = repo.getTransactionList('0','10');
+    var _apiCall = repo.getTransactionList('0', '10');
 
     await _apiCall.then((value) {
-      print('donnned $value');
+      print('TransList DONE ${value.responseCode}');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value != null) {
+      if (value.responseCode == globalSuccessGetResponseCode) {
         setState(() => {
-          _propertyList = value.getTransList,
-          //print(_propertyList[0].listingID)
-        });
+              _propertyList = value.data,
+              print('TarnsList: ${_propertyList.length}')
+            });
       } else {
         //showInSnackBar(value.message);
         print('Failed to load transaction list');
       }
+    }, onError: (e) {
+      // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      print('Failed to load transaction list ${e.toString()}');
     });
   }
 
-   Future _getUserProfile() async {
+  Future _getUserProfile() async {
     _prefUserFN = await _sharedPreferenceQS.getSharedPrefs(String, 'userFN');
     setState(() {
       _prefUserFN = _prefUserFN;
     });
-  } 
+  }
 
   @override
   void initState() {
     super.initState();
     _getTransactionList();
     _getUserProfile();
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+
+    //   await showLoadingDialog(context, _keyLoader);
+    // });
   }
 
   @override
@@ -109,20 +117,19 @@ class _DashboardTransactionsState extends State<DashboardTransactions> {
               ),
             ),
             const SizedBox(height: 20),
-           // (_propertyList.length>0)?
-            Expanded(
-              flex: 1,
-              child: ListView.builder(
-                itemBuilder: _buildItemsForListView,
-                itemCount: 3,
-                scrollDirection: Axis.vertical,
-              ),
-            )
-            // :
-            //  Expanded(
-            //   flex: 1,
-            //   child: Text('No Record Found'),
-            // )
+            (_propertyList.length > 0)
+                ? Expanded(
+                    flex: 1,
+                    child: ListView.builder(
+                      itemBuilder: _buildItemsForListView,
+                      itemCount: _propertyList.length,
+                      scrollDirection: Axis.vertical,
+                    ),
+                  )
+                : Expanded(
+                    flex: 1,
+                    child: Text('No Record Found'),
+                  )
           ],
         ),
       ),
@@ -140,15 +147,27 @@ class _DashboardTransactionsState extends State<DashboardTransactions> {
         splashColor: Colors.orange.withAlpha(30),
         onTap: () {
           print('Transaction tapped');
-          Navigator.pushNamed(ctxt, transactionDetailsRoute);
+          Navigator.pushNamed(ctxt, transactionDetailsRoute, arguments: _propertyList[index]);
         },
         child: Container(
           margin: EdgeInsets.all(12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text('_propertyList[index].listing.property.title', style: TextStyle(color: appTextColorPrimary),),
-              Icon(Icons.keyboard_arrow_right, color: appTextColorPrimary,),
+              Expanded(
+                child: Text(
+                  (_propertyList[index].listing.property.title != null)
+                      ? _propertyList[index].listing.property.title
+                      : 'Property',
+                  softWrap: true,
+                  style: TextStyle(color: appTextColorPrimary),
+                ),
+              ),
+              const SizedBox(width:3),
+              Icon(
+                Icons.keyboard_arrow_right,
+                color: appTextColorPrimary,
+              ),
             ],
           ),
         ),
