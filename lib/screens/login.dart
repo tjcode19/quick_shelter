@@ -102,7 +102,7 @@ class _LoginState extends State<Login> {
         await _getUserProfile().runtimeType;
         Navigator.pushNamed(context, dashboardRoute);
       } else {
-        showInSnackBar(value.responseMessage);
+        showInSnackBar('Login Failed: ${ (value.responseMessage!=null)?value.responseMessage:''}');
       }
     }, onError: (error) {
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();

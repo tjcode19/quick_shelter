@@ -29,16 +29,16 @@ class _RegCompletedState extends State<RegCompleted> {
     });
   }
 
-  void _doLogin() async {
-    print('loginRes');
+  void _doLogin() async{
+    print('loginRes SignUp');
     FocusScope.of(context).requestFocus(new FocusNode());
 
     showLoadingDialog(context, _keyLoader);
 
     var _loginRes = repo.loginData(_userEmail, _userPassword);
 
-    await _loginRes.then((value) async {
-      //print('donnned ${value.auth}');
+    await _loginRes.then((value) async{
+      print('donnned ${value.responseCode}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.responseCode == globalSuccessResponseCode &&
           value.data.auth == true) {
@@ -46,13 +46,14 @@ class _RegCompletedState extends State<RegCompleted> {
             'String', 'accessToken', value.data.accessToken);
         _sharedPreferenceQS.setData(
             'String', 'userFN', value.data.user.firstName);
-        await _resetDetails().runtimeType;
-        await _getUserProfile().runtimeType;
+        await _resetDetails();
+        await _getUserProfile();
         Navigator.pushNamed(context, dashboardRoute);
       } else {
         snackBar(value.responseMessage, _scaffoldKey);
       }
     }, onError: (error) {
+      print('Sign up comp $error');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     });
   }

@@ -168,7 +168,7 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
                           ),
                         ],
                       )
-                    : Text('No record found'),
+                    : Text('You are yet to add any properties', style: TextStyle(fontSize: 16.0,),),
               ),
             ],
           ),

@@ -196,7 +196,7 @@ class _SignUpState extends State<SignUp> {
                           InputFieldWidget('Password', TextInputType.text, true,
                               controller: _passwordController,
                               capitalizationType: TextCapitalization.none,
-                              errorMsg: 'Password can not be empty',
+                              errorMsg: 'Password must be 6 characters',
                               onChange: (content) {
                             setState(() {
                               password = content;

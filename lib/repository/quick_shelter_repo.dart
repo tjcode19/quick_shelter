@@ -163,6 +163,22 @@ class QuickShelterRepository {
     return AddPropertyResponse.fromJson(response);
   }
 
+  Future<AddPropertyResponse> editPropertyListing(
+      Map data, String listingID) async {
+    final response = await _provider.put(
+      "edit-listing/$listingID",
+      <String, Object>{
+        'ListingType': data['ListingType'],
+        'AvailableFrom': data['AvailableFrom'],
+        'MinPeriod': data['MinPeriod'],
+        'PeriodUnits': data['PeriodUnits'],
+        'Price': data['Price'],
+        'IS_AVAILABLE': data['IS_AVAILABLE']
+      },
+    );
+    return AddPropertyResponse.fromJson(response);
+  }
+
   Future<UpdateProfileResponse> updateProfile(
       String firstname, String surName, String phoneNum, String email) async {
     final response = await _provider.put(

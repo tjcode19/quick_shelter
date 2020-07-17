@@ -407,44 +407,45 @@ class _UserPropertyDetailsState extends State<UserPropertyDetails> {
                             ),
                             onPressed: () {
                               // _settingModalBottomSheet(context);
-                              Navigator.pushNamed(context, propertyListingsRoute, arguments: _propertyDetails);
+                              //Navigator.pushNamed(context, propertyListingsRoute, arguments: _propertyDetails);
+                              Navigator.pushNamed(context, propertyListingsRoute, arguments: {'data':_propertyDetails, 'refFunc':widget.propDetails['refFunc']});
                             },
                           ),
                         ),
                       ],
                     ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                      child: OutlineButton(
-                        padding: EdgeInsets.all(12),
-                        color: Colors.white,
-                        highlightedBorderColor: Colors.white,
-                        borderSide: BorderSide(color: appTextColorPrimary2),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(15),
-                          topLeft: Radius.circular(3),
-                          bottomRight: Radius.circular(3),
-                          bottomLeft: Radius.circular(3),
-                        )),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
-                              child: Text(
-                                'Delete Property',
-                                style: TextStyle(
-                                    color: appTextColorPrimary2, fontSize: 15),
-                              ),
-                            ),
-                          ],
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
+                    // Container(
+                    //   margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    //   child: OutlineButton(
+                    //     padding: EdgeInsets.all(12),
+                    //     color: Colors.white,
+                    //     highlightedBorderColor: Colors.white,
+                    //     borderSide: BorderSide(color: appTextColorPrimary2),
+                    //     shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.only(
+                    //       topRight: Radius.circular(15),
+                    //       topLeft: Radius.circular(3),
+                    //       bottomRight: Radius.circular(3),
+                    //       bottomLeft: Radius.circular(3),
+                    //     )),
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       children: <Widget>[
+                    //         Container(
+                    //           padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                    //           child: Text(
+                    //             'Delete Property',
+                    //             style: TextStyle(
+                    //                 color: appTextColorPrimary2, fontSize: 15),
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //     onPressed: () {
+                    //       Navigator.pop(context);
+                    //     },
+                    //   ),
+                    // ),
                     const SizedBox(height: 20),
                   ],
                 ),

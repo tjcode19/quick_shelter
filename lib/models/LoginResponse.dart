@@ -23,15 +23,13 @@ class LoginResponse {
 }
 
 class Data {
-  String code;
   bool auth;
   String accessToken;
   User user;
 
-  Data({this.code, this.auth, this.accessToken, this.user});
+  Data({this.auth, this.accessToken, this.user});
 
   Data.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
     auth = json['auth'];
     accessToken = json['accessToken'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
@@ -39,7 +37,6 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['code'] = this.code;
     data['auth'] = this.auth;
     data['accessToken'] = this.accessToken;
     if (this.user != null) {
@@ -60,9 +57,9 @@ class User {
   String dOB;
   String profilePhoto;
   String uSERTYPE;
-  String oTP;
+  OTP oTP;
   String nationalID;
-  bool isEmailVerified;
+  String isEmailVerified;
   bool isProfileReviewed;
   String createdAt;
   String updatedAt;
@@ -96,7 +93,7 @@ class User {
     dOB = json['DOB'];
     profilePhoto = json['ProfilePhoto'];
     uSERTYPE = json['USER_TYPE'];
-    oTP = json['OTP'];
+    oTP = json['OTP'] != null ? new OTP.fromJson(json['OTP']) : null;
     nationalID = json['NationalID'];
     isEmailVerified = json['isEmailVerified'];
     isProfileReviewed = json['isProfileReviewed'];
@@ -116,12 +113,33 @@ class User {
     data['DOB'] = this.dOB;
     data['ProfilePhoto'] = this.profilePhoto;
     data['USER_TYPE'] = this.uSERTYPE;
-    data['OTP'] = this.oTP;
+    if (this.oTP != null) {
+      data['OTP'] = this.oTP.toJson();
+    }
     data['NationalID'] = this.nationalID;
     data['isEmailVerified'] = this.isEmailVerified;
     data['isProfileReviewed'] = this.isProfileReviewed;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
+    return data;
+  }
+}
+
+class OTP {
+  String email;
+  String phone;
+
+  OTP({this.email, this.phone});
+
+  OTP.fromJson(Map<String, dynamic> json) {
+    email = json['Email'];
+    phone = json['Phone'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['Email'] = this.email;
+    data['Phone'] = this.phone;
     return data;
   }
 }

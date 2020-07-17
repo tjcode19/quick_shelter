@@ -40,7 +40,7 @@ class _PropertyListingsState extends State<PropertyListings> {
         !_controller.position.outOfRange) {
       setState(() {
         _isVisible = true;
-       // _prefUserFN = _prefUserFN;
+        // _prefUserFN = _prefUserFN;
       });
     }
   }
@@ -48,7 +48,7 @@ class _PropertyListingsState extends State<PropertyListings> {
   @override
   void initState() {
     super.initState();
-    _propertyList = widget.propDetails;
+    _propertyList = widget.propDetails['data'];
   }
 
   @override
@@ -83,7 +83,6 @@ class _PropertyListingsState extends State<PropertyListings> {
                     fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              
             ]),
             const SizedBox(height: 30),
             Expanded(
@@ -98,12 +97,16 @@ class _PropertyListingsState extends State<PropertyListings> {
           ],
         ),
       ),
-       floatingActionButton: AnimatedOpacity(
+      floatingActionButton: AnimatedOpacity(
         opacity: _isVisible ? 1.0 : 0.0,
         duration: Duration(milliseconds: 500),
         child: FloatingActionButton.extended(
           onPressed: () {
-            Navigator.pushNamed(context, addPropertyListingRoute, arguments: _propertyList);
+            Navigator.pushNamed(
+              context,
+              addPropertyListingRoute,
+              arguments: {'dataLoad': _propertyList, 'type': 'new', 'refFunc':widget.propDetails['refFunc']},
+            );
           },
           // child: Icon(
           //   Icons.add,
@@ -137,7 +140,7 @@ class _PropertyListingsState extends State<PropertyListings> {
         Navigator.pushNamed(
           ctxt,
           propertyListingDetailsRoute,
-          arguments: _propertyList.listings[index],
+          arguments: {'data':_propertyList.listings[index], 'refFunc':widget.propDetails['refFunc']},
         );
       },
       child: Container(

@@ -52,13 +52,16 @@ class InputFieldWidget extends StatelessWidget {
             return errorMsg;
           } else {
             if (cPassword!=null) {
-              print(cPassword);
-              print(val);
               if (cPassword != val) {
                 return errorMsg;
               } else
                 return null;
-            }
+            }  
+            if(isPasswordField){
+              if(val.length <6){
+                return errorMsg;
+              }
+            }          
             return null;
           }
         },

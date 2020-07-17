@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quick_shelter/colors.dart';
 import 'package:quick_shelter/models/GetUserProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
@@ -23,9 +24,6 @@ class _AddPropListingState extends State<AddPropListing> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final _propTypeController = TextEditingController();
-  final _propTitleController = TextEditingController();
-  final _propStateController = TextEditingController();
-  final _propLocationController = TextEditingController();
   final _propMinPeriodController = TextEditingController();
   final _propPeriodUnitController = TextEditingController();
   final _propPriceController = TextEditingController();
@@ -36,7 +34,9 @@ class _AddPropListingState extends State<AddPropListing> {
   bool sale = true;
   bool rent = false;
   bool isAvailable = false;
+  String _actionType;
   GetUserPropData _propertyDet;
+  GetUserListings _propertyListDetails;
 
   String stateSelection = "";
 
@@ -48,7 +48,7 @@ class _AddPropListingState extends State<AddPropListing> {
 
     //var detailsOne = widget.propData;
 
-    isAvailable = (isAvailable  == null) ? false : isAvailable;
+    isAvailable = (isAvailable == null) ? false : isAvailable;
 
     showLoadingDialog(context, _keyLoader);
     Map data = {
@@ -79,7 +79,60 @@ class _AddPropListingState extends State<AddPropListing> {
     );
   }
 
-  
+  void _editPropertyListing() {
+    if (listingType.isEmpty) {
+      snackBar('Please select Listing Type', _scaffoldKey);
+      return;
+    }
+
+    //var detailsOne = widget.propData;
+
+    isAvailable = (isAvailable == null) ? false : isAvailable;
+
+    showLoadingDialog(context, _keyLoader);
+    Map data = {
+      "ListingType": listingType,
+      "AvailableFrom": _propAvailableDateController.text,
+      "MinPeriod": _propMinPeriodController.text,
+      "PeriodUnits": _propPeriodUnitController.text,
+      "Price": _propPriceController.text,
+      "IS_AVAILABLE": isAvailable
+    };
+
+    var _apiCall =
+        repo.editPropertyListing(data, _propertyListDetails.iD.toString());
+
+    _apiCall.then(
+      (value) {
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        if (value.responseCode == globalSuccessResponseCode) {
+          _settingModalBottomSheet(context);
+        } else {
+          snackBar('Property Update Failed', _scaffoldKey);
+        }
+      },
+    );
+  }
+
+  _setValues() {
+    listingType = _propertyListDetails.listingType;
+    _propMinPeriodController.text = _propertyListDetails.minPeriod.toString();
+    _propPeriodUnitController.text = _propertyListDetails.periodUnits;
+    _propPriceController.text = _propertyListDetails.price.toString();
+    _propAvailableDateController.text = _propertyListDetails.availableFrom;
+    isAvailable = _propertyListDetails.iSAVAILABLE;
+
+    setState(() {
+      if(listingType != 'FOR SALE'){
+        sale = false;
+        rent = true;
+      }
+      else{
+        sale = true;
+        rent = false;
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -89,11 +142,22 @@ class _AddPropListingState extends State<AddPropListing> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // _getProperty();
       //await showLoadingDialog(context, _keyLoader);
-      _propertyDet = widget.propDetails;
-      print(_propertyDet);
-      //_setValues();
+      _actionType = widget.propDetails['type'];
+      if (_actionType == 'new') {
+        _propertyDet = widget.propDetails['dataLoad'];
+        print('New Listing: $_propertyDet');
+      } else {
+        _propertyListDetails = widget.propDetails['dataLoad'];
+        _setValues();
+        print('Edit Listing: $_propertyListDetails');
+      }
     });
+
+    fToast = FToast(context);
   }
+
+  FToast fToast;
+
 
   @override
   Widget build(BuildContext context) {
@@ -300,7 +364,7 @@ class _AddPropListingState extends State<AddPropListing> {
                           unselectedWidgetColor: Colors.white,
                           selectedRowColor: Colors.amber),
                       child: Checkbox(
-                        value: isAvailable ,
+                        value: isAvailable,
                         activeColor: Theme.of(context).primaryColor,
                         onChanged: (bool value) {
                           setState(() {
@@ -320,12 +384,19 @@ class _AddPropListingState extends State<AddPropListing> {
                 ],
               ),
               const SizedBox(height: 40),
-              RaisedButtonWidget(
-                addProperty2Route,
-                'Add Listing',
-                true,
-                action: _addPropertyListing,
-              ),
+              (_actionType != 'edit')
+                  ? RaisedButtonWidget(
+                      addProperty2Route,
+                      'Add Listing',
+                      true,
+                      action: _addPropertyListing,
+                    )
+                  : RaisedButtonWidget(
+                      addProperty2Route,
+                      'Edit Listing',
+                      true,
+                      action: _editPropertyListing,
+                    ),
               const SizedBox(height: 20),
             ],
           ),
@@ -490,7 +561,8 @@ class _AddPropListingState extends State<AddPropListing> {
                         sale = false;
                         listingType = 'FOR RENT';
                       });
-                      print(rent);
+                      //print(rent);
+                      _showToast('You selected FOR RENT');
                       //showSnackBar("OutlineButton with Shape");
                     },
                   ),
@@ -528,7 +600,8 @@ class _AddPropListingState extends State<AddPropListing> {
                       rent = false;
                       listingType = 'FOR SALE';
                     });
-                    print('pressed');
+                    //print('pressed');
+                    _showToast('You selected FOR SALE');
                   },
                 ),
               ),
@@ -563,6 +636,7 @@ class _AddPropListingState extends State<AddPropListing> {
                       rent = false;
                       listingType = 'FOR SALE';
                     });
+                    _showToast('You selected FOR SALE');
                     //showSnackBar("OutlineButton with Shape");
                   },
                 ),
@@ -602,7 +676,8 @@ class _AddPropListingState extends State<AddPropListing> {
                         rent = true;
                         listingType = 'FOR RENT';
                       });
-                      print('pressed');
+                      _showToast('You selected FOR RENT');
+                      //print('pressed');
                     },
                   ),
                 ),
@@ -690,9 +765,10 @@ class _AddPropListingState extends State<AddPropListing> {
                   ),
                   onPressed: () {
                     // _settingModalBottomSheet(context);
+                    widget.propDetails['refFunc']();
                     int count = 0;
                     Navigator.popUntil(context, (route) {
-                      return count++ == 3;
+                      return count++ == 4;
                     });
                   },
                 ),
@@ -703,4 +779,31 @@ class _AddPropListingState extends State<AddPropListing> {
       },
     );
   }
+
+  _showToast(String msg) {
+    Widget toast = Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+        decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.white30,
+        ),
+        child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+            Icon(Icons.check, color: Colors.white,),
+            SizedBox(
+            width: 12.0,
+            ),
+            Text(msg, style: TextStyle(color: Colors.white, fontSize: 15.0, fontWeight: FontWeight.bold),),
+        ],
+        ),
+    );
+
+
+    fToast.showToast(
+        child: toast,
+        gravity: ToastGravity.BOTTOM_RIGHT,
+        toastDuration: Duration(seconds: 2),
+    );
+}
 }

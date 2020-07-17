@@ -49,7 +49,7 @@ class _PropertyListingDeatilsState extends State<PropertyListingDeatils> {
   @override
   void initState() {
     super.initState();
-    _propertyListDetails = widget.propDetails;
+    _propertyListDetails = widget.propDetails['data'];
   }
 
   @override
@@ -75,16 +75,33 @@ class _PropertyListingDeatilsState extends State<PropertyListingDeatils> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(
-                'Listing Details',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-            ]),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Listing Details',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.pushNamed(context, addPropertyListingRoute,
+                    arguments: {'dataLoad':_propertyListDetails, 'type':'edit', 'refFunc':widget.propDetails['refFunc']},);
+                  },
+                  child: Text(
+                    'Edit Listing',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.0,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 30),
             Divider(color: Colors.white38, thickness: 1.0),
             _rowCont('Listing Type', _propertyListDetails.listingType,

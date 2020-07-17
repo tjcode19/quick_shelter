@@ -17,6 +17,10 @@ class SearchProp extends StatefulWidget {
 class _SearchPropState extends State<SearchProp> {
   final QuickShelterRepository repo = QuickShelterRepository();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final _propTypeController = TextEditingController();
+  final _propLocationController = TextEditingController();
+  final _propPriceRangeController = TextEditingController();
+  final _noOfBedroomsController = TextEditingController();
 
   bool sale = true;
   bool rent = false;
@@ -32,7 +36,7 @@ class _SearchPropState extends State<SearchProp> {
     await _apiCall.then((value) {
       print('donnned ${value.data}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.responseCode == 'M000') {
+      if (value.responseCode == globalSuccessGetResponseCode) {
         setState(() => {_propertyList = value.data});
         Navigator.pushNamed(context, searchResultRoute,
             arguments: _propertyList);
@@ -73,20 +77,53 @@ class _SearchPropState extends State<SearchProp> {
               inputlabel('Price Range', Icons.local_offer),
               const SizedBox(height: 8),
               InputFieldWidget(
-                  '100,000 - 300,000', TextInputType.number, false),
+                '100,000 - 300,000',
+                TextInputType.number,
+                false,
+                controller: _propPriceRangeController,
+              ),
               const SizedBox(height: 20),
               inputlabel('Bedrooms', Icons.hotel),
               const SizedBox(height: 8),
-              InputFieldWidget('2', TextInputType.number, false),
+              GestureDetector(
+                onTap: () {
+                  showNumberDialog(
+                      context, _noOfBedroomsController, 'Bedrooms');
+                },
+                child: AbsorbPointer(
+                  child: InputFieldWidget(
+                    'Select no of bedrooms',
+                    TextInputType.number,
+                    false,
+                    controller: _noOfBedroomsController,
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
               inputlabel('Location', Icons.location_on),
               const SizedBox(height: 8),
-              InputFieldWidget('ex. Lekki Phase 1', TextInputType.text, false),
+              InputFieldWidget(
+                'ex. Lekki Phase 1',
+                TextInputType.text,
+                false,
+                controller: _propLocationController,
+              ),
               const SizedBox(height: 20),
               inputlabel('Building Type', Icons.home),
               const SizedBox(height: 8),
-              InputFieldWidget(
-                  'Fully Detached Duplex', TextInputType.text, false),
+              GestureDetector(
+                onTap: () {
+                  showPropertyTypeDialog(context);
+                },
+                child: AbsorbPointer(
+                  child: InputFieldWidget(
+                    'Select Type',
+                    TextInputType.text,
+                    false,
+                    controller: _propTypeController,
+                  ),
+                ),
+              ),
               const SizedBox(height: 40),
               RaisedButtonWidget(
                 searchResultRoute,
@@ -100,6 +137,73 @@ class _SearchPropState extends State<SearchProp> {
         ),
       ),
     );
+  }
+
+  // replace this function with the examples above
+  Future showPropertyTypeDialog(BuildContext context) async {
+    // set up the SimpleDialog
+    SimpleDialog dialog = SimpleDialog(
+      title: const Text(
+        'Select Property Type',
+        style: TextStyle(fontSize: 17.0, fontStyle: FontStyle.normal),
+      ),
+      children: propType.map((e) {
+        return new SimpleDialogOption(
+          onPressed: () {
+            Navigator.pop(context,
+                e); //here passing the index to be return on item selection
+          },
+          child: new Text(e), //item value
+        );
+      }).toList(),
+    );
+
+    // show the dialog
+    String dialogVal = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return dialog;
+      },
+    );
+
+    setState(() {
+      FocusScope.of(context).requestFocus(new FocusNode());
+      _propTypeController.text = dialogVal;
+      // propertyType = dialogVal;
+    });
+  }
+
+  // replace this function with the examples above
+  Future showNumberDialog(BuildContext context, _controll, String lb) async {
+    // set up the SimpleDialog
+    SimpleDialog dialog = SimpleDialog(
+      title: Text(
+        'Select Number Of $lb',
+        style: TextStyle(fontSize: 17.0, fontStyle: FontStyle.normal),
+      ),
+      children: noList.map((e) {
+        return new SimpleDialogOption(
+          onPressed: () {
+            Navigator.pop(context,
+                e); //here passing the index to be return on item selection
+          },
+          child: new Text(e), //item value
+        );
+      }).toList(),
+    );
+
+    // show the dialog
+    String dialogVal = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return dialog;
+      },
+    );
+
+    setState(() {
+      FocusScope.of(context).requestFocus(new FocusNode());
+      _controll.text = dialogVal;
+    });
   }
 
   Widget saleRentButton() {

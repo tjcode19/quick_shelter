@@ -35,8 +35,8 @@ class _BasicInfoState extends State<BasicInfo> {
     _apiCall.then((value) {
       print(value);
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.code != '200') {
-        snackBar(value.message, _scaffoldKey);
+      if (value.responseCode != globalSuccessResponseCode) {
+        snackBar(value.responseMessage, _scaffoldKey);
       } else {        
         _settingModalBottomSheet(context);
       }
