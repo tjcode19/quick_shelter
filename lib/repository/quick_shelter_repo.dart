@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:quick_shelter/models/AddPropertyResponse.dart';
 import 'package:quick_shelter/models/AddSavedListing.dart';
+import 'package:quick_shelter/models/AddSavedProperty.dart';
 import 'package:quick_shelter/models/EditPropertyResponse.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/models/GetProfileResponse.dart';
@@ -13,6 +14,7 @@ import 'package:quick_shelter/models/GetSingleProperty.dart';
 import 'package:quick_shelter/models/GetSinglePropertyListing.dart';
 import 'package:quick_shelter/models/GetUserProperties.dart';
 import 'package:quick_shelter/models/LoginResponse.dart';
+import 'package:quick_shelter/models/PaymentResponse.dart';
 import 'package:quick_shelter/models/SignUpResponse.dart';
 import 'package:quick_shelter/models/TransactionListResponse.dart';
 import 'package:quick_shelter/models/UpdateProfileResponse.dart';
@@ -208,6 +210,11 @@ class QuickShelterRepository {
     return ValidatePhone.fromJson(response);
   }
 
+  Future<AddPropertyResponse> deletePhoto(String propertyID) async {
+    final response = await _provider.delete("property/photos/$propertyID");
+    return AddPropertyResponse.fromJson(response);
+  }
+
   Future<GetProfileResponse> getProfile() async {
     final response = await _provider.get(
       "user/profile",
@@ -240,6 +247,15 @@ class QuickShelterRepository {
     );
     print(response);
     return GetAllProperties.fromJson(response);
+  }
+
+  Future<PaymentResponse> doPayment(int listingID) async {
+    final response = await _provider.put(
+      "pay-listing/$listingID",
+      <String, dynamic>{},
+    );
+    print(response);
+    return PaymentResponse.fromJson(response);
   }
 
   Future<GetSingleProperty> getSingleProperty(String propID) async {

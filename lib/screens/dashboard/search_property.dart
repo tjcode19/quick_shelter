@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
+import 'package:quick_shelter/utils/commonFunctions.dart';
 import 'package:quick_shelter/widgets/commonUtils.dart';
 import '../../colors.dart';
 import '../../widgets/input_field.dart';
@@ -31,7 +32,9 @@ class _SearchPropState extends State<SearchProp> {
   void _getAllProperties() async {
     print('Get Properties');
     showLoadingDialog(context, _keyLoader);
-    var _apiCall = repo.getAllProperties('0', '10', '2020-01-01', '2020-07-11');
+    DateTime sDate = DateTime.now();
+    String sDateC = sDate.toString();
+    var _apiCall = repo.getAllProperties('0', '50', '2020-01-01', formatDate(sDateC, pattern: 'yyyy-MM-dd'));
 
     await _apiCall.then((value) {
       print('donnned ${value.data}');

@@ -179,7 +179,8 @@ List<GetAllPropData> searchedPropList;
                               fontSize: 13, color: appSecondaryColorLight),
                           children: <TextSpan>[
                             TextSpan(
-                              text: formatMoney(searchedPropList[index].price.toDouble()).withoutFractionDigits,
+                              text: (searchedPropList[index].price != null)?
+                              formatMoney(searchedPropList[index].price.toDouble()).withoutFractionDigits:'0',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,

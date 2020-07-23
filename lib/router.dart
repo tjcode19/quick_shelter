@@ -5,8 +5,11 @@ import 'package:quick_shelter/screens/dashboard/dashboard_add_property2.dart';
 import 'package:quick_shelter/screens/dashboard/edit_property_details.dart';
 import 'package:quick_shelter/screens/dashboard/edit_property_listing.dart';
 import 'package:quick_shelter/screens/dashboard/file_upload.dart';
+import 'package:quick_shelter/screens/dashboard/payment_webview.dart';
 import 'package:quick_shelter/screens/dashboard/property_edit_main.dart';
 import 'package:quick_shelter/screens/dashboard/property_listings_details.dart';
+import 'package:quick_shelter/screens/dashboard/trans_details_photos.dart';
+import 'package:quick_shelter/screens/dashboard/transaction_success.dart';
 import 'package:quick_shelter/screens/dashboard/user_property_details.dart';
 import 'package:quick_shelter/screens/dashboard/property_listings.dart';
 import 'package:quick_shelter/screens/dashboard/search_result.dart';
@@ -20,6 +23,7 @@ import 'screens/dashboard/profile.dart';
 import 'screens/dashboard/property_details.dart';
 import 'screens/dashboard/search_property.dart';
 import 'screens/dashboard/transaction_details.dart';
+import 'screens/dashboard/user_prop_details_photos.dart';
 import 'screens/identity_card.dart';
 import 'screens/dashboard/dashboard.dart';
 import 'screens/reg_complete.dart';
@@ -151,6 +155,26 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => ChangePassword());
     case forgotPasswordRoute:
       return MaterialPageRoute(builder: (context) => ForgotPassword());
+    case paymentWebviewRoute:
+      var paymentData = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => PaymentWebview(paymentData: paymentData));
+    case transSuccessRoute:
+      var paymentData = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => TransSuccess(transDetails: paymentData));
+    case transDetailPhotosRoute:
+      var propData = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => TransDetailsPhotos(
+                propDetails: propData,
+              ));
+    case userPropDetailPhotosRoute:
+      var propData = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => UserPropDetailsPhotos(
+                propDetails: propData,
+              ));
     default:
       return MaterialPageRoute(builder: (context) => WelcomePage());
   }

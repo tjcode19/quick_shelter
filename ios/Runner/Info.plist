@@ -43,6 +43,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<key>NSCameraUsageDescription</key>
 	<key>NSMicrophoneUsageDescription</key>
+	<key>io.flutter.embedded_views_preview</key><string>yes</string>
 	<false/>
 </dict>
 </plist>

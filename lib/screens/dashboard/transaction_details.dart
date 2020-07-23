@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quick_shelter/constants.dart';
 import 'package:quick_shelter/models/TransactionListResponse.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/utils/commonFunctions.dart';
@@ -45,7 +46,6 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   ];
 
   int imageNum = 0;
-  
 
   // _saveProperty() {
   //   if (_isSaved) {
@@ -104,10 +104,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                     left: 10.0,
                     child: Container(
                       child: IconButton(
-                        onPressed: (){
+                        onPressed: () {
                           Navigator.pop(context);
                         },
-                        icon:Icon(Icons.arrow_back),
+                        icon: Icon(Icons.arrow_back),
                         color: Colors.white,
                       ),
                     ),
@@ -128,24 +128,32 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                             ],
                           ),
                           const SizedBox(height: 20),
-                          Container(
-                            padding: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                                  border: Border.all(color:Colors.white)
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  'View property images',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13),
-                                ),
-                                Icon(Icons.keyboard_arrow_right, color: Colors.white,),
-                              ],
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, transDetailPhotosRoute, arguments: _propertyDetails);
+                            },
+                            child: Container(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
+                              decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15)),
+                                  border: Border.all(color: Colors.white)),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    'View property images',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 13),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -207,9 +215,11 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                     const SizedBox(height: 30),
                     detailsRow('Property Owner', '$_prefUserLN $_prefUserFN'),
                     const SizedBox(height: 16),
-                    detailsRow('Customer', '${_propertyDetails.seller.surName} ${_propertyDetails.seller.firstName}'),
+                    detailsRow('Customer',
+                        '${_propertyDetails.seller.surName} ${_propertyDetails.seller.firstName}'),
                     const SizedBox(height: 16),
-                    detailsRow('Price', _propertyDetails.listing.price.toDouble()),
+                    detailsRow(
+                        'Price', _propertyDetails.listing.price.toDouble()),
                     const SizedBox(height: 16),
                     detailsRow('Payment ID', '995799930020'),
                     const SizedBox(height: 16),
@@ -487,39 +497,37 @@ class _TransactionDetailsState extends State<TransactionDetails> {
             style: TextStyle(
                 fontSize: 18, color: Color.fromRGBO(112, 112, 112, 0.7)),
           ),
-          (tag !='Price')?
-          Text(
-            value,
-            style: TextStyle(fontSize: 18),
-          ):RichText(
-                        text: TextSpan(
-                          text: '₦ ',
-                          style: TextStyle(
-                              fontSize: 15, color: Colors.black38),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: (value != null)
-                                  ? formatMoney(
-                                          value)
-                                      .withoutFractionDigits
-                                  : '0',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Colors.black,
-                              ),
-                            ),
-                            TextSpan(
-                              text: '.00',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 15,
-                                color:Colors.black38,
-                              ),
-                            )
-                          ],
+          (tag != 'Price')
+              ? Text(
+                  value,
+                  style: TextStyle(fontSize: 18),
+                )
+              : RichText(
+                  text: TextSpan(
+                    text: '₦ ',
+                    style: TextStyle(fontSize: 15, color: Colors.black38),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: (value != null)
+                            ? formatMoney(value).withoutFractionDigits
+                            : '0',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.black,
                         ),
                       ),
+                      TextSpan(
+                        text: '.00',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                          color: Colors.black38,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
         ],
       );
 

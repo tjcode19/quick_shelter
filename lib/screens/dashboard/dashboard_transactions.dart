@@ -28,6 +28,8 @@ class _DashboardTransactionsState extends State<DashboardTransactions> {
       print('TransList DONE ${value.responseCode}');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.responseCode == globalSuccessGetResponseCode) {
+
+        value.data..sort((a, b) => b.createdAt.compareTo(a.createdAt));
         setState(() => {
               _propertyList = value.data,
               print('TarnsList: ${_propertyList.length}')
@@ -36,10 +38,12 @@ class _DashboardTransactionsState extends State<DashboardTransactions> {
         //showInSnackBar(value.message);
         print('Failed to load transaction list');
       }
-    }, onError: (e) {
-      // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      print('Failed to load transaction list ${e.toString()}');
-    });
+    },
+       onError: (e) {
+     // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+     print('Failed to load transaction list ${e.toString()}');
+   }
+    );
   }
 
   Future _getUserProfile() async {

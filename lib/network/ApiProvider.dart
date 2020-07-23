@@ -69,6 +69,21 @@ class ApiProvider {
     return responseJson;
   }
 
+  Future<dynamic> delete(String url) async {
+    var responseJson;
+    await getTokenPref();
+    try {
+      final response = await http.delete(
+        _baseUrl + url,
+        headers: headers,
+      );
+      responseJson = _response(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
   Future<Map<String, dynamic>> uploadFile(
       File image, String url, String fileType, String docName, String actionType) async {
 

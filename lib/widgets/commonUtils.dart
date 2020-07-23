@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../colors.dart';
 
-void snackBar(String value, _scaffoldKey) {
+void snackBar(String value, _scaffoldKey, {type:'error'}) {
+  
   return _scaffoldKey.currentState.showSnackBar(new SnackBar(
       content: new Text(value),
-      backgroundColor: Colors.red,
+      backgroundColor: (type != 'error')?Colors.green:Colors.red
     ));
 }
 

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/utils/commonFunctions.dart';
+import 'package:quick_shelter/widgets/commonUtils.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -18,10 +19,11 @@ class PropertyDetails extends StatefulWidget {
 
 class _PropertyDetailsState extends State<PropertyDetails> {
   final QuickShelterRepository repo = QuickShelterRepository();
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool rememberMe = false;
   GetAllPropData _propertyDetails;
   bool _isSaved = false;
-
 
   int imageNum = 0;
   int _currentPosition = 0;
@@ -42,24 +44,42 @@ class _PropertyDetailsState extends State<PropertyDetails> {
     });
   }
 
-  _saveProperty(){
-    if(_isSaved){
+  _saveProperty() {
+    if (_isSaved) {
       var _apiCall = repo.addSavedListing(_propertyDetails.propertyID);
 
-    _apiCall.then((value) async {
-      print('donnned');
-      if (value.message != null) {
-       // Navigator.pushNamed(context, dashboardRoute);
-      } else {
-        //showInSnackBar(value.message);
-        print('Saving property failed');
-      }
-    });
+      _apiCall.then((value) async {
+        print('Property Saved ');
+        if (value.responseCode == globalSuccessResponseCode) {
+          // Navigator.pushNamed(context, dashboardRoute);
+          print('Property Listing Saved');
+        } else {
+          //showInSnackBar(value.message);
+          print('Saving property failed');
+        }
+      });
+    } else {}
+  }
 
-    }
-    else{
+  _makePayment() {
+    showLoadingDialog(context, _keyLoader);
+      var _apiCall = repo.doPayment(_propertyDetails.iD);
 
-    }
+      _apiCall.then((value) async {
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        if (value.responseCode == globalSuccessGetResponseCode && value.data.status!=false) {          
+         print(value);
+           Navigator.pushNamed(context, paymentWebviewRoute, arguments: value);
+        } else {
+          //showInSnackBar(value.message);     
+          print('Payment failed');     
+          snackBar(value.responseMessage, _scaffoldKey);
+        }
+      }, onError: (e){
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        snackBar('Payment failed', _scaffoldKey);
+        print('Payment failed $e');
+      });
   }
 
   @override
@@ -73,6 +93,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
   Widget build(BuildContext context) {
     final screeSize = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.transparent,
       body: Stack(
         children: <Widget>[
@@ -108,8 +129,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                   (e) => Container(
                     height: screeSize.height / 2 + 50,
                     constraints: BoxConstraints.loose(Size.infinite),
-                    child:
-                        FadeInImage.memoryNetwork(
+                    child: FadeInImage.memoryNetwork(
                       placeholder: kTransparentImage,
                       image: (_propertyDetails.property.photos.isNotEmpty)
                           ? e.path
@@ -176,7 +196,10 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                   ),
                 ),
                 Visibility(
-                  visible: (_currentPosition < (_propertyDetails.property.photos.length - 1) ? true : false),
+                  visible: (_currentPosition <
+                          (_propertyDetails.property.photos.length - 1)
+                      ? true
+                      : false),
                   child: ClipOval(
                     child: Material(
                       color: Colors.white, // button color
@@ -226,9 +249,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                               ),
                             )
                           : null,
-                      child:
-                          
-                          Stack(alignment: Alignment.center, children: [
+                      child: Stack(alignment: Alignment.center, children: [
                         Container(child: CircularProgressIndicator()),
                         FadeInImage.memoryNetwork(
                           width: 55,
@@ -268,7 +289,14 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                     Container(
                         margin: EdgeInsets.only(top: 10),
                         child: Text(
-                          'Studio Apartment, Fully Furnished',
+                          (_propertyDetails.property.title != null)
+                            ? (_propertyDetails.property.title.length > 50)
+                                ? '${_propertyDetails
+                                    .property
+                                    .title
+                                    .substring(0, 50)} ...'
+                                : _propertyDetails.property.title
+                            : 'NA',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20.0,
@@ -276,15 +304,16 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                         )),
                     const SizedBox(height: 10),
                     Container(
-                      child: 
-                      RichText(
+                      child: RichText(
                         text: TextSpan(
                           text: '₦',
                           style: TextStyle(
                               fontSize: 22, color: appTextColorPrimary2),
                           children: <TextSpan>[
                             TextSpan(
-                              text: formatMoney(_propertyDetails.price.toDouble()).withoutFractionDigits,
+                              text:(_propertyDetails.price!=null)?
+                                  formatMoney(_propertyDetails.price.toDouble())
+                                      .withoutFractionDigits:'0',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
@@ -312,7 +341,8 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              _propertyDetails.property.specifications.nOOFBEDROOMS
+                              _propertyDetails
+                                  .property.specifications.nOOFBEDROOMS
                                   .toString(),
                               style:
                                   TextStyle(color: Colors.white, fontSize: 15),
@@ -345,7 +375,9 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              _propertyDetails.property.specifications.nOOFBATHROOMS.toString(),
+                              _propertyDetails
+                                  .property.specifications.nOOFBATHROOMS
+                                  .toString(),
                               style:
                                   TextStyle(color: Colors.white, fontSize: 15),
                             ),
@@ -373,7 +405,9 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                           children: <Widget>[
                             ClipOval(
                               child: Material(
-                                color: (_isSaved)?appColorSecondary: Colors.grey, // button color
+                                color: (_isSaved)
+                                    ? appColorSecondary
+                                    : Colors.grey, // button color
                                 child: InkWell(
                                   splashColor: Colors.orange, // inkwell color
                                   child: Padding(
@@ -384,7 +418,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                                   onTap: () {
                                     // Navigator.pushNamed(context, profileRoute);
                                     setState(() {
-                                      _isSaved =! _isSaved;
+                                      _isSaved = !_isSaved;
                                       _saveProperty();
                                     });
                                   },
@@ -409,17 +443,33 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                     _rowCont('Location', _propertyDetails.property.location,
                         Icons.location_on),
                     Divider(color: Colors.white38, thickness: 1.0),
-                    _rowCont('State', _propertyDetails.property.state, Icons.pin_drop),
+                    _rowCont('State', _propertyDetails.property.state,
+                        Icons.pin_drop),
                     Divider(color: Colors.white38, thickness: 1.0),
-                    _rowCont('Land Area', _propertyDetails.property.landArea, Icons.landscape),
+                    _rowCont('Land Area', _propertyDetails.property.landArea,
+                        Icons.landscape),
                     Divider(color: Colors.white38, thickness: 1.0),
                     _rowCont(
-                        'Available date', (_propertyDetails.listingDate != null)? formatDate(_propertyDetails.listingDate): 'NA', Icons.date_range),
+                        'Available date',
+                        (_propertyDetails.listingDate != null)
+                            ? formatDate(_propertyDetails.listingDate)
+                            : 'NA',
+                        Icons.date_range),
                     Divider(color: Colors.white38, thickness: 1.0),
                     const SizedBox(height: 20),
-                    (_propertyDetails.listingType =='FOR SALE')?
-                    RaisedButtonWidget('pop', 'Buy Property', true):
-                    RaisedButtonWidget('pop', 'Rent Property', true),
+                    (_propertyDetails.listingType == 'FOR SALE')
+                        ? RaisedButtonWidget(
+                            'pop',
+                            'Buy Property',
+                            true,
+                            action: _makePayment,
+                          )
+                        : RaisedButtonWidget(
+                            'pop',
+                            'Rent Property',
+                            true,
+                            action: _makePayment,
+                          ),
                     const SizedBox(height: 20),
                   ],
                 ),

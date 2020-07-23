@@ -53,14 +53,17 @@ class _DashboardHomeState extends State<DashboardHome> {
   void _getAllProperties() {
     print('Get Properties');
     //showLoadingDialog(context, _keyLoader);
-    var _apiCall = repo.getAllProperties('0', '10', '2020-01-01', '2020-07-11');
+    DateTime sDate = DateTime.now();
+    String sDateC = sDate.toString();
+    var _apiCall = repo.getAllProperties('0', '100', '2020-01-01', formatDate(sDateC, pattern: 'yyyy-MM-dd'));
 
     _apiCall.then((value) {
-      print('donnned ${value.data}');
+      //print('donnned ${value.data}');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.responseCode == globalSuccessGetResponseCode) {
-        setState(() => {_propertyList = value.data});
-        _isPropLoaded = true;
+        value.data..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        setState(() => {_propertyList = value.data, _isPropLoaded = true});
+        
       } else {
         //showInSnackBar(value.message);
         print('Failed to load properties');
@@ -178,7 +181,7 @@ class _DashboardHomeState extends State<DashboardHome> {
               ),
               const SizedBox(height: 10),
               Container(
-                height: 280.0,
+                height: size.height,
                 child: CustomScrollView(
                   primary: false,
                   slivers: <Widget>[
@@ -309,12 +312,16 @@ class _DashboardHomeState extends State<DashboardHome> {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        'Studio Apartment',
+                        (_propertyList[index].property.title != null)
+                            ? (_propertyList[index].property.title.length > 30)
+                                ? '${_propertyList[index].property.title.substring(0, 30)}...'
+                                : _propertyList[index].property.title
+                            : 'NA',
                         style:
                             TextStyle(fontSize: 13, color: appTextColorPrimary),
                       ),
 
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 5),
                       Container(
                         height: 35.0,
                         child: Row(
@@ -350,26 +357,32 @@ class _DashboardHomeState extends State<DashboardHome> {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                              ((_propertyList[index]
-                                              .property
-                                              .specifications
-                                              .nOOFBEDROOMS ==
-                                          null)
-                                      ? 'NA'
-                                      : _propertyList[index]
-                                          .property
-                                          .specifications
-                                          .nOOFBEDROOMS)
-                                  .toString(),
-                              style: TextStyle(
-                                  color: Colors.black87, fontSize: 12.0)),
+                            ((_propertyList[index]
+                                            .property
+                                            .specifications
+                                            .nOOFBEDROOMS ==
+                                        null)
+                                    ? 'NA'
+                                    : '${_propertyList[index].property.specifications.nOOFBEDROOMS} Beds')
+                                .toString(),
+                            style: TextStyle(
+                                color: Colors.black87, fontSize: 12.0),
+                          ),
                           const SizedBox(width: 15),
                           SvgPicture.asset(
                             'assets/icons/bath.svg',
                             color: Colors.orange,
                           ),
                           const SizedBox(width: 5),
-                          Text('2 Bath',
+                          Text(
+                              ((_propertyList[index]
+                                              .property
+                                              .specifications
+                                              .nOOFBATHROOMS ==
+                                          null)
+                                      ? 'NA'
+                                      : '${_propertyList[index].property.specifications.nOOFBATHROOMS} Baths')
+                                  .toString(),
                               style: TextStyle(
                                   color: Colors.black87, fontSize: 12.0)),
                         ],

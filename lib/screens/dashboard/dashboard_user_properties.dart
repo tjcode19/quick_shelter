@@ -24,16 +24,34 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
   String message = "";
   List<GetUserPropData> _propertyList = List<GetUserPropData>();
   List<GetUserProperties> _propertyRentList = List<GetUserProperties>();
+  ScrollController _controller;
   String listingType = "";
   bool sale = true;
   bool rent = false;
   String _prefUserFN;
+  bool _isVisible = true;
 
   refresh() {
     print('refresh');
-   // setState(() {
-      _getUserProperties();
+    // setState(() {
+    _getUserProperties();
     //});
+  }
+
+  _scrollListener() {
+    if (_controller.offset >= _controller.position.maxScrollExtent &&
+        !_controller.position.outOfRange) {
+      setState(() {
+        _isVisible = false;
+      });
+    }
+    if (_controller.offset <= _controller.position.minScrollExtent &&
+        !_controller.position.outOfRange) {
+      setState(() {
+        _isVisible = true;
+        _prefUserFN = _prefUserFN;
+      });
+    }
   }
 
   void _getUserProperties() async {
@@ -45,9 +63,10 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
       print('DONE Get User Prop ${value.responseCode}');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.responseCode == globalSuccessGetResponseCode) {
-        setState(
-            () => {_propertyList = value.dataVal, 
-            // print(_propertyList[0])
+        value.dataVal..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        setState(() => {
+              _propertyList = value.dataVal,
+              // print(_propertyList[0])
             });
       } else {
         //showInSnackBar(value.message);
@@ -66,6 +85,8 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
   @override
   void initState() {
     super.initState();
+    _controller = ScrollController();
+    _controller.addListener(_scrollListener);
     _getUserProperties();
     _getUserProfile();
   }
@@ -125,6 +146,7 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
         ),
       ),
       body: SingleChildScrollView(
+        controller: _controller,
         scrollDirection: Axis.vertical,
         child: Container(
           padding: EdgeInsets.all(15),
@@ -168,12 +190,41 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
                           ),
                         ],
                       )
-                    : Text('You are yet to add any properties', style: TextStyle(fontSize: 16.0,),),
+                    : Text(
+                        'You are yet to add any properties',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
               ),
             ],
           ),
         ),
       ),
+      // floatingActionButton: AnimatedOpacity(
+      //   opacity: _isVisible ? 1.0 : 0.0,
+      //   duration: Duration(milliseconds: 500),
+      //   child: FloatingActionButton.extended(
+      //     onPressed: () {
+      //       Navigator.pushNamed(context, addPropertyRoute);
+      //     },
+      //     // child: Icon(
+      //     //   Icons.add,
+      //     //   color: Colors.white,
+      //     // ),
+      //     // backgroundColor: Theme.of(context).primaryColor,
+      //     label: Text(
+      //       'New Property',
+      //       style: TextStyle(fontSize: 14.0, color: Colors.white),
+      //     ),
+      //     icon: Icon(
+      //       Icons.add,
+      //       color: Colors.white,
+      //     ),
+      //     backgroundColor: Theme.of(context).primaryColor,
+      //     tooltip: 'Propertyu',
+      //   ),
+      // ),
     );
   }
 
@@ -186,7 +237,7 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
           Navigator.pushNamed(
             context,
             userPropertyDetailsRoute,
-            arguments: {'data':_propertyList[index], 'refFunc':refresh},
+            arguments: {'data': _propertyList[index], 'refFunc': refresh},
           );
         },
         child: Container(

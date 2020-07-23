@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quick_shelter/colors.dart';
+import '../../colors.dart';
 import 'package:quick_shelter/models/GetUserProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 
@@ -82,9 +82,24 @@ class _PropertyEditMainState extends State<PropertyEditMain> {
   }
 
   List<Map<String, dynamic>> _eventData = [
-    {'icon': Icon(Icons.note, color:appTextColorPrimary2), 'text': 'Update Property Details'},
-    {'icon': Icon(Icons.camera_alt, color: appTextColorPrimary2,), 'text': 'Update Property Images'},
-    {'icon': Icon(Icons.description, color: appTextColorPrimary2,), 'text': 'Update Property Document'},
+    {
+      'icon': Icon(Icons.note, color: appTextColorPrimary2),
+      'text': 'Update Property Details'
+    },
+    {
+      'icon': Icon(
+        Icons.camera_alt,
+        color: appTextColorPrimary2,
+      ),
+      'text': 'Update Property Images'
+    },
+    {
+      'icon': Icon(
+        Icons.description,
+        color: appTextColorPrimary2,
+      ),
+      'text': 'Update Property Document'
+    },
   ];
 
   Widget _buildItemsForListView(BuildContext context, int index) {
@@ -95,14 +110,21 @@ class _PropertyEditMainState extends State<PropertyEditMain> {
     return InkWell(
       splashColor: Colors.orange.withAlpha(30),
       onTap: () {
-        print(_propertyList);
+       // print(_propertyList);
         String rt;
-      switch (index) {
-        case 0:
-          rt = editPropDetailsRoute;
-          break;
-        default:
-      }
+        switch (index) {
+          case 0:
+            rt = editPropDetailsRoute;
+            break;
+          case 1:
+          print(index);
+            rt = userPropDetailPhotosRoute;
+            break;
+          case 2:
+            rt = editPropDetailsRoute;
+            break;
+          default:
+        }
         Navigator.pushNamed(
           ctxt,
           rt,
@@ -132,14 +154,19 @@ class _PropertyEditMainState extends State<PropertyEditMain> {
             Row(
               children: <Widget>[
                 _eventData[index]['icon'],
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Text(
                   _eventData[index]['text'],
                   style: TextStyle(color: appTextColorPrimary2),
                 ),
               ],
             ),
-            Icon(Icons.keyboard_arrow_right, color: appTextColorPrimary2,)
+            Icon(
+              Icons.keyboard_arrow_right,
+              color: appTextColorPrimary2,
+            )
           ],
         ),
       ),

@@ -313,10 +313,10 @@ class Photos {
 }
 
 class Specifications {
-  int nOOFFLOORS;
-  int nOOFBEDROOMS;
+  var nOOFFLOORS;
+  var nOOFBEDROOMS;
   bool hASSWIMMINGPOOL;
-  int nOOFLIVINGROOMS;
+  var nOOFLIVINGROOMS;
 
   Specifications(
       {this.nOOFFLOORS,
