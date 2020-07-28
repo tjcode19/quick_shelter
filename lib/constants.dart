@@ -33,6 +33,7 @@ const String transSuccessRoute = '/transSuccess';
 const String transDetailPhotosRoute = '/transDetailPhotos';
 const String userPropDetailPhotosRoute = '/userPropDetailPhotos';
 const String createPdfRoute = '/createPdf';
+const String splashScreenRoute = '/splashScreen';
 
 const String globalSuccessResponseCode = 'M200';
 const String globalSuccessGetResponseCode = 'M000';

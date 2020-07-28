@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       ),
 
       onGenerateRoute: router.generateRoute,
-      initialRoute: welcomeRoute,
+      initialRoute:splashScreenRoute,
       // home: Login(),
     );
   }

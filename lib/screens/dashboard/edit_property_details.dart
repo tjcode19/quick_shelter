@@ -106,7 +106,10 @@ class _EditPropDetailsState extends State<EditPropDetails> {
           snackBar('Adding or property failed', _scaffoldKey);
         }
         //snackBar(value.message, _scaffoldKey);
-      },
+      },onError: (){
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        snackBar('Adding or property failed', _scaffoldKey);
+      }
     );
   }
 

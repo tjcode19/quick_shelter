@@ -16,6 +16,7 @@ import 'package:quick_shelter/screens/dashboard/user_property_details.dart';
 import 'package:quick_shelter/screens/dashboard/property_listings.dart';
 import 'package:quick_shelter/screens/dashboard/search_result.dart';
 import 'package:quick_shelter/screens/forgot_password.dart';
+import 'package:quick_shelter/screens/splashscreen.dart';
 import 'screens/dashboard/add_property_step_2.dart';
 import 'screens/dashboard/add_property_step_3.dart';
 import 'screens/dashboard/basic_info.dart';
@@ -186,6 +187,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           builder: (context) => EditPropertyPhotos(
                 propertyData: propData,
               ));
+    case splashScreenRoute:
+      return MaterialPageRoute(builder: (context) => SplashScreen());
     default:
       return MaterialPageRoute(builder: (context) => WelcomePage());
   }
