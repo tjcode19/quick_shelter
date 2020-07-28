@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/screens/dashboard/add_property_listing.dart';
 import 'package:quick_shelter/screens/dashboard/change_password.dart';
+import 'package:quick_shelter/screens/dashboard/create_pdf_receipt.dart';
 import 'package:quick_shelter/screens/dashboard/dashboard_add_property2.dart';
 import 'package:quick_shelter/screens/dashboard/edit_property_details.dart';
 import 'package:quick_shelter/screens/dashboard/edit_property_listing.dart';
+import 'package:quick_shelter/screens/dashboard/edit_property_photos.dart';
 import 'package:quick_shelter/screens/dashboard/file_upload.dart';
 import 'package:quick_shelter/screens/dashboard/payment_webview.dart';
 import 'package:quick_shelter/screens/dashboard/property_edit_main.dart';
@@ -174,6 +176,15 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
           builder: (context) => UserPropDetailsPhotos(
                 propDetails: propData,
+              ));
+    case createPdfRoute:
+      var propData = settings.arguments;
+      return MaterialPageRoute(builder: (context) => CreatePdf());
+    case editPropPhotosRoute:
+      var propData = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => EditPropertyPhotos(
+                propertyData: propData,
               ));
     default:
       return MaterialPageRoute(builder: (context) => WelcomePage());

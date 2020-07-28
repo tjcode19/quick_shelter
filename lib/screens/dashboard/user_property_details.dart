@@ -22,12 +22,12 @@ class _UserPropertyDetailsState extends State<UserPropertyDetails> {
   String lDate, lType;
   int price;
 
-  var ls = [
-    ImageList('assets/images/1_thumbnail.png', 'assets/images/1_big.png'),
-    ImageList('assets/images/2_thumbnail.png', 'assets/images/2_big.png'),
-    ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
-    ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
-  ];
+  // var ls = [
+  //   ImageList('assets/images/1_thumbnail.png', 'assets/images/1_big.png'),
+  //   ImageList('assets/images/2_thumbnail.png', 'assets/images/2_big.png'),
+  //   ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
+  //   ImageList('assets/images/3_thumbnail.png', 'assets/images/3_big.png'),
+  // ];
 
   int imageNum = 0;
   int _currentPosition = 0;
@@ -148,7 +148,7 @@ class _UserPropertyDetailsState extends State<UserPropertyDetails> {
                   ),
                 ),
                 Visibility(
-                  visible: (_currentPosition < (ls.length - 1) ? true : false),
+                  visible: (_currentPosition < (propPhotos.length - 1) ? true : false),
                   child: ClipOval(
                     child: Material(
                       color: Colors.white, // button color

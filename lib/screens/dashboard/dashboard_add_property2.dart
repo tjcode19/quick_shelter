@@ -87,7 +87,8 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
         if (value.responseCode == globalSuccessResponseCode) {
           Navigator.pushNamed(context, addPropertyStep2Route, arguments: {
             'propID': value.data.propertyID,
-            'listingType': detailsOne['listingType']
+            'listingType': detailsOne['listingType'],
+            'type':'newProp'
           });
         } else {
           snackBar('Adding or property failed', _scaffoldKey);

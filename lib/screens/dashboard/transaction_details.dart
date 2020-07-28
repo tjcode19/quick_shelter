@@ -5,6 +5,7 @@ import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/utils/commonFunctions.dart';
 import 'package:quick_shelter/utils/sharedPreference.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
+import 'package:quick_shelter/utils/createPdf.dart';
 
 import '../../colors.dart';
 
@@ -131,7 +132,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                           GestureDetector(
                             onTap: () {
                               Navigator.pushNamed(
-                                  context, transDetailPhotosRoute, arguments: _propertyDetails);
+                                  context, transDetailPhotosRoute,
+                                  arguments: _propertyDetails);
                             },
                             child: Container(
                               padding:
@@ -213,29 +215,42 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                       ],
                     ),
                     const SizedBox(height: 30),
-                    detailsRow('Property Owner', '$_prefUserLN $_prefUserFN'),
+                    detailsRow('Property Owner', '${_propertyDetails.seller.surName} ${_propertyDetails.seller.firstName}'),
                     const SizedBox(height: 16),
                     detailsRow('Customer',
-                        '${_propertyDetails.seller.surName} ${_propertyDetails.seller.firstName}'),
+                        '$_prefUserLN $_prefUserFN'),
                     const SizedBox(height: 16),
                     detailsRow(
-                        'Price', _propertyDetails.listing.price.toDouble()),
+                        'Price',
+                        (_propertyDetails.listing.price != null)
+                            ? _propertyDetails.listing.price.toDouble()
+                            : 'NA'),
                     const SizedBox(height: 16),
                     detailsRow('Payment ID', '995799930020'),
                     const SizedBox(height: 16),
                     detailsRow('Date', '20th May, 2020'),
                     const SizedBox(height: 30),
-                    RaisedButtonWidget(
-                      '',
-                      'Share Receipt',
-                      true,
-                    ),
-                    const SizedBox(height: 10),
-                    RaisedButtonWidget(
-                      '',
-                      'Download Receipt',
-                      false,
-                    ),
+                    // RaisedButtonWidget(
+                    //   ' createPdf',
+                    //   'Share Receipt',
+                    //   true,
+                    //   action: () {
+                    //     reportView(context, {
+                    //       'name':
+                    //           '${_propertyDetails.seller.surName} ${_propertyDetails.seller.firstName}',
+                    //       'customer': '$_prefUserLN $_prefUserFN',
+                    //       'price': (_propertyDetails.listing.price != null)
+                    //         ? _propertyDetails.listing.price.toDouble()
+                    //         : 'NA'
+                    //     });
+                    //   },
+                    // ),
+                    // const SizedBox(height: 10),
+                    // RaisedButtonWidget(
+                    //   '',
+                    //   'Download Receipt',
+                    //   false,
+                    // ),
                   ],
                 ),
               )
@@ -508,7 +523,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                     style: TextStyle(fontSize: 15, color: Colors.black38),
                     children: <TextSpan>[
                       TextSpan(
-                        text: (value != null)
+                        text: (value != 'NA')
                             ? formatMoney(value).withoutFractionDigits
                             : '0',
                         style: TextStyle(

@@ -180,11 +180,6 @@ class _EditPropDetailsState extends State<EditPropDetails> {
                   style: TextStyle(color: Colors.white, fontSize: 15.0),
                   textAlign: TextAlign.center,
                 ),
-                // Text(
-                //   'Step 1 of 4',
-                //   style: TextStyle(color: Colors.white, fontSize: 15.0),
-                //   textAlign: TextAlign.center,
-                // )
               ]),
               const SizedBox(height: 10),
               // Row(

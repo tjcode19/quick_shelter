@@ -72,6 +72,9 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
         //showInSnackBar(value.message);
         print('Failed to load properties');
       }
+    },
+    onError: (e){
+
     });
   }
 

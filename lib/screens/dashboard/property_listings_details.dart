@@ -87,9 +87,16 @@ class _PropertyListingDeatilsState extends State<PropertyListingDeatils> {
                   textAlign: TextAlign.center,
                 ),
                 GestureDetector(
-                  onTap: (){
-                    Navigator.pushNamed(context, addPropertyListingRoute,
-                    arguments: {'dataLoad':_propertyListDetails, 'type':'edit', 'refFunc':widget.propDetails['refFunc']},);
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      addPropertyListingRoute,
+                      arguments: {
+                        'dataLoad': _propertyListDetails,
+                        'type': 'edit',
+                        'refFunc': widget.propDetails['refFunc']
+                      },
+                    );
                   },
                   child: Text(
                     'Edit Listing',
@@ -108,7 +115,11 @@ class _PropertyListingDeatilsState extends State<PropertyListingDeatils> {
                 Icons.location_on),
             Divider(color: Colors.white38, thickness: 1.0),
             _rowCont(
-                'Price', _propertyListDetails.price.toDouble(), Icons.pin_drop),
+                'Price',
+                (_propertyListDetails.price != null)
+                    ? _propertyListDetails.price.toDouble()
+                    : 'NA',
+                Icons.pin_drop),
             Divider(color: Colors.white38, thickness: 1.0),
             _rowCont(
                 'Available Date',
@@ -189,9 +200,8 @@ class _PropertyListingDeatilsState extends State<PropertyListingDeatils> {
                     style: TextStyle(fontSize: 15, color: appTextColorPrimary2),
                     children: <TextSpan>[
                       TextSpan(
-                        text: formatMoney(subTitle)
-                            .withoutFractionDigits
-                            .toString(),
+                        text: (subTitle != 'NA')? formatMoney(subTitle)
+                            .withoutFractionDigits:'0',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 17,

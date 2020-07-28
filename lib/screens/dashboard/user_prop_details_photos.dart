@@ -22,7 +22,9 @@ class _UserPropDetailsPhotosState extends State<UserPropDetailsPhotos> {
   GetUserPropData _propertyDet;
   final QuickShelterRepository repo = QuickShelterRepository();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  ScrollController _controller;
   FToast fToast;
+  bool _isVisible = true;
 
   void _deletePhoto() {
     var _apiCall = repo.deletePhoto('0');
@@ -43,6 +45,21 @@ class _UserPropDetailsPhotosState extends State<UserPropDetailsPhotos> {
     });
   }
 
+  _scrollListener() {
+    if (_controller.offset >= _controller.position.maxScrollExtent &&
+        !_controller.position.outOfRange) {
+      setState(() {
+        _isVisible = false;
+      });
+    }
+    if (_controller.offset <= _controller.position.minScrollExtent &&
+        !_controller.position.outOfRange) {
+      setState(() {
+        _isVisible = true;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -50,6 +67,8 @@ class _UserPropDetailsPhotosState extends State<UserPropDetailsPhotos> {
 
     print('Photos ${widget.propDetails['pData']}');
     fToast = FToast(context);
+    _controller = ScrollController();
+    _controller.addListener(_scrollListener);
   }
 
   @override
@@ -111,6 +130,31 @@ class _UserPropDetailsPhotosState extends State<UserPropDetailsPhotos> {
               ],
             ),
           ),
+        ),
+      ),
+      floatingActionButton: AnimatedOpacity(
+        opacity: _isVisible ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 500),
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.pushNamed(context, editPropPhotosRoute, arguments: {'propID': _propertyDet.iD,
+            'type':'editProp', 'refFunc': widget.propDetails['refFunc'],});
+          },
+          // child: Icon(
+          //   Icons.add,
+          //   color: Colors.white,
+          // ),
+          // backgroundColor: Theme.of(context).primaryColor,
+          label: Text(
+            'New Photo',
+            style: TextStyle(fontSize: 14.0, color: Colors.white),
+          ),
+          icon: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          tooltip: 'Property',
         ),
       ),
     );

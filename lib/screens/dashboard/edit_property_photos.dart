@@ -9,16 +9,16 @@ import 'package:quick_shelter/widgets/raised_button.dart';
 
 import '../../constants.dart';
 
-class AddPropStep2 extends StatefulWidget {
+class EditPropertyPhotos extends StatefulWidget {
   final propertyData;
 
-  const AddPropStep2({Key key, this.propertyData}) : super(key: key);
+  const EditPropertyPhotos({Key key, this.propertyData}) : super(key: key);
 
   @override
-  _AddPropStep2State createState() => _AddPropStep2State();
+  _EditPropertyPhotosState createState() => _EditPropertyPhotosState();
 }
 
-class _AddPropStep2State extends State<AddPropStep2> {
+class _EditPropertyPhotosState extends State<EditPropertyPhotos> {
   final QuickShelterRepository repo = QuickShelterRepository();
   // final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -212,7 +212,7 @@ class _AddPropStep2State extends State<AddPropStep2> {
                   ),
                   onPressed: () {
                     // _settingModalBottomSheet(context);
-                    //widget.propDetails['refFunc']();
+                    widget.propertyData['refFunc']();
                     int count = 0;
                     Navigator.popUntil(context, (route) {
                       return count++ == 4;

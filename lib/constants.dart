@@ -26,11 +26,13 @@ const String propertyListingDetailsRoute = '/propertyListingDetails';
 const String userPropertyDetailsRoute = '/userPropertyDetails';
 const String editPropDetailsRoute = '/editPropDetails';
 const String editPropListingRoute = '/editPropListing';
+const String editPropPhotosRoute = '/editPropPhotos';
 const String editPropMainRoute = '/editPropMain';
 const String paymentWebviewRoute = '/paymentWebview';
 const String transSuccessRoute = '/transSuccess';
 const String transDetailPhotosRoute = '/transDetailPhotos';
 const String userPropDetailPhotosRoute = '/userPropDetailPhotos';
+const String createPdfRoute = '/createPdf';
 
 const String globalSuccessResponseCode = 'M200';
 const String globalSuccessGetResponseCode = 'M000';
