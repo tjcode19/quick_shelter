@@ -32,27 +32,25 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     final userEmail = _emailController.text;
 
     if (userEmail.isEmpty ) {
-      snackBar('Email must be filled', _scaffoldKey);
+      snackBar('Please enter password', _scaffoldKey);
       return;
     }
+    showLoadingDialog(context, _keyLoader);
 
+    var _apiCall = repo.updatePassword(userEmail.trim());
 
-    //showLoadingDialog(context, _keyLoader);
-
-    // var _apiCall = repo.forgotPassword(userEmail.trim());
-
-    // await _apiCall.then((value) async {
-    //   print('donnned ${value.auth}');
-    //   Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-    //   if (value.code == '200' && value.auth == true) {
-    //     Navigator.pushNamed(context, dashboardRoute);
-    //   } else {
-    //     showInSnackBar(value.message);
-    //   }
-    // }, onError: (error) {
-    //   Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-    //   showInSnackBar("Login Failed");
-    // });
+    await _apiCall.then((value) async {
+      print('donnned ${value.responseCode}');
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (value.responseCode == globalSuccessResponseCode) {
+        Navigator.pushNamed(context, dashboardRoute);
+      } else {
+        showInSnackBar(value.responseMessage);
+      }
+    }, onError: (error) {
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      showInSnackBar("Password reset failed");
+    });
     print('######');
 
     setState(() {
@@ -60,6 +58,71 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     });
   }
 
+  void _sendOtp() async {
+    print('forgotPassword');
+    FocusScope.of(context).requestFocus(new FocusNode());
+
+    final userEmail = _emailController.text;
+
+    if (userEmail.isEmpty ) {
+      snackBar('Please enter password', _scaffoldKey);
+      return;
+    }
+    showLoadingDialog(context, _keyLoader);
+
+    var _apiCall = repo.updatePassword(userEmail.trim());
+
+    await _apiCall.then((value) async {
+      print('donnned ${value.responseCode}');
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (value.responseCode == globalSuccessResponseCode) {
+        Navigator.pushNamed(context, dashboardRoute);
+      } else {
+        showInSnackBar(value.responseMessage);
+      }
+    }, onError: (error) {
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      showInSnackBar("Password reset failed");
+    });
+    print('######');
+
+    setState(() {
+      pageStep+=1;
+    });
+  }
+
+  void _validateOtp() async {
+    print('forgotPassword');
+    FocusScope.of(context).requestFocus(new FocusNode());
+
+    final userEmail = _emailController.text;
+
+    if (userEmail.isEmpty ) {
+      snackBar('Please enter password', _scaffoldKey);
+      return;
+    }
+    showLoadingDialog(context, _keyLoader);
+
+    var _apiCall = repo.updatePassword(userEmail.trim());
+
+    await _apiCall.then((value) async {
+      print('donnned ${value.responseCode}');
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (value.responseCode == globalSuccessResponseCode) {
+        Navigator.pushNamed(context, dashboardRoute);
+      } else {
+        showInSnackBar(value.responseMessage);
+      }
+    }, onError: (error) {
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      showInSnackBar("Password reset failed");
+    });
+    print('######');
+
+    setState(() {
+      pageStep+=1;
+    });
+  }
 
 
   void showInSnackBar(String value) {
@@ -154,7 +217,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   dashboardRoute,
                   'Send Code',
                   true,
-                  action: _submitData,
+                  action: _sendCode,
                 ),                
                 const SizedBox(height: 10),
               ],
@@ -200,7 +263,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 InputFieldWidget(
                   'Enter Code',
                   TextInputType.number,
-                  false,
+                  true,
                   capitalizationType: TextCapitalization.none,
                   controller: _codeController,
                 ),
@@ -210,7 +273,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   dashboardRoute,
                   'Validate Code',
                   true,
-                  action: _submitData,
+                  action: _validateOtp,
                 ),                
                 const SizedBox(height: 10),
               ],
@@ -239,7 +302,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 Container(
                     margin: EdgeInsets.only(top: 40),
                     child: Text(
-                      'Reset Password',
+                      'Create New Password',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 20.0,
@@ -248,7 +311,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 const SizedBox(height: 20),
                 Container(
                   child: Text(
-                    'Enter your registered email address to reset your password',
+                    'You can now creat new password for your account',
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                 ),
@@ -260,6 +323,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   capitalizationType: TextCapitalization.none,
                   controller: _passwordController,
                 ),
+                const SizedBox(height: 8),
                 InputFieldWidget(
                   'Confirm Password',
                   TextInputType.text,

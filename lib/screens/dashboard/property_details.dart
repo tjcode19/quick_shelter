@@ -49,7 +49,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
       var _apiCall = repo.addSavedListing(_propertyDetails.propertyID);
 
       _apiCall.then((value) async {
-        print('Property Saved ');
+        print('Property Saved ${value.responseCode} ');
         if (value.responseCode == globalSuccessResponseCode) {
           // Navigator.pushNamed(context, dashboardRoute);
           print('Property Listing Saved');
@@ -57,6 +57,8 @@ class _PropertyDetailsState extends State<PropertyDetails> {
           //showInSnackBar(value.message);
           print('Saving property failed');
         }
+      },onError: (e){
+         print('Saving property failed $e');
       });
     } else {}
   }

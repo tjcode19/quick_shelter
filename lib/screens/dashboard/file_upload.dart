@@ -34,7 +34,7 @@ class _FileUploadState extends State<FileUpload> {
     }
     showLoadingDialog(context, _keyLoader);
 
-    var _apiCall = repo.uploadPropDocs(_image, '', widget.docType, widget.propertyID);
+    var _apiCall = repo.uploadPropDocs(_image, 'doc', widget.docType, widget.propertyID);
 
     print(_apiCall);
 

@@ -397,7 +397,7 @@ class _UserPropertyDetailsState extends State<UserPropertyDetails> {
                                 Container(
                                   padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
                                   child: Text(
-                                    'List Property',
+                                    'Property Listings',
                                     style: TextStyle(
                                         color: appTextColorPrimary2,
                                         fontSize: 15),

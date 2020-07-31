@@ -40,7 +40,7 @@ class QuickShelterRepository {
     return LoginResponse.fromJson(response);
   }
 
-  Future<LoginResponse> forgotPassword(String email) async {
+  Future<LoginResponse> sendOtp(String email) async {
     final response = await _provider.post(
       "auth/signin",
       <String, String>{

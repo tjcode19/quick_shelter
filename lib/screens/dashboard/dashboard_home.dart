@@ -17,6 +17,8 @@ class DashboardHome extends StatefulWidget {
 class _DashboardHomeState extends State<DashboardHome> {
   SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
   final QuickShelterRepository repo = QuickShelterRepository();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
   ScrollController _controller;
   String message = "";
   bool _isVisible = true;
@@ -55,7 +57,8 @@ class _DashboardHomeState extends State<DashboardHome> {
     //showLoadingDialog(context, _keyLoader);
     DateTime sDate = DateTime.now();
     String sDateC = sDate.toString();
-    var _apiCall = repo.getAllProperties('0', '100', '2020-01-01', formatDate(sDateC, pattern: 'yyyy-MM-dd'));
+    var _apiCall = repo.getAllProperties(
+        '0', '100', '2020-01-01', formatDate(sDateC, pattern: 'yyyy-MM-dd'));
 
     _apiCall.then((value) {
       //print('donnned ${value.data}');
@@ -63,7 +66,28 @@ class _DashboardHomeState extends State<DashboardHome> {
       if (value.responseCode == globalSuccessGetResponseCode) {
         value.data..sort((a, b) => b.createdAt.compareTo(a.createdAt));
         setState(() => {_propertyList = value.data, _isPropLoaded = true});
-        
+      } else {
+        //showInSnackBar(value.message);
+        print('Failed to load properties');
+      }
+    });
+  }
+
+  Future<Null> _refresh() {
+    // return getUser().then((_user) {
+    //   setState(() => user = _user);
+    // });
+    DateTime sDate = DateTime.now();
+    String sDateC = sDate.toString();
+    var _apiCall = repo.getAllProperties(
+        '0', '100', '2020-01-01', formatDate(sDateC, pattern: 'yyyy-MM-dd'));
+
+    return _apiCall.then((value) {
+      //print('donnned ${value.data}');
+      //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (value.responseCode == globalSuccessGetResponseCode) {
+        value.data..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        setState(() => {_propertyList = value.data, _isPropLoaded = true});
       } else {
         //showInSnackBar(value.message);
         print('Failed to load properties');
@@ -147,61 +171,66 @@ class _DashboardHomeState extends State<DashboardHome> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        controller: _controller,
-        scrollDirection: Axis.vertical,
-        child: Container(
-          padding: EdgeInsets.all(5),
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 20),
-              Container(
-                  margin: EdgeInsets.only(left: 10),
+      body: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: _refresh,
+        child: SingleChildScrollView(
+          controller: _controller,
+          scrollDirection: Axis.vertical,
+          child: Container(
+            padding: EdgeInsets.all(5),
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 20),
+                Container(
+                    margin: EdgeInsets.only(left: 10),
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Featured Properties',
+                      style:
+                          TextStyle(color: appSecondaryColor, fontSize: 15.0),
+                    )),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10.0),
+                  height: 280.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _propertyList.length,
+                    itemBuilder: _buildItemsForListView,
+                  ),
+                ),
+                Container(
                   alignment: Alignment.topLeft,
+                  margin: EdgeInsets.only(left: 10.0),
                   child: Text(
-                    'Featured Properties',
+                    'Available Properties',
                     style: TextStyle(color: appSecondaryColor, fontSize: 15.0),
-                  )),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10.0),
-                height: 280.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _propertyList.length,
-                  itemBuilder: _buildItemsForListView,
+                  ),
                 ),
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                margin: EdgeInsets.only(left: 10.0),
-                child: Text(
-                  'Available Properties',
-                  style: TextStyle(color: appSecondaryColor, fontSize: 15.0),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Container(
-                height: size.height,
-                child: CustomScrollView(
-                  primary: false,
-                  slivers: <Widget>[
-                    SliverPadding(
-                      padding: const EdgeInsets.all(5),
-                      sliver: SliverGrid.count(
-                        crossAxisSpacing: 5,
-                        childAspectRatio: (itemWidth / itemHeight),
-                        mainAxisSpacing: 1,
-                        crossAxisCount: 2,
-                        children: _propertyList
-                            .map((item) =>
-                                _propertItem(_propertyList.indexOf(item)))
-                            .toList(),
+                const SizedBox(height: 10),
+                Container(
+                  height: size.height,
+                  child: CustomScrollView(
+                    primary: false,
+                    slivers: <Widget>[
+                      SliverPadding(
+                        padding: const EdgeInsets.all(5),
+                        sliver: SliverGrid.count(
+                          crossAxisSpacing: 5,
+                          childAspectRatio: (itemWidth / itemHeight),
+                          mainAxisSpacing: 1,
+                          crossAxisCount: 2,
+                          children: _propertyList
+                              .map((item) =>
+                                  _propertItem(_propertyList.indexOf(item)))
+                              .toList(),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
