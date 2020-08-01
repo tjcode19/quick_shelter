@@ -220,13 +220,13 @@ class _EditPropertyPhotosState extends State<EditPropertyPhotos> {
                   },
                 ),
               ): RaisedButtonWidget(
-                        addPropertyStep3Route,
+                        addPropertyStep4Route,
                         'Continue',
                         true,
                         argsPushName: widget.propertyData,
                       )
                     : RaisedButtonWidget(
-                        addPropertyStep3Route,
+                        addPropertyStep4Route,
                         'Upload',
                         true,
                         action: runMultipleFutures,

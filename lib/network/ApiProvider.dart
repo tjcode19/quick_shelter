@@ -29,7 +29,15 @@ class ApiProvider {
     var responseJson;
     await getTokenPref();
     try {
-      final response = await http.get(_baseUrl + url, headers: headers);
+      final response = await http.get(_baseUrl + url, headers: headers).timeout(
+        Duration(seconds: 20),
+        onTimeout: () {
+          print('Time out');
+          // return null;
+          throw TimeoutException('Time out');
+        },
+      );
+      ;
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -37,13 +45,13 @@ class ApiProvider {
     return responseJson;
   }
 
-  Future<Map<String, dynamic>> post(String url,Map body) async {
+  Future<Map<String, dynamic>> post(String url, Map body) async {
     var responseJson;
     await getTokenPref();
     try {
       final response = await http.post(
         _baseUrl + url,
-          headers: headers,
+        headers: headers,
         body: jsonEncode(body),
       );
       responseJson = _response(response);
@@ -84,52 +92,55 @@ class ApiProvider {
     return responseJson;
   }
 
-  Future<Map<String, dynamic>> uploadFile(
-      File image, String url, String fileType, String docName, String actionType) async {
+  Future<Map<String, dynamic>> uploadFile(File image, String url,
+      String fileType, String docName, String actionType) async {
 
-    print(url);
 
     await getTokenPref();
     // Find the mime type of the selected file by looking at the header bytes of the file
-     final mimeTypeData =
-         lookupMimeType(image.path, headerBytes: [0xFF, 0xD8]).split('/');
-     // Intilize the multipart request
-     final imageUploadRequest =
-         http.MultipartRequest(actionType, Uri.parse(_baseUrl + url));
-     // Attach the file in the request
-     final file = await http.MultipartFile.fromPath(docName, image.path,
-         contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-     imageUploadRequest.fields['type'] = fileType;
-     //imageUploadRequest.headers.addAll(headers);
-     imageUploadRequest.files.add(file);
+    final mimeTypeData =
+        lookupMimeType(image.path, headerBytes: [0xFF, 0xD8]).split('/');
+    // Intilize the multipart request
+    final imageUploadRequest =
+        http.MultipartRequest(actionType, Uri.parse(_baseUrl + url));
+    // Attach the file in the request
+    final file = await http.MultipartFile.fromPath(docName, image.path,
+        contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
 
-     imageUploadRequest.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
-     try {
-       final streamedResponse = await imageUploadRequest.send();
-       final response = await http.Response.fromStream(streamedResponse);
-       var responseData = _response(response);
-       // if (response.statusCode != 200) {
-       //   return null;
-       // }
-       //final Map<String, dynamic> responseData = json.decode(response.body);
-       //_resetState();
-       return responseData;
-     } catch (e) {
-       print(e);
-       return null;
-     }
+    print('name: $docName value:${image.path}');
+
+    //imageUploadRequest.fields['test'] = image.path;
+    //imageUploadRequest.headers.addAll(headers);
+    imageUploadRequest.files.add(file);
+
+    imageUploadRequest.headers[HttpHeaders.authorizationHeader] =
+        'Bearer $token';
+    try {
+      final streamedResponse = await imageUploadRequest.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      var responseData = _response(response);
+      // if (response.statusCode != 200) {
+      //   return null;
+      // }
+      //final Map<String, dynamic> responseData = json.decode(response.body);
+      //_resetState();
+      print('Upload File: $responseData');
+      return responseData;
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
-
 
   dynamic _response(http.Response response) {
     switch (response.statusCode) {
       case 200:
         var responseJson = json.decode(response.body.toString());
         print(responseJson);
-        return responseJson;     
+        return responseJson;
 
       default:
-         var responseJson = json.decode(response.body.toString());
+        var responseJson = json.decode(response.body.toString());
         print(response);
         return responseJson;
     }

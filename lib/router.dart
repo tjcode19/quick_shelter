@@ -12,13 +12,16 @@ import 'package:quick_shelter/screens/dashboard/property_edit_main.dart';
 import 'package:quick_shelter/screens/dashboard/property_listings_details.dart';
 import 'package:quick_shelter/screens/dashboard/trans_details_photos.dart';
 import 'package:quick_shelter/screens/dashboard/transaction_success.dart';
+import 'package:quick_shelter/screens/dashboard/user_prop_details_documents.dart';
 import 'package:quick_shelter/screens/dashboard/user_property_details.dart';
 import 'package:quick_shelter/screens/dashboard/property_listings.dart';
 import 'package:quick_shelter/screens/dashboard/search_result.dart';
+import 'package:quick_shelter/screens/dashboard/user_property_documents_edit.dart';
 import 'package:quick_shelter/screens/forgot_password.dart';
 import 'package:quick_shelter/screens/splashscreen.dart';
 import 'screens/dashboard/add_property_step_2.dart';
 import 'screens/dashboard/add_property_step_3.dart';
+import 'screens/dashboard/add_property_step_4.dart';
 import 'screens/dashboard/basic_info.dart';
 import 'screens/dashboard/collection_property_details.dart';
 import 'screens/dashboard/dashboard_add_property.dart';
@@ -70,11 +73,17 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           builder: (context) => AddPropStep2(
                 propertyData: propertyID,
               ));
-    case addPropertyStep3Route:
+    case addPropertyStep4Route:
+      var propertyID = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => AddPropStep4(
+                propertyData: propertyID,
+              ));
+    case addPropStep3Route:
       var propertyID = settings.arguments;
       return MaterialPageRoute(
           builder: (context) => AddPropStep3(
-                propertyData: propertyID,
+                propDetails: propertyID,
               ));
     case profileRoute:
       return MaterialPageRoute(builder: (context) => Profile());
@@ -169,24 +178,41 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case transDetailPhotosRoute:
       var propData = settings.arguments;
       return MaterialPageRoute(
-          builder: (context) => TransDetailsPhotos(
-                propDetails: propData,
-              ));
+        builder: (context) => TransDetailsPhotos(
+          propDetails: propData,
+        ),
+      );
     case userPropDetailPhotosRoute:
       var propData = settings.arguments;
       return MaterialPageRoute(
-          builder: (context) => UserPropDetailsPhotos(
-                propDetails: propData,
-              ));
+        builder: (context) => UserPropDetailsPhotos(
+          propDetails: propData,
+        ),
+      );
+    case userPropDetailDocRoute:
+      var propData = settings.arguments;
+      return MaterialPageRoute(
+        builder: (context) => UserPropDetailsDoc(
+          propDetails: propData,
+        ),
+      );
+    case userPropDocEditRoute:
+      var propData = settings.arguments;
+      return MaterialPageRoute(
+        builder: (context) => UserPropDocEdit(
+          propertyData: propData,
+        ),
+      );
     case createPdfRoute:
       var propData = settings.arguments;
       return MaterialPageRoute(builder: (context) => CreatePdf());
     case editPropPhotosRoute:
       var propData = settings.arguments;
       return MaterialPageRoute(
-          builder: (context) => EditPropertyPhotos(
-                propertyData: propData,
-              ));
+        builder: (context) => EditPropertyPhotos(
+          propertyData: propData,
+        ),
+      );
     case splashScreenRoute:
       return MaterialPageRoute(builder: (context) => SplashScreen());
     default:

@@ -8,6 +8,7 @@ import 'package:quick_shelter/models/AddSavedProperty.dart';
 import 'package:quick_shelter/models/EditPropertyResponse.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/models/GetProfileResponse.dart';
+import 'package:quick_shelter/models/GetPropertyDocs.dart';
 import 'package:quick_shelter/models/GetPropertyListingReq.dart';
 import 'package:quick_shelter/models/GetSavedProperties.dart';
 import 'package:quick_shelter/models/GetSingleProperty.dart';
@@ -265,6 +266,13 @@ class QuickShelterRepository {
     return GetSingleProperty.fromJson(response);
   }
 
+  Future<GetPropertyDoc> getPropertyDocuments(String propID) async {
+    final response = await _provider.get(
+      "property-documents/$propID", 
+    );
+    return GetPropertyDoc.fromJson(response);
+  }
+
   Future<TransactionListResponse> getTransactionList(var page, var pageSize) async {
     final response = await _provider.get(
       "paid-listings/$page/$pageSize",
@@ -295,10 +303,10 @@ class QuickShelterRepository {
   }
 
   Future<UploadIdResponse> uploadPropDocs(
-      File file, String fileType, String docName, int propertyId) async {
-    print('Main2$propertyId');
+      File file, String fileType, String docName, var propertyId) async {
     final response = await _provider.uploadFile(
-        file, "property/documents/$propertyId", fileType, docName, 'PUT');
+        file, 'property/documents/$propertyId', fileType, docName, 'PUT');
+      //  print('Inside Life: $docName');
     return UploadIdResponse.fromJson(response);
   }
 

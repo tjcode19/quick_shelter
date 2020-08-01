@@ -30,6 +30,8 @@ class _PropertyEditMainState extends State<PropertyEditMain> {
   void initState() {
     super.initState();
     _propertyList = widget.propDetails['data'];
+
+    //print(_propertyList.listings[0].listingType);
   }
 
   @override
@@ -121,7 +123,7 @@ class _PropertyEditMainState extends State<PropertyEditMain> {
             rt = userPropDetailPhotosRoute;
             break;
           case 2:
-            rt = editPropDetailsRoute;
+            rt = userPropDetailDocRoute;
             break;
           default:
         }
@@ -131,6 +133,7 @@ class _PropertyEditMainState extends State<PropertyEditMain> {
           arguments: {
             'pData': _propertyList,
             'refFunc': widget.propDetails['refFunc'],
+            'propType': listingType
           },
         );
       },

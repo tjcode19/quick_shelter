@@ -25,7 +25,7 @@ class _FileUploadState extends State<FileUpload> {
 
   File _image;
 
-  void _uploadFile(){
+  _uploadFile() async{
     print('File Upload');
 
     if (_image==null) {
@@ -34,12 +34,11 @@ class _FileUploadState extends State<FileUpload> {
     }
     showLoadingDialog(context, _keyLoader);
 
-    var _apiCall = repo.uploadPropDocs(_image, 'doc', widget.docType, widget.propertyID);
+    print('propId: ${widget.propertyID} ## ${widget.docType}');
 
-    print(_apiCall);
-
-    _apiCall.then((value) {
-      print(value.responseCode);
+    var _apiCall = repo.uploadPropDocs(_image, 'test', widget.docType, widget.propertyID);
+    await _apiCall.then((value) {
+      print('File Upload: ${value.responseCode}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if(value.responseCode == globalSuccessResponseCode){
         Navigator.of(context).pop({'id':widget.docTypeId, 'status':true});        
@@ -47,6 +46,10 @@ class _FileUploadState extends State<FileUpload> {
       else{
         Navigator.of(context).pop({'id':widget.docTypeId, 'status':false});
       }
+    },onError: (e){
+      print('error uploading file $e');
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      snackBar('Error Uploading ${widget.docType}', _scaffoldKey);
     });
 
   }
@@ -54,6 +57,7 @@ class _FileUploadState extends State<FileUpload> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: appSecondaryColor,
       appBar: AppBar(
         backgroundColor: appSecondaryColor,
@@ -153,7 +157,7 @@ class _FileUploadState extends State<FileUpload> {
 
     Navigator.of(context).pop(widget.docTypeId);
 
-    _uploadFile();
+    await _uploadFile();
   }
 
   Future _openCamera(BuildContext context) async {

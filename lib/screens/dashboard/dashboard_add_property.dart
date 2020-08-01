@@ -31,10 +31,10 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
   String stateSelection = "";
 
   void _addProperty() {
-    if (listingType.isEmpty) {
-      snackBar('Please select property category', _scaffoldKey);
-      return;
-    }
+    // if (listingType.isEmpty) {
+    //   snackBar('Please select property category', _scaffoldKey);
+    //   return;
+    // }
     Map propData = {
       'propType': _propTypeController.text,
       'propTitle': _propTitleController.text,
@@ -82,38 +82,38 @@ class _DashboardAddPropState extends State<DashboardAddProp> {
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text(
                   'Add Property',
-                  style: TextStyle(color: Colors.white, fontSize: 15.0),
+                  style: TextStyle(color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  'Step 1 of 4',
+                  'Step 1 of 5',
                   style: TextStyle(color: Colors.white, fontSize: 15.0),
                   textAlign: TextAlign.center,
                 )
               ]),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(
-                        top: 4,
-                      ),
-                      child: Text(
-                        'Choose Property Category',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              // const SizedBox(height: 10),
+              // Row(
+              //   children: [
+              //     Expanded(
+              //       child: Container(
+              //         margin: EdgeInsets.only(
+              //           top: 4,
+              //         ),
+              //         child: Text(
+              //           'Choose Property Category',
+              //           style: TextStyle(
+              //             fontSize: 14,
+              //             color: Colors.white,
+              //           ),
+              //           textAlign: TextAlign.left,
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(height: 20),
+              // saleRentButton(),
               const SizedBox(height: 20),
-              saleRentButton(),
-              const SizedBox(height: 10),
               Row(
                 children: [
                   Container(

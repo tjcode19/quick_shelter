@@ -142,7 +142,7 @@ class _DashboardAddProp2State extends State<DashboardAddProp2> {
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  'Step 2 of 4',
+                  'Step 2 of 5',
                   style: TextStyle(color: Colors.white, fontSize: 15.0),
                   textAlign: TextAlign.center,
                 )
