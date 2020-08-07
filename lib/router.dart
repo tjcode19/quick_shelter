@@ -7,6 +7,7 @@ import 'package:quick_shelter/screens/dashboard/edit_property_details.dart';
 import 'package:quick_shelter/screens/dashboard/edit_property_listing.dart';
 import 'package:quick_shelter/screens/dashboard/edit_property_photos.dart';
 import 'package:quick_shelter/screens/dashboard/file_upload.dart';
+import 'package:quick_shelter/screens/dashboard/identification.dart';
 import 'package:quick_shelter/screens/dashboard/payment_webview.dart';
 import 'package:quick_shelter/screens/dashboard/property_edit_main.dart';
 import 'package:quick_shelter/screens/dashboard/property_listings_details.dart';
@@ -137,6 +138,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       //var propertyDetails = settings.arguments;
       return MaterialPageRoute(
         builder: (context) => EditPropListing(),
+      );
+    case identificationRoute:
+      //var propertyDetails = settings.arguments;
+      return MaterialPageRoute(
+        builder: (context) => Identification(),
       );
     case editPropMainRoute:
       var propertyDetails = settings.arguments;

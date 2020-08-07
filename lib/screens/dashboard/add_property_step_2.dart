@@ -133,25 +133,8 @@ class _AddPropStep2State extends State<AddPropStep2> {
 
                 const SizedBox(height: 20),
 
-                (_images.length < 1)
-                    ? Container(
-                        height: 150.0,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.all(Radius.circular(6)),
-                            border: Border.all(color: appTextColorPrimary2)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      )
+                (_images.isEmpty)
+                    ? Text('')
                     : Container(
                         margin: EdgeInsets.symmetric(vertical: 10.0),
                         height: 350.0,
@@ -302,11 +285,10 @@ class _AddPropStep2State extends State<AddPropStep2> {
           //   ),
           // );
 
-          // setState(() {
-          //   _propertyListingReq[result['id']].status = result['status'];
-
-          //   print('Hello ${result['status']}');
-          // });
+          setState(() {
+            _images.remove(_images[index]);
+          });
+          
         },
         child: Column(
           children: <Widget>[

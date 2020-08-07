@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:quick_shelter/models/AddPropertyResponse.dart';
 import 'package:quick_shelter/models/AddSavedListing.dart';
-import 'package:quick_shelter/models/AddSavedProperty.dart';
 import 'package:quick_shelter/models/EditPropertyResponse.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/models/GetProfileResponse.dart';
@@ -18,6 +17,7 @@ import 'package:quick_shelter/models/LoginResponse.dart';
 import 'package:quick_shelter/models/PaymentResponse.dart';
 import 'package:quick_shelter/models/SignUpResponse.dart';
 import 'package:quick_shelter/models/TransactionListResponse.dart';
+import 'package:quick_shelter/models/TransactionStatusResponse.dart';
 import 'package:quick_shelter/models/UpdateProfileResponse.dart';
 import 'package:quick_shelter/models/UploadIdResponse.dart';
 import 'package:quick_shelter/models/ValidatePhone.dart';
@@ -41,14 +41,18 @@ class QuickShelterRepository {
     return LoginResponse.fromJson(response);
   }
 
-  Future<LoginResponse> sendOtp(String email) async {
-    final response = await _provider.post(
-      "auth/signin",
-      <String, String>{
-        'Email': email,
-      },
+  Future<LoginResponse> requestOtp(String email) async {
+    final response = await _provider.get(
+      "user/request-otp"
     );
     return LoginResponse.fromJson(response);
+  }
+
+  Future<TransactionStatusResponse> checkTransaction(String transactionID) async {
+    final response = await _provider.get(
+      "verify-transaction/$transactionID"
+    );
+    return TransactionStatusResponse.fromJson(response);
   }
 
   Future<SignUpResponse> signUpData(String firstname, String surName,
@@ -250,6 +254,39 @@ class QuickShelterRepository {
     return GetAllProperties.fromJson(response);
   }
 
+  Future<GetAllProperties> searchProperty(
+      var page,
+      var noPerPage,
+      String startDate,
+      String endDate,
+      String minPrice,
+      String maxPrice,
+      noOfRoom,
+      apartmentType,
+      listingType,
+      state) async {
+    var price;
+    if (minPrice.isEmpty || maxPrice.isEmpty) {
+      price = {};
+    } else {
+      price = {"min": minPrice, "max": maxPrice};
+    }
+    final response = await _provider.put(
+      "search-listing/$page/$noPerPage",
+      <String, dynamic>{
+        "ListingDate": {"startDate": startDate, "endDate": endDate},
+        "Price": price,
+        "NO_OF_BEDROOMS": noOfRoom,
+        "PropertyType": apartmentType,
+        "ListingType": listingType,
+        "IS_AVAILABLE": true,
+        "State": state
+      },
+    );
+    print(response);
+    return GetAllProperties.fromJson(response);
+  }
+
   Future<PaymentResponse> doPayment(int listingID) async {
     final response = await _provider.put(
       "pay-listing/$listingID",
@@ -261,19 +298,20 @@ class QuickShelterRepository {
 
   Future<GetSingleProperty> getSingleProperty(String propID) async {
     final response = await _provider.get(
-      "get-property/$propID", 
+      "get-property/$propID",
     );
     return GetSingleProperty.fromJson(response);
   }
 
   Future<GetPropertyDoc> getPropertyDocuments(String propID) async {
     final response = await _provider.get(
-      "property-documents/$propID", 
+      "property-documents/$propID",
     );
     return GetPropertyDoc.fromJson(response);
   }
 
-  Future<TransactionListResponse> getTransactionList(var page, var pageSize) async {
+  Future<TransactionListResponse> getTransactionList(
+      var page, var pageSize) async {
     final response = await _provider.get(
       "paid-listings/$page/$pageSize",
     );
@@ -306,7 +344,7 @@ class QuickShelterRepository {
       File file, String fileType, String docName, var propertyId) async {
     final response = await _provider.uploadFile(
         file, 'property/documents/$propertyId', fileType, docName, 'PUT');
-      //  print('Inside Life: $docName');
+    //  print('Inside Life: $docName');
     return UploadIdResponse.fromJson(response);
   }
 

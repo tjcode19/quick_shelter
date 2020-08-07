@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/colors.dart';
+import 'package:quick_shelter/models/TransactionStatusResponse.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/utils/sharedPreference.dart';
 import 'package:quick_shelter/widgets/commonUtils.dart';
@@ -22,72 +23,30 @@ class _TransSuccessState extends State<TransSuccess> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   String _surName, _userEmail, _userPassword;
 
-  _getUserSurName() async {
-    _surName = await _sharedPreferenceQS.getSharedPrefs(String, 'surName');
-    _userEmail = await _sharedPreferenceQS.getSharedPrefs(String, 'userEmail');
-    _userPassword =
-        await _sharedPreferenceQS.getSharedPrefs(String, 'userPassword');
+  TransactionStatusResponse paymentRes;
 
-    setState(() {
-      _surName = _surName;
-    });
-  }
+  void _checkTrans() async {
+    print('Check Transaction');
+    var _apiCall = repo.checkTransaction(_userPassword);
 
-  void _doLogin() async {
-    print('loginRes SignUp');
-    FocusScope.of(context).requestFocus(new FocusNode());
-
-    showLoadingDialog(context, _keyLoader);
-
-    var _loginRes = repo.loginData(_userEmail, _userPassword);
-
-    await _loginRes.then((value) async {
+    await _apiCall.then((value) async {
       print('donnned ${value.responseCode}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.responseCode == globalSuccessResponseCode &&
-          value.data.auth == true) {
-        _sharedPreferenceQS.setData(
-            'String', 'accessToken', value.data.accessToken);
-        _sharedPreferenceQS.setData(
-            'String', 'userFN', value.data.user.firstName);
-        await _resetDetails();
-        await _getUserProfile();
-        Navigator.pushNamed(context, dashboardRoute);
+      if (value.responseCode == globalSuccessGetResponseCode) {
+        
+        setState(() {
+          paymentRes = value;
+        });
       } else {
-        snackBar(value.responseMessage, _scaffoldKey);
+        //snackBar(value.responseMessage, _scaffoldKey);
       }
     }, onError: (error) {
-      print('Sign up comp $error');
+      print('Check Transaction $error');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     });
   }
 
-  _resetDetails() {
-    _sharedPreferenceQS.setData('String', 'userLN', '');
-    _sharedPreferenceQS.setData('String', 'userPN', '');
-    _sharedPreferenceQS.setData('String', 'userEm', '');
-    _sharedPreferenceQS.setData('bool', 'detailsLoaded', false);
-    print('User details cleared');
-  }
 
-  _getUserProfile() {
-    print('Get User Profile');
-    var _apiCall = repo.getProfile();
-
-    _apiCall.then((value) {
-      print(value.responseCode);
-      if (value.responseCode == globalSuccessGetResponseCode) {
-        setState(() {
-          _sharedPreferenceQS.setData('String', 'userFN', value.data.firstName);
-          _sharedPreferenceQS.setData('String', 'userLN', value.data.surName);
-          _sharedPreferenceQS.setData(
-              'String', 'userPN', value.data.phoneNumber);
-          _sharedPreferenceQS.setData('String', 'userEm', value.data.email);
-          _sharedPreferenceQS.setData('bool', 'detailsLoaded', true);
-        });
-      } else {}
-    });
-  }
 
   Future<bool> _onBackPressed() {
     return Navigator.pushNamedAndRemoveUntil(
@@ -97,8 +56,10 @@ class _TransSuccessState extends State<TransSuccess> {
   @override
   void initState() {
     super.initState();
-
-    //_getUserSurName();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _checkTrans();      
+      await showLoadingDialog(context, _keyLoader);
+    });
   }
 
   @override
@@ -135,7 +96,18 @@ class _TransSuccessState extends State<TransSuccess> {
                     const SizedBox(height: 10),
                     Container(
                       child: Text(
-                        'Your payment was completed succesfully',
+                        'Transaction ID: ${paymentRes.data.transactionID}', 
+                        style: TextStyle(
+                            color: Color.fromRGBO(226, 208, 195, 1),
+                            fontSize: 15.0),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+                    Container(
+                      child: Text(
+                        'Payment Status: ${paymentRes.data.status}', 
                         style: TextStyle(
                             color: Color.fromRGBO(226, 208, 195, 1),
                             fontSize: 15.0),

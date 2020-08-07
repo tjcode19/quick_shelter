@@ -93,7 +93,7 @@ class _LoginState extends State<Login> {
     var _loginRes = repo.loginData(userEmail.trim(), userPassword);
 
     await _loginRes.then((value) async {
-      //print('donnned ${value.auth}');
+      print('donnned ${value.responseCode}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.responseCode == globalSuccessResponseCode && value.data.auth == true) {
         _sharedPreferenceQS.setData('String', 'accessToken', value.data.accessToken);
@@ -106,7 +106,7 @@ class _LoginState extends State<Login> {
       }
     }, onError: (error) {
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      showInSnackBar("Login Failed");
+      showInSnackBar("Login Failed $error");
     });
     print('######');
   }
@@ -127,6 +127,9 @@ class _LoginState extends State<Login> {
       _sharedPreferenceQS.setData('String', 'userLN', value.data.surName);
       _sharedPreferenceQS.setData('String', 'userPN', value.data.phoneNumber);
       _sharedPreferenceQS.setData('String', 'userEm', value.data.email);
+      //_sharedPreferenceQS.setData('String', 'nationalId', value.data.nationalID);
+      _sharedPreferenceQS.setData('bool', 'isEmailVerified', value.data.isEmailVerified);
+      _sharedPreferenceQS.setData('bool', 'isPhoneVerified', value.data.isPhoneVerified);
       _sharedPreferenceQS.setData('bool', 'detailsLoaded', true);
 
       print('User details set');

@@ -2,6 +2,7 @@ library pin_entry_text_field;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:quick_shelter/colors.dart';
 
 class PinEntryTextField extends StatefulWidget {
   final String lastPin;
@@ -11,6 +12,7 @@ class PinEntryTextField extends StatefulWidget {
   final fontSize;
   final isTextObscure;
   final showFieldAsBox;
+  final keyboardType;
 
   PinEntryTextField(
       {this.lastPin,
@@ -19,6 +21,7 @@ class PinEntryTextField extends StatefulWidget {
       this.fieldWidth: 40.0,
       this.fontSize: 20.0,
       this.isTextObscure: false,
+      this.keyboardType:TextInputType.phone,
       this.showFieldAsBox: false})
       : assert(fields > 0);
 
@@ -103,12 +106,12 @@ class PinEntryTextFieldState extends State<PinEntryTextField> {
       child: TextField(
         autofocus: _pin.first == null ? true : false,
         controller: _textControllers[i],
-        keyboardType: TextInputType.number,
+        keyboardType: widget.keyboardType,
         textAlign: TextAlign.center,
         maxLength: 1,
         style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: appColorSecondary,
             fontSize: widget.fontSize),
         focusNode: _focusNodes[i],
 
@@ -119,6 +122,7 @@ class PinEntryTextFieldState extends State<PinEntryTextField> {
         //         ? OutlineInputBorder(borderSide: BorderSide(width: 2.0, color: Colors.white))
         //         : null),
         decoration: InputDecoration(
+          
           counterText: "",
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.white, width: 2.0),

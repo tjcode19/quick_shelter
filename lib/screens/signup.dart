@@ -57,7 +57,7 @@ class _SignUpState extends State<SignUp> {
         _sharedPreferenceQS.setData('String', 'userEmail', userEmail);
         _sharedPreferenceQS.setData('String', 'userPassword', userPassword);
         _getUserProfile();
-        Navigator.pushNamed(context, verifyPhoneRoute);
+        Navigator.pushNamed(context, identityCardRoute);
       } else {
         snackBar(
             'Registration Failed \n ${value.responseMessage}', _scaffoldKey);
@@ -214,12 +214,12 @@ class _SignUpState extends State<SignUp> {
                           ),
                           const SizedBox(height: 30),
                           RaisedButtonWidget(
-                            verifyPhoneRoute,
+                            identityCardRoute,
                             'Continue',
                             true,
                             isValidatable: true,
                             formKey: _formKey,
-                            action: _signUpFunc,
+                           action: _signUpFunc,
                           ),
                           const SizedBox(height: 25),
                           GestureDetector(

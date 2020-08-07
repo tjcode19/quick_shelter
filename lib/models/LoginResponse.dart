@@ -56,10 +56,11 @@ class User {
   String password;
   String dOB;
   String profilePhoto;
-  String uSERTYPE;
+  var uSERTYPE;
   OTP oTP;
-  String nationalID;
-  String isEmailVerified;
+  var nationalID;
+  bool isEmailVerified;
+  bool isPhoneVerified;
   bool isProfileReviewed;
   String createdAt;
   String updatedAt;
@@ -78,6 +79,7 @@ class User {
       this.oTP,
       this.nationalID,
       this.isEmailVerified,
+      this.isPhoneVerified,
       this.isProfileReviewed,
       this.createdAt,
       this.updatedAt});
@@ -96,6 +98,7 @@ class User {
     oTP = json['OTP'] != null ? new OTP.fromJson(json['OTP']) : null;
     nationalID = json['NationalID'];
     isEmailVerified = json['isEmailVerified'];
+    isPhoneVerified = json['isPhoneVerified'];
     isProfileReviewed = json['isProfileReviewed'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
@@ -118,6 +121,7 @@ class User {
     }
     data['NationalID'] = this.nationalID;
     data['isEmailVerified'] = this.isEmailVerified;
+    data['isPhoneVerified'] = this.isPhoneVerified;
     data['isProfileReviewed'] = this.isProfileReviewed;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;

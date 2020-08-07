@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../colors.dart';
 
-Widget inputlabel(String label, icon){
+Widget inputlabel(String label, icon, {color: Colors.white}){
   return Row(
                 children: [
                   Icon(icon ,color: appColorSecondary, size: 16,),
@@ -13,7 +13,7 @@ Widget inputlabel(String label, icon){
                         label,
                         style: TextStyle(
                           fontSize: 15,
-                          color: Colors.white,
+                          color: color,
                         ),
                         textAlign: TextAlign.left,
                       ),

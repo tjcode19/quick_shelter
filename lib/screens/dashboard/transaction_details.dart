@@ -121,11 +121,11 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                         children: <Widget>[
                           Row(
                             children: <Widget>[
-                              Text(
-                                'Property Sold',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 25.0),
-                              ),
+                              // Text(
+                              //   'Property' _propertyDetails.l,
+                              //   style: TextStyle(
+                              //       color: Colors.white, fontSize: 25.0),
+                              // ),
                             ],
                           ),
                           const SizedBox(height: 20),
@@ -202,23 +202,46 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                         Container(
                           padding: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(215, 247, 223, 1),
+                            // color: Color.fromRGBO(215, 247, 223, 1),
+                            color: (_propertyDetails.tRANSACTIONSTATUS != null)
+                                ? (_propertyDetails.tRANSACTIONSTATUS == 'PAID')
+                                    ? Color.fromRGBO(215, 247, 223, 0.7)
+                                    : ((_propertyDetails.tRANSACTIONSTATUS ==
+                                            'INITIALIZED')
+                                        ? Color.fromRGBO(233, 212, 96, 0.2)
+                                        : Color.fromRGBO(240, 52, 52, 0.2))
+                                : '',
                             borderRadius: BorderRadius.all(Radius.circular(15)),
                           ),
                           child: Text(
-                            'Sucess',
+                            (_propertyDetails.tRANSACTIONSTATUS != null)
+                                ? (_propertyDetails.tRANSACTIONSTATUS == 'PAID')
+                                    ? 'Success'
+                                    : ((_propertyDetails.tRANSACTIONSTATUS ==
+                                            'INITIALIZED')
+                                        ? 'Pending'
+                                        : 'Failed')
+                                : '',
                             style: TextStyle(
-                                color: Color.fromRGBO(1, 157, 50, 1),
+                                //  color: Color.fromRGBO(1, 157, 50, 1),
+                                color: (_propertyDetails.tRANSACTIONSTATUS != null)
+                                ? (_propertyDetails.tRANSACTIONSTATUS == 'PAID')
+                                    ? Color.fromRGBO(1, 157, 50, 1)
+                                    : ((_propertyDetails.tRANSACTIONSTATUS ==
+                                            'INITIALIZED')
+                                        ? Color.fromRGBO(233, 212, 96, 1)
+                                        : Color.fromRGBO(240, 52, 52, 1))
+                                : '',
                                 fontSize: 18),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 30),
-                    detailsRow('Property Owner', '${_propertyDetails.seller.surName} ${_propertyDetails.seller.firstName}'),
+                    detailsRow('Property Owner',
+                        '${_propertyDetails.seller.surName} ${_propertyDetails.seller.firstName}'),
                     const SizedBox(height: 16),
-                    detailsRow('Customer',
-                        '$_prefUserLN $_prefUserFN'),
+                    detailsRow('Customer', '$_prefUserLN $_prefUserFN'),
                     const SizedBox(height: 16),
                     detailsRow(
                         'Price',
@@ -226,9 +249,9 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                             ? _propertyDetails.listing.price.toDouble()
                             : 'NA'),
                     const SizedBox(height: 16),
-                    detailsRow('Payment ID', '995799930020'),
+                    detailsRow('Payment ID', _propertyDetails.transactionID),
                     const SizedBox(height: 16),
-                    detailsRow('Date', '20th May, 2020'),
+                    detailsRow('Date', formatDate(_propertyDetails.createdAt)),
                     const SizedBox(height: 30),
                     // RaisedButtonWidget(
                     //   ' createPdf',

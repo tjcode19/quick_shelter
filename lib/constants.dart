@@ -37,6 +37,7 @@ const String userPropDetailDocRoute = '/userPropDetailDoc';
 const String userPropDocEditRoute = '/userPropDocEdit';
 const String createPdfRoute = '/createPdf';
 const String splashScreenRoute = '/splashScreen';
+const String identificationRoute = '/identification';
 
 const String globalSuccessResponseCode = 'M200';
 const String globalSuccessGetResponseCode = 'M000';

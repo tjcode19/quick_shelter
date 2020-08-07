@@ -186,7 +186,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                     margin: EdgeInsets.only(left: 10),
                     alignment: Alignment.topLeft,
                     child: Text(
-                      'Featured Properties',
+                      'Sponsored Properties',
                       style:
                           TextStyle(color: appSecondaryColor, fontSize: 15.0),
                     )),
@@ -238,6 +238,7 @@ class _DashboardHomeState extends State<DashboardHome> {
         opacity: _isVisible ? 1.0 : 0.0,
         duration: Duration(milliseconds: 500),
         child: FloatingActionButton.extended(
+          heroTag: "dashHome",
           onPressed: () {
             Navigator.pushNamed(context, addPropertyRoute);
           },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
+import 'package:quick_shelter/screens/dashboard/dashboard_collections.dart';
 import 'package:quick_shelter/utils/commonFunctions.dart';
 import 'package:quick_shelter/widgets/commonUtils.dart';
 import 'package:quick_shelter/widgets/raised_button.dart';
@@ -12,7 +13,8 @@ import '../../constants.dart';
 
 class PropertyDetails extends StatefulWidget {
   final propertyDetails;
-  const PropertyDetails({Key key, this.propertyDetails}) : super(key: key);
+  const PropertyDetails({Key key, this.propertyDetails}):super(key:key);
+
   @override
   _PropertyDetailsState createState() => _PropertyDetailsState();
 }
@@ -25,6 +27,9 @@ class _PropertyDetailsState extends State<PropertyDetails> {
   GetAllPropData _propertyDetails;
   bool _isSaved = false;
 
+  //final userColl = DashboardCollections();
+
+ 
   int imageNum = 0;
   int _currentPosition = 0;
 
@@ -46,13 +51,15 @@ class _PropertyDetailsState extends State<PropertyDetails> {
 
   _saveProperty() {
     if (_isSaved) {
-      var _apiCall = repo.addSavedListing(_propertyDetails.propertyID);
+      var _apiCall = repo.addSavedListing(_propertyDetails.iD);
 
       _apiCall.then((value) async {
         print('Property Saved ${value.responseCode} ');
         if (value.responseCode == globalSuccessResponseCode) {
           // Navigator.pushNamed(context, dashboardRoute);
           print('Property Listing Saved');
+          DashboardCollections().method();
+          //widget?._callback();
         } else {
           //showInSnackBar(value.message);
           print('Saving property failed');
@@ -65,13 +72,20 @@ class _PropertyDetailsState extends State<PropertyDetails> {
 
   _makePayment() {
     showLoadingDialog(context, _keyLoader);
+    print(_propertyDetails.iD);
       var _apiCall = repo.doPayment(_propertyDetails.iD);
 
       _apiCall.then((value) async {
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
         if (value.responseCode == globalSuccessGetResponseCode && value.data.status!=false) {          
-         print(value);
+         print('Auth: ${value.data.data.authorizationUrl}');
+         if(value.data.data.authorizationUrl != null){
            Navigator.pushNamed(context, paymentWebviewRoute, arguments: value);
+         }
+         else{
+           snackBar('Payment cannot be completed', _scaffoldKey);
+         }
+           
         } else {
           //showInSnackBar(value.message);     
           print('Payment failed');     

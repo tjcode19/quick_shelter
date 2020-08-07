@@ -31,7 +31,7 @@ class _AddPropListingState extends State<AddPropListing> {
   //final _propCountryController = TextEditingController();
 
   String listingType = "";
-  bool sale = true;
+  bool sale = false;
   bool rent = false;
   bool isAvailable = false;
   String _actionType;
@@ -123,11 +123,10 @@ class _AddPropListingState extends State<AddPropListing> {
     isAvailable = _propertyListDetails.iSAVAILABLE;
 
     setState(() {
-      if(listingType != 'FOR SALE'){
+      if (listingType != 'FOR SALE') {
         sale = false;
         rent = true;
-      }
-      else{
+      } else {
         sale = true;
         rent = false;
       }
@@ -157,7 +156,6 @@ class _AddPropListingState extends State<AddPropListing> {
   }
 
   FToast fToast;
-
 
   @override
   Widget build(BuildContext context) {
@@ -607,83 +605,154 @@ class _AddPropListingState extends State<AddPropListing> {
               ),
             ],
           )
-        : Stack(
-            children: <Widget>[
-              Container(
-                height: 70,
-              ),
-              Container(
-                width: screeSize.width / 2 - 5,
-                child: OutlineButton(
-                  padding: EdgeInsets.all(10),
-                  color: Colors.white,
-                  highlightedBorderColor: Colors.white,
-                  borderSide: BorderSide(color: appTextColorPrimary2),
-                  shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.only(topRight: Radius.circular(15))),
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(10, 3, 4, 4),
-                    child: Text(
-                      'For Sale',
-                      style:
-                          TextStyle(color: appTextColorPrimary2, fontSize: 15),
+        : (rent)
+            ? Stack(
+                children: <Widget>[
+                  Container(
+                    height: 70,
+                  ),
+                  Container(
+                    width: screeSize.width / 2 - 5,
+                    child: OutlineButton(
+                      padding: EdgeInsets.all(10),
+                      color: Colors.white,
+                      highlightedBorderColor: Colors.white,
+                      borderSide: BorderSide(color: appTextColorPrimary2),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.only(topRight: Radius.circular(15))),
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(10, 3, 4, 4),
+                        child: Text(
+                          'For Sale',
+                          style: TextStyle(
+                              color: appTextColorPrimary2, fontSize: 15),
+                        ),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          sale = true;
+                          rent = false;
+                          listingType = 'FOR SALE';
+                        });
+                        _showToast('You selected FOR SALE');
+                        //showSnackBar("OutlineButton with Shape");
+                      },
                     ),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      sale = true;
-                      rent = false;
-                      listingType = 'FOR SALE';
-                    });
-                    _showToast('You selected FOR SALE');
-                    //showSnackBar("OutlineButton with Shape");
-                  },
-                ),
-              ),
-              Positioned(
-                right: 0.0,
-                top: 0,
-                child: Container(
-                  width: screeSize.width / 2,
-                  child: RaisedButton(
-                    padding: EdgeInsets.all(10),
-                    highlightElevation: 5.0,
-                    elevation: 3.0,
-                    splashColor: Colors.orange[100],
-                    highlightColor: Colors.orange[100],
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        //borderRadius: new BorderRadius.circular(10.0),
-                        borderRadius:
-                            BorderRadius.only(topRight: Radius.circular(20))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                  Positioned(
+                    right: 0.0,
+                    top: 0,
+                    child: Container(
+                      width: screeSize.width / 2,
+                      child: RaisedButton(
+                        padding: EdgeInsets.all(10),
+                        highlightElevation: 5.0,
+                        elevation: 3.0,
+                        splashColor: Colors.orange[100],
+                        highlightColor: Colors.orange[100],
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            //borderRadius: new BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                              child: Text(
+                                'For Rent',
+                                style: TextStyle(
+                                    color: appTextColorPrimary, fontSize: 15),
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            sale = false;
+                            rent = true;
+                            listingType = 'FOR RENT';
+                          });
+                          _showToast('You selected FOR RENT');
+                          //print('pressed');
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : Stack(
+                children: <Widget>[
+                  Container(
+                    height: 70,
+                  ),
+                  Container(
+                    width: screeSize.width / 2 - 5,
+                    child: OutlineButton(
+                      padding: EdgeInsets.all(10),
+                      color: Colors.white,
+                      highlightedBorderColor: Colors.white,
+                      borderSide: BorderSide(color: appTextColorPrimary2),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.only(topRight: Radius.circular(15))),
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(10, 3, 4, 4),
+                        child: Text(
+                          'For Sale New',
+                          style: TextStyle(
+                              color: appTextColorPrimary2, fontSize: 15),
+                        ),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          sale = true;
+                          rent = false;
+                          listingType = 'FOR SALE';
+                        });
+                        _showToast('You selected FOR SALE');
+                        //showSnackBar("OutlineButton with Shape");
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    right: 0.0,
+                    top: 0,
+                    child: Container(
+                      width: screeSize.width / 2 - 5,
+                      color: appSecondaryColor,
+                      child: OutlineButton(
+                        padding: EdgeInsets.all(10),
+                        color: Colors.white,
+                        highlightedBorderColor: Colors.white,
+                        borderSide: BorderSide(color: appTextColorPrimary2),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(15))),
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(10, 3, 4, 4),
                           child: Text(
                             'For Rent',
                             style: TextStyle(
-                                color: appTextColorPrimary, fontSize: 15),
+                                color: appTextColorPrimary2, fontSize: 15),
                           ),
                         ),
-                      ],
+                        onPressed: () {
+                          setState(() {
+                            sale = false;
+                            rent = true;
+                            listingType = 'FOR RENT';
+                          });
+                          _showToast('You selected FOR RENT');
+                          //showSnackBar("OutlineButton with Shape");
+                        },
+                      ),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        sale = false;
-                        rent = true;
-                        listingType = 'FOR RENT';
-                      });
-                      _showToast('You selected FOR RENT');
-                      //print('pressed');
-                    },
                   ),
-                ),
-              ),
-            ],
-          );
+                ],
+              );
   }
 
   void _settingModalBottomSheet(context) {
@@ -782,28 +851,36 @@ class _AddPropListingState extends State<AddPropListing> {
 
   _showToast(String msg) {
     Widget toast = Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-        decoration: BoxDecoration(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25.0),
         color: Colors.white30,
-        ),
-        child: Row(
+      ),
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-            Icon(Icons.check, color: Colors.white,),
-            SizedBox(
+          Icon(
+            Icons.check,
+            color: Colors.white,
+          ),
+          SizedBox(
             width: 12.0,
-            ),
-            Text(msg, style: TextStyle(color: Colors.white, fontSize: 15.0, fontWeight: FontWeight.bold),),
+          ),
+          Text(
+            msg,
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold),
+          ),
         ],
-        ),
+      ),
     );
-
 
     fToast.showToast(
-        child: toast,
-        gravity: ToastGravity.BOTTOM_RIGHT,
-        toastDuration: Duration(seconds: 2),
+      child: toast,
+      gravity: ToastGravity.BOTTOM_RIGHT,
+      toastDuration: Duration(seconds: 2),
     );
-}
+  }
 }

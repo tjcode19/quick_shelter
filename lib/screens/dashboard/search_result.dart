@@ -21,7 +21,7 @@ List<GetAllPropData> searchedPropList;
   @override
   void initState() {
     super.initState();
-    searchedPropList = widget.propertyList;
+    searchedPropList = widget.propertyList['dataLoad'];
   }
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ List<GetAllPropData> searchedPropList;
                         child: Container(
                           padding: EdgeInsets.fromLTRB(10, 3, 4, 4),
                           child: Text(
-                            searchedPropList[0].listingType,
+                            widget.propertyList['listingType'],
                             style: TextStyle(
                                 color: appColorSecondary, fontSize: 13),
                           ),

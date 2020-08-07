@@ -23,7 +23,7 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
   SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
   String message = "";
   List<GetUserPropData> _propertyList = List<GetUserPropData>();
-  List<GetUserProperties> _propertyRentList = List<GetUserProperties>();
+  // List<GetUserProperties> _propertyRentList = List<GetUserProperties>();
   ScrollController _controller;
   String listingType = "";
   bool sale = true;
@@ -204,30 +204,31 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
           ),
         ),
       ),
-      // floatingActionButton: AnimatedOpacity(
-      //   opacity: _isVisible ? 1.0 : 0.0,
-      //   duration: Duration(milliseconds: 500),
-      //   child: FloatingActionButton.extended(
-      //     onPressed: () {
-      //       Navigator.pushNamed(context, addPropertyRoute);
-      //     },
-      //     // child: Icon(
-      //     //   Icons.add,
-      //     //   color: Colors.white,
-      //     // ),
-      //     // backgroundColor: Theme.of(context).primaryColor,
-      //     label: Text(
-      //       'New Property',
-      //       style: TextStyle(fontSize: 14.0, color: Colors.white),
-      //     ),
-      //     icon: Icon(
-      //       Icons.add,
-      //       color: Colors.white,
-      //     ),
-      //     backgroundColor: Theme.of(context).primaryColor,
-      //     tooltip: 'Propertyu',
-      //   ),
-      // ),
+      floatingActionButton: AnimatedOpacity(
+        opacity: _isVisible ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 500),
+        child: FloatingActionButton.extended(
+          heroTag: "dashUser",
+          onPressed: () {
+            Navigator.pushNamed(context, addPropertyRoute);
+          },
+          // child: Icon(
+          //   Icons.add,
+          //   color: Colors.white,
+          // ),
+          // backgroundColor: Theme.of(context).primaryColor,
+          label: Text(
+            'New Property',
+            style: TextStyle(fontSize: 14.0, color: Colors.white),
+          ),
+          icon: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          tooltip: 'Propertyu',
+        ),
+      ),
     );
   }
 

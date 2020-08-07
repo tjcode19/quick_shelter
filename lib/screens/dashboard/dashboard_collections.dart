@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/models/GetSavedProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
+import 'package:quick_shelter/screens/dashboard/property_details.dart';
 import 'package:quick_shelter/utils/commonFunctions.dart';
 import 'package:quick_shelter/utils/sharedPreference.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -10,6 +11,8 @@ import '../../colors.dart';
 import '../../constants.dart';
 
 class DashboardCollections extends StatefulWidget {
+  method() => createState().refresh();
+
   @override
   _DashboardCollectionsState createState() => _DashboardCollectionsState();
 }
@@ -28,40 +31,93 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
 
   String message = "";
 
-  void _getSavedProperties() async {
+  // refresh() {
+  //   print('refresh');
+  //   // setState(() {
+  //   _getSavedProperties();
+  //   //});
+  // }
+
+  // PropertyDetails(
+  //      refreshCallback: refresh,
+  //   );
+
+  refresh() => _getSavedPropert();
+
+  void _getSavedPropert() async {
+    List<Data> _propertyList = List<Data>();
+    List<Data> _propertyRentList = List<Data>();
+    List<Data> saleList = List<Data>();
+    List<Data> rentList = List<Data>();
     print('Get Saved Properties');
     //showLoadingDialog(context, _keyLoader);
-    var _apiCall = repo.getSavedProperties('0', '10');
+    var _apiCall = repo.getSavedProperties('0', '100');
 
     await _apiCall.then((value) {
       print('Saved Prop DONE ${value.responseCode}');
       //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.responseCode == globalSuccessGetResponseCode) {
-        
-        for (int l = 0; l < value.data.length; l++)
-                {
-                  if (value.data[l].listingType != 'FOR RENT')
-                    {
-                      saleList.add(value.data[l]);
-                     // print('${saleList[l].listingType} Sales');
-                    }
-                  else
-                    {
-                      rentList.add(value.data[l]);
-                      //print('${rentList[l].listingType} Rent');
-                    }
-                }
-                
+        print('Saved prop: ${value.data.length}');
+
+        for (int l = 0; l < value.data.length; l++) {
+          if (value.data[l].listingType != 'FOR RENT') {
+            saleList.add(value.data[l]);
+            // print('${saleList[l].listingType} Sales');
+          } else {
+            rentList.add(value.data[l]);
+            //print('${rentList[l].listingType} Rent');
+          }
+        }
 
         setState(() => {
-          _propertyList = saleList,
-          _propertyRentList = rentList,
-         if( _propertyList.length < 1){
-           sale = false, rent = true,
-         },
+              _propertyList = saleList,
+              _propertyRentList = rentList,
+              if (_propertyList.length < 1)
+                {
+                  sale = false,
+                  rent = true,
+                }
 
-          //print(_propertyRentList[0].price)
-              
+              //print(_propertyRentList[0].price)
+            });
+      } else {
+        //showInSnackBar(value.message);
+        print('Failed to load properties');
+      }
+    });
+  }
+
+  void _getSavedProperties() async {
+    print('Get Saved Properties');
+    //showLoadingDialog(context, _keyLoader);
+    var _apiCall = repo.getSavedProperties('0', '100');
+
+    await _apiCall.then((value) {
+      print('Saved Prop DONE ${value.responseCode}');
+      //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (value.responseCode == globalSuccessGetResponseCode) {
+        print('Saved prop: ${value.data.length}');
+
+        for (int l = 0; l < value.data.length; l++) {
+          if (value.data[l].listingType != 'FOR RENT') {
+            saleList.add(value.data[l]);
+            // print('${saleList[l].listingType} Sales');
+          } else {
+            rentList.add(value.data[l]);
+            //print('${rentList[l].listingType} Rent');
+          }
+        }
+
+        setState(() => {
+              _propertyList = saleList,
+              _propertyRentList = rentList,
+              if (_propertyList.length < 1)
+                {
+                  sale = false,
+                  rent = true,
+                },
+
+              //print(_propertyRentList[0].price)
             });
       } else {
         //showInSnackBar(value.message);
@@ -158,33 +214,34 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
               ),
               const SizedBox(height: 20),
               saleRentButton(),
-              (_propertyList != null)?
-              Container(
-                height: 400,
-                child: CustomScrollView(
-                  primary: false,
-                  slivers: <Widget>[
-                    SliverPadding(
-                      padding: const EdgeInsets.all(0),
-                      sliver: SliverGrid.count(
-                        crossAxisSpacing: 5,
-                        childAspectRatio: ((itemWidth) / (itemHeight)),
-                        mainAxisSpacing: 1,
-                        crossAxisCount: 2,
-                        children: (sale)
-                            ? _propertyList
-                                .map((e) =>
-                                    _propertItem(_propertyList.indexOf(e)))
-                                .toList()
-                            : _propertyRentList
-                                .map((e) =>
-                                    _propertItem(_propertyRentList.indexOf(e)))
-                                .toList(),
+              (_propertyList != null)
+                  ? Container(
+                      height: 400,
+                      child: CustomScrollView(
+                        primary: false,
+                        slivers: <Widget>[
+                          SliverPadding(
+                            padding: const EdgeInsets.all(0),
+                            sliver: SliverGrid.count(
+                              crossAxisSpacing: 5,
+                              childAspectRatio: ((itemWidth) / (itemHeight)),
+                              mainAxisSpacing: 1,
+                              crossAxisCount: 2,
+                              children: (sale)
+                                  ? _propertyList
+                                      .map((e) => _propertItem(
+                                          _propertyList.indexOf(e)))
+                                      .toList()
+                                  : _propertyRentList
+                                      .map((e) => _propertItem(
+                                          _propertyRentList.indexOf(e)))
+                                      .toList(),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ):Text('No Record Found'),
+                    )
+                  : Text('No Record Found'),
             ],
           ),
         ),
@@ -199,40 +256,44 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
         splashColor: Colors.orange.withAlpha(30),
         onTap: () {
           print('Transaction tapped.');
-          
-          Navigator.pushNamed(context, collPropDetailsRoute, arguments: (sale)?_propertyList[index]: _propertyRentList[index] );
+
+          Navigator.pushNamed(context, collPropDetailsRoute,
+              arguments:
+                  (sale) ? _propertyList[index] : _propertyRentList[index]);
         },
         child: Container(
           margin: EdgeInsets.all(2),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              (sale)?
-              Stack(alignment: Alignment.center, children: [
-                Container(child: CircularProgressIndicator()),
-                FadeInImage.memoryNetwork(
-                  width: 175,
-                  height: 123,
-                  placeholder: kTransparentImage,
-                  image: (_propertyList[index].property.photos.isNotEmpty)
-                      ? _propertyList[index].property.photos[0].path
-                      : 'https://picsum.photos/250?image=9',
-                  fit: BoxFit.cover,
-                ),
-              ]):
-              Stack(alignment: Alignment.center, children: [
-                Container(child: CircularProgressIndicator()),
-                FadeInImage.memoryNetwork(
-                  width: 175,
-                  height: 123,
-                  placeholder: kTransparentImage,
-                  image: (_propertyRentList[index].property.photos.isNotEmpty)
-                      ? _propertyRentList[index].property.photos[0].path
-                      : 'https://picsum.photos/250?image=9',
-                  fit: BoxFit.cover,
-                ),
-              ])
-              ,
+              (sale)
+                  ? Stack(alignment: Alignment.center, children: [
+                      Container(child: CircularProgressIndicator()),
+                      FadeInImage.memoryNetwork(
+                        width: 175,
+                        height: 123,
+                        placeholder: kTransparentImage,
+                        image: (_propertyList[index].property.photos.isNotEmpty)
+                            ? _propertyList[index].property.photos[0].path
+                            : 'https://picsum.photos/250?image=9',
+                        fit: BoxFit.cover,
+                      ),
+                    ])
+                  : Stack(alignment: Alignment.center, children: [
+                      Container(child: CircularProgressIndicator()),
+                      FadeInImage.memoryNetwork(
+                        width: 175,
+                        height: 123,
+                        placeholder: kTransparentImage,
+                        image: (_propertyRentList[index]
+                                .property
+                                .photos
+                                .isNotEmpty)
+                            ? _propertyRentList[index].property.photos[0].path
+                            : 'https://picsum.photos/250?image=9',
+                        fit: BoxFit.cover,
+                      ),
+                    ]),
               Container(
                 width: 172,
                 padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -246,30 +307,33 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
                         style: TextStyle(
                             fontSize: 13, color: appSecondaryColorLight),
                         children: <TextSpan>[
-                          (sale)?TextSpan(
-                            text: (_propertyList[index].price != null)
-                                ? formatMoney(
-                                        _propertyList[index].price.toDouble())
-                                    .withoutFractionDigits
-                                : '0',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: appTextColorPrimary,
-                            ),
-                          ):
-                          TextSpan(
-                            text: (_propertyRentList[index].price != null)
-                                ? formatMoney(
-                                        _propertyRentList[index].price.toDouble())
-                                    .withoutFractionDigits
-                                : '0',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: appTextColorPrimary,
-                            ),
-                          ),
+                          (sale)
+                              ? TextSpan(
+                                  text: (_propertyList[index].price != null)
+                                      ? formatMoney(_propertyList[index]
+                                              .price
+                                              .toDouble())
+                                          .withoutFractionDigits
+                                      : '0',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: appTextColorPrimary,
+                                  ),
+                                )
+                              : TextSpan(
+                                  text: (_propertyRentList[index].price != null)
+                                      ? formatMoney(_propertyRentList[index]
+                                              .price
+                                              .toDouble())
+                                          .withoutFractionDigits
+                                      : '0',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: appTextColorPrimary,
+                                  ),
+                                ),
                           TextSpan(
                             text: '.00',
                             style: TextStyle(
@@ -302,7 +366,9 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
                         Container(
                           child: Expanded(
                             child: Text(
-                              (sale)?_propertyList[index].property.location:_propertyRentList[index].property.location,
+                              (sale)
+                                  ? _propertyList[index].property.location
+                                  : _propertyRentList[index].property.location,
                               softWrap: true,
                               style: TextStyle(
                                   fontSize: 10, color: Colors.black87),

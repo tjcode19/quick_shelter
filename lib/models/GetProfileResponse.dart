@@ -34,8 +34,9 @@ class Data {
   String profilePhoto;
   String uSERTYPE;
   OTP oTP;
-  String nationalID;
+  var nationalID;
   bool isEmailVerified;
+  bool isPhoneVerified;
   bool isProfileReviewed;
   String createdAt;
   String updatedAt;
@@ -54,6 +55,7 @@ class Data {
       this.oTP,
       this.nationalID,
       this.isEmailVerified,
+      this.isPhoneVerified,
       this.isProfileReviewed,
       this.createdAt,
       this.updatedAt});
@@ -72,6 +74,7 @@ class Data {
     oTP = json['OTP'] != null ? new OTP.fromJson(json['OTP']) : null;
     nationalID = json['NationalID'];
     isEmailVerified = json['isEmailVerified'];
+    isPhoneVerified = json['isPhoneVerified'];
     isProfileReviewed = json['isProfileReviewed'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
@@ -94,6 +97,7 @@ class Data {
     }
     data['NationalID'] = this.nationalID;
     data['isEmailVerified'] = this.isEmailVerified;
+    data['isPhoneVerified'] = this.isPhoneVerified;
     data['isProfileReviewed'] = this.isProfileReviewed;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;

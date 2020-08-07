@@ -32,6 +32,8 @@ class TransactionListResponse {
 }
 
 class Data {
+  bool iSPAID;
+  String tRANSACTIONSTATUS;
   int iD;
   int listingID;
   Listing listing;
@@ -41,12 +43,16 @@ class Data {
   String startDate;
   String endDate;
   int paid;
-  int outstanding;
+  int payable;
+  var transactionID;
   String createdAt;
   String updatedAt;
+  List<Transaction> transaction;
 
   Data(
-      {this.iD,
+      {this.iSPAID,
+      this.tRANSACTIONSTATUS,
+      this.iD,
       this.listingID,
       this.listing,
       this.userID,
@@ -55,11 +61,15 @@ class Data {
       this.startDate,
       this.endDate,
       this.paid,
-      this.outstanding,
+      this.payable,
+      this.transactionID,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.transaction});
 
   Data.fromJson(Map<String, dynamic> json) {
+    iSPAID = json['IS_PAID'];
+    tRANSACTIONSTATUS = json['TRANSACTION_STATUS'];
     iD = json['ID'];
     listingID = json['ListingID'];
     listing =
@@ -71,13 +81,22 @@ class Data {
     startDate = json['StartDate'];
     endDate = json['EndDate'];
     paid = json['Paid'];
-    outstanding = json['Outstanding'];
+    payable = json['Payable'];
+    transactionID = json['TransactionID'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    if (json['Transaction'] != null) {
+      transaction = new List<Transaction>();
+      json['Transaction'].forEach((v) {
+        transaction.add(new Transaction.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['IS_PAID'] = this.iSPAID;
+    data['TRANSACTION_STATUS'] = this.tRANSACTIONSTATUS;
     data['ID'] = this.iD;
     data['ListingID'] = this.listingID;
     if (this.listing != null) {
@@ -91,9 +110,13 @@ class Data {
     data['StartDate'] = this.startDate;
     data['EndDate'] = this.endDate;
     data['Paid'] = this.paid;
-    data['Outstanding'] = this.outstanding;
+    data['Payable'] = this.payable;
+    data['TransactionID'] = this.transactionID;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
+    if (this.transaction != null) {
+      data['Transaction'] = this.transaction.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -108,7 +131,7 @@ class Listing {
   int propertyID;
   String listingDate;
   String listingType;
-  String periodUnits;
+  var periodUnits;
   bool iSAVAILABLE;
   String availableFrom;
   String specifications;
@@ -172,8 +195,9 @@ class Property {
   String type;
   String state;
   String title;
-  String units;
+  var units;
   List<Photos> photos;
+  Seller seller;
   int addedBy;
   String address;
   String country;
@@ -182,7 +206,9 @@ class Property {
   String addedDate;
   String createdAt;
   String updatedAt;
+  bool iSDELETED;
   String description;
+  bool iSAVAILABLE;
   bool iSPUBLISHED;
   Specifications specifications;
 
@@ -193,6 +219,7 @@ class Property {
       this.title,
       this.units,
       this.photos,
+      this.seller,
       this.addedBy,
       this.address,
       this.country,
@@ -201,7 +228,9 @@ class Property {
       this.addedDate,
       this.createdAt,
       this.updatedAt,
+      this.iSDELETED,
       this.description,
+      this.iSAVAILABLE,
       this.iSPUBLISHED,
       this.specifications});
 
@@ -217,6 +246,8 @@ class Property {
         photos.add(new Photos.fromJson(v));
       });
     }
+    seller =
+        json['Seller'] != null ? new Seller.fromJson(json['Seller']) : null;
     addedBy = json['AddedBy'];
     address = json['Address'];
     country = json['Country'];
@@ -225,7 +256,9 @@ class Property {
     addedDate = json['AddedDate'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    iSDELETED = json['IS_DELETED'];
     description = json['Description'];
+    iSAVAILABLE = json['IS_AVAILABLE'];
     iSPUBLISHED = json['IS_PUBLISHED'];
     specifications = json['Specifications'] != null
         ? new Specifications.fromJson(json['Specifications'])
@@ -242,6 +275,9 @@ class Property {
     if (this.photos != null) {
       data['Photos'] = this.photos.map((v) => v.toJson()).toList();
     }
+    if (this.seller != null) {
+      data['Seller'] = this.seller.toJson();
+    }
     data['AddedBy'] = this.addedBy;
     data['Address'] = this.address;
     data['Country'] = this.country;
@@ -250,7 +286,9 @@ class Property {
     data['AddedDate'] = this.addedDate;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
+    data['IS_DELETED'] = this.iSDELETED;
     data['Description'] = this.description;
+    data['IS_AVAILABLE'] = this.iSAVAILABLE;
     data['IS_PUBLISHED'] = this.iSPUBLISHED;
     if (this.specifications != null) {
       data['Specifications'] = this.specifications.toJson();
@@ -312,44 +350,12 @@ class Photos {
   }
 }
 
-class Specifications {
-  var nOOFFLOORS;
-  var nOOFBEDROOMS;
-  bool hASSWIMMINGPOOL;
-  var nOOFLIVINGROOMS;
-
-  Specifications(
-      {this.nOOFFLOORS,
-      this.nOOFBEDROOMS,
-      this.hASSWIMMINGPOOL,
-      this.nOOFLIVINGROOMS});
-
-  Specifications.fromJson(Map<String, dynamic> json) {
-    nOOFFLOORS = json['NO_OF_FLOORS'];
-    nOOFBEDROOMS = json['NO_OF_BEDROOMS'];
-    hASSWIMMINGPOOL = json['HAS_SWIMMING_POOL'];
-    nOOFLIVINGROOMS = json['NO_OF_LIVINGROOMS'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['NO_OF_FLOORS'] = this.nOOFFLOORS;
-    data['NO_OF_BEDROOMS'] = this.nOOFBEDROOMS;
-    data['HAS_SWIMMING_POOL'] = this.hASSWIMMINGPOOL;
-    data['NO_OF_LIVINGROOMS'] = this.nOOFLIVINGROOMS;
-    return data;
-  }
-}
-
 class Seller {
   int iD;
   String dOB;
-  OTP oTP;
   String email;
   String surName;
-  String password;
   String firstName;
-  String uSERTYPE;
   String createdAt;
   String updatedAt;
   String middleName;
@@ -362,12 +368,9 @@ class Seller {
   Seller(
       {this.iD,
       this.dOB,
-      this.oTP,
       this.email,
       this.surName,
-      this.password,
       this.firstName,
-      this.uSERTYPE,
       this.createdAt,
       this.updatedAt,
       this.middleName,
@@ -380,12 +383,9 @@ class Seller {
   Seller.fromJson(Map<String, dynamic> json) {
     iD = json['ID'];
     dOB = json['DOB'];
-    oTP = json['OTP'] != null ? new OTP.fromJson(json['OTP']) : null;
     email = json['Email'];
     surName = json['SurName'];
-    password = json['Password'];
     firstName = json['FirstName'];
-    uSERTYPE = json['USER_TYPE'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     middleName = json['MiddleName'];
@@ -400,14 +400,9 @@ class Seller {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['ID'] = this.iD;
     data['DOB'] = this.dOB;
-    if (this.oTP != null) {
-      data['OTP'] = this.oTP.toJson();
-    }
     data['Email'] = this.email;
     data['SurName'] = this.surName;
-    data['Password'] = this.password;
     data['FirstName'] = this.firstName;
-    data['USER_TYPE'] = this.uSERTYPE;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['MiddleName'] = this.middleName;
@@ -420,21 +415,60 @@ class Seller {
   }
 }
 
-class OTP {
-  String email;
-  String phone;
+class Specifications {
+  String nOOFFLOORS;
+  String nOOFBEDROOMS;
+  String nOOFBATHROOMS;
+  bool hASSWIMMINGPOOL;
+  String nOOFLIVINGROOMS;
 
-  OTP({this.email, this.phone});
+  Specifications(
+      {this.nOOFFLOORS,
+      this.nOOFBEDROOMS,
+      this.nOOFBATHROOMS,
+      this.hASSWIMMINGPOOL,
+      this.nOOFLIVINGROOMS});
 
-  OTP.fromJson(Map<String, dynamic> json) {
-    email = json['Email'];
-    phone = json['Phone'];
+  Specifications.fromJson(Map<String, dynamic> json) {
+    nOOFFLOORS = json['NO_OF_FLOORS'];
+    nOOFBEDROOMS = json['NO_OF_BEDROOMS'];
+    nOOFBATHROOMS = json['NO_OF_BATHROOMS'];
+    hASSWIMMINGPOOL = json['HAS_SWIMMING_POOL'];
+    nOOFLIVINGROOMS = json['NO_OF_LIVINGROOMS'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Email'] = this.email;
-    data['Phone'] = this.phone;
+    data['NO_OF_FLOORS'] = this.nOOFFLOORS;
+    data['NO_OF_BEDROOMS'] = this.nOOFBEDROOMS;
+    data['NO_OF_BATHROOMS'] = this.nOOFBATHROOMS;
+    data['HAS_SWIMMING_POOL'] = this.hASSWIMMINGPOOL;
+    data['NO_OF_LIVINGROOMS'] = this.nOOFLIVINGROOMS;
+    return data;
+  }
+}
+
+class Transaction {
+  int iD;
+  String status;
+  String createdAt;
+  String updatedAt;
+
+  Transaction({this.iD, this.status, this.createdAt, this.updatedAt});
+
+  Transaction.fromJson(Map<String, dynamic> json) {
+    iD = json['ID'];
+    status = json['Status'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ID'] = this.iD;
+    data['Status'] = this.status;
+    data['createdAt'] = this.createdAt;
+    data['updatedAt'] = this.updatedAt;
     return data;
   }
 }

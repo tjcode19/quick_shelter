@@ -65,7 +65,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                   ),
                 ),
                 Container(
-                  height: screeSize.height - 100,
+                  //height: screeSize.height - 100,
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(129, 92, 67, 1),

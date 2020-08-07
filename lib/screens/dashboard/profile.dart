@@ -96,7 +96,7 @@ class Profile extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-               // Navigator.pushNamed(context, personalInfoRoute);
+               Navigator.pushNamed(context, identificationRoute);
               },
               child: Container(
                 padding: EdgeInsets.fromLTRB(10, 14, 10, 14),
