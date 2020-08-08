@@ -78,7 +78,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
       _apiCall.then((value) async {
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
         if (value.responseCode == globalSuccessGetResponseCode && value.data.status!=false) {          
-         print('Auth: ${value.data.data.authorizationUrl}');
+         print('Auth: ${value.data.data.reference}');
          if(value.data.data.authorizationUrl != null){
            Navigator.pushNamed(context, paymentWebviewRoute, arguments: value);
          }

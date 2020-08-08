@@ -21,9 +21,10 @@ class _PaymentWebviewState extends State<PaymentWebview> {
 
   PaymentResponse _paymentData;
   String _url;
+  String _transID;
 
   Future<bool> _onBackPressed() {
-    Navigator.pushNamed(context, transSuccessRoute);
+    Navigator.pushNamed(context, transSuccessRoute, arguments: _transID);
   }
 
   @override
@@ -31,7 +32,8 @@ class _PaymentWebviewState extends State<PaymentWebview> {
     super.initState();
     _paymentData = widget.paymentData;
     _url = _paymentData.data.data.authorizationUrl;
-    print(_url);
+    _transID = _paymentData.data.data.reference;
+    //print(_url);
   }
 
   @override

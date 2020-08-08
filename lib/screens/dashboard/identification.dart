@@ -100,9 +100,9 @@ class _IdentificationState extends State<Identification> {
       String prefEm =
           await _sharedPreferenceQS.getSharedPrefs(String, 'userEm');
       bool isPhone =
-          await _sharedPreferenceQS.getSharedPrefs(String, 'isPhoneVerified');
+          await _sharedPreferenceQS.getSharedPrefs(bool, 'isPhoneVerified');
       bool isEmail =
-          await _sharedPreferenceQS.getSharedPrefs(String, 'isEmailVerified');
+          await _sharedPreferenceQS.getSharedPrefs(bool, 'isEmailVerified');
       setState(() {
         _prefEm = prefEm;
         _prefPh = prefPh;

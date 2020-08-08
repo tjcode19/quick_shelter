@@ -21,13 +21,13 @@ class _TransSuccessState extends State<TransSuccess> {
   final QuickShelterRepository repo = QuickShelterRepository();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  String _surName, _userEmail, _userPassword;
+  String _transID = '', _transStatus = '';
 
   TransactionStatusResponse paymentRes;
 
   void _checkTrans() async {
     print('Check Transaction');
-    var _apiCall = repo.checkTransaction(_userPassword);
+    var _apiCall = repo.checkTransaction(widget.transDetails);
 
     await _apiCall.then((value) async {
       print('donnned ${value.responseCode}');
@@ -36,6 +36,8 @@ class _TransSuccessState extends State<TransSuccess> {
         
         setState(() {
           paymentRes = value;
+          _transID = paymentRes.data.transactionID;
+          _transStatus = paymentRes.data.status;
         });
       } else {
         //snackBar(value.responseMessage, _scaffoldKey);
@@ -50,7 +52,7 @@ class _TransSuccessState extends State<TransSuccess> {
 
   Future<bool> _onBackPressed() {
     return Navigator.pushNamedAndRemoveUntil(
-        context, getStartedRoute, (route) => false);
+        context, dashboardRoute, (route) => false);
   }
 
   @override
@@ -89,14 +91,14 @@ class _TransSuccessState extends State<TransSuccess> {
                         text: 'Transaction Completed ',
                         style: TextStyle(color: Colors.white, fontSize: 25.0),
                         children: [
-                          TextSpan(text: _surName),
+                          // TextSpan(text: _surName),
                         ],
                       ),
                     ),
                     const SizedBox(height: 10),
                     Container(
                       child: Text(
-                        'Transaction ID: ${paymentRes.data.transactionID}', 
+                        'Transaction ID: $_transID', 
                         style: TextStyle(
                             color: Color.fromRGBO(226, 208, 195, 1),
                             fontSize: 15.0),
@@ -107,7 +109,7 @@ class _TransSuccessState extends State<TransSuccess> {
                     const SizedBox(height: 10),
                     Container(
                       child: Text(
-                        'Payment Status: ${paymentRes.data.status}', 
+                        'Payment Status: $_transStatus', 
                         style: TextStyle(
                             color: Color.fromRGBO(226, 208, 195, 1),
                             fontSize: 15.0),
