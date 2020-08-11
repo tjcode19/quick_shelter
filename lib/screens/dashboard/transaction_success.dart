@@ -21,7 +21,8 @@ class _TransSuccessState extends State<TransSuccess> {
   final QuickShelterRepository repo = QuickShelterRepository();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  String _transID = '', _transStatus = '';
+  String _transID = '', _transStatus = '', _msg = 'Transaction Completed';
+  bool isPaid = false;
 
   TransactionStatusResponse paymentRes;
 
@@ -38,6 +39,12 @@ class _TransSuccessState extends State<TransSuccess> {
           paymentRes = value;
           _transID = paymentRes.data.transactionID;
           _transStatus = paymentRes.data.status;
+          if(paymentRes.data.status != 'PAID'){
+              _msg = 'Transaction was not completed';
+          }
+          if(paymentRes.data.status == 'PAID'){
+            isPaid = true;
+          }
         });
       } else {
         //snackBar(value.responseMessage, _scaffoldKey);
@@ -80,16 +87,22 @@ class _TransSuccessState extends State<TransSuccess> {
                 padding: EdgeInsets.all(30),
                 child: Column(
                   children: <Widget>[
+                    (isPaid)?
                     Icon(
                       Icons.check_circle,
+                      size: 50.0,
+                      color: appTextColorPrimary2,
+                    ):
+                    Icon(
+                      Icons.close,
                       size: 50.0,
                       color: appTextColorPrimary2,
                     ),
                     const SizedBox(height: 25),
                     RichText(
                       text: TextSpan(
-                        text: 'Transaction Completed ',
-                        style: TextStyle(color: Colors.white, fontSize: 25.0),
+                        text: _msg,
+                        style: TextStyle(color: Colors.white, fontSize: 18.0),
                         children: [
                           // TextSpan(text: _surName),
                         ],

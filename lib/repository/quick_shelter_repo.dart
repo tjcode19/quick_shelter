@@ -220,6 +220,11 @@ class QuickShelterRepository {
     return AddPropertyResponse.fromJson(response);
   }
 
+   Future<AddPropertyResponse> deletePropListing(String listingID) async {
+    final response = await _provider.delete("listing/$listingID");
+    return AddPropertyResponse.fromJson(response);
+  }
+
   Future<GetProfileResponse> getProfile() async {
     final response = await _provider.get(
       "user/profile",

@@ -359,7 +359,7 @@ class Seller {
   String createdAt;
   String updatedAt;
   String middleName;
-  String nationalID;
+  var nationalID;
   String phoneNumber;
   String profilePhoto;
   bool isEmailVerified;

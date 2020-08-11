@@ -3,6 +3,8 @@ import 'package:quick_shelter/colors.dart';
 import 'package:quick_shelter/models/GetUserProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/utils/commonFunctions.dart';
+import 'package:quick_shelter/widgets/commonUtils.dart';
+import 'package:quick_shelter/widgets/raised_button.dart';
 
 import '../../constants.dart';
 
@@ -44,6 +46,61 @@ class _PropertyListingDeatilsState extends State<PropertyListingDeatils> {
         // _prefUserFN = _prefUserFN;
       });
     }
+  }
+
+  void _deleteListing() {
+    var _apiCall = repo.deletePropListing(_propertyListDetails.iD.toString());
+
+    _apiCall.then((value) {
+      //print('donnned ${value.data}');
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (value.responseCode == globalSuccessGetResponseCode) {
+        print('Listing deleted');
+
+        //_showToast(value.responseMessage);
+        // snackBar(value.responseMessage, _scaffoldKey, type: 'success');
+        // Navigator.pop(context);
+        widget.propDetails['refFunc']();
+        int count = 0;
+        Navigator.popUntil(context, (route) {
+          return count++ == 4;
+        });
+      } else {
+        // _showToast(value.responseMessage);
+        print('Failed to load properties');
+      }
+    });
+  }
+
+  Future<bool> _onDeleteCall() {
+    return showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text(
+          'Delete Listing?',
+          style: TextStyle(
+              fontStyle: FontStyle.normal,
+              fontSize: 18,
+              color: appColorSecondary),
+        ),
+        content: new Text('Are you sure you want to delete this listing?'),
+        actions: <Widget>[
+          new GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: Text("NO"),
+          ),
+          SizedBox(height: 16),
+          new GestureDetector(
+            onTap: () => {
+              //SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop'),
+              showLoadingDialog(context, _keyLoader),
+              _deleteListing()
+            },
+            child: Text("YES"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -154,6 +211,12 @@ class _PropertyListingDeatilsState extends State<PropertyListingDeatils> {
                 (_propertyListDetails.iSAVAILABLE != false) ? 'Yes' : 'No',
                 Icons.pin_drop),
             const SizedBox(height: 20),
+            RaisedButtonWidget(
+              addProperty2Route,
+              'Delete Listing',
+              true,
+              action: _onDeleteCall,
+            )
           ],
         ),
       ),
@@ -200,8 +263,9 @@ class _PropertyListingDeatilsState extends State<PropertyListingDeatils> {
                     style: TextStyle(fontSize: 15, color: appTextColorPrimary2),
                     children: <TextSpan>[
                       TextSpan(
-                        text: (subTitle != 'NA')? formatMoney(subTitle)
-                            .withoutFractionDigits:'0',
+                        text: (subTitle != 'NA')
+                            ? formatMoney(subTitle).withoutFractionDigits
+                            : '0',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 17,

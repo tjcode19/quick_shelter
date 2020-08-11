@@ -26,6 +26,8 @@ class _DashboardHomeState extends State<DashboardHome> {
   List<GetAllPropData> _propertyList = List<GetAllPropData>();
   bool _isPropLoaded = false;
 
+  int limit = 2;
+
   _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
         !_controller.position.outOfRange) {
@@ -175,6 +177,7 @@ class _DashboardHomeState extends State<DashboardHome> {
         key: _refreshIndicatorKey,
         onRefresh: _refresh,
         child: SingleChildScrollView(
+          //physics: const AlwaysScrollableScrollPhysics(),
           controller: _controller,
           scrollDirection: Axis.vertical,
           child: Container(
@@ -211,7 +214,9 @@ class _DashboardHomeState extends State<DashboardHome> {
                 Container(
                   height: size.height,
                   child: CustomScrollView(
-                    primary: false,
+                    scrollDirection: Axis.vertical,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    primary: true,
                     slivers: <Widget>[
                       SliverPadding(
                         padding: const EdgeInsets.all(5),

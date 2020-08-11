@@ -22,7 +22,7 @@ class _DashboardTransactionsState extends State<DashboardTransactions> {
   void _getTransactionList() async {
     print('Get Transaction List');
     //showLoadingDialog(context, _keyLoader);
-    var _apiCall = repo.getTransactionList('0', '10');
+    var _apiCall = repo.getTransactionList('0', '100');
 
     await _apiCall.then((value) {
       print('TransList DONE ${value.responseCode}');

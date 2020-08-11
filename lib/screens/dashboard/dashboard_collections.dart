@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/models/GetSavedProperties.dart';
 import 'package:quick_shelter/repository/quick_shelter_repo.dart';
-import 'package:quick_shelter/screens/dashboard/property_details.dart';
 import 'package:quick_shelter/utils/commonFunctions.dart';
 import 'package:quick_shelter/utils/sharedPreference.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -20,6 +19,8 @@ class DashboardCollections extends StatefulWidget {
 class _DashboardCollectionsState extends State<DashboardCollections> {
   final QuickShelterRepository repo = QuickShelterRepository();
   SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
   List<Data> _propertyList = List<Data>();
   List<Data> _propertyRentList = List<Data>();
   List<Data> saleList = List<Data>();
@@ -126,6 +127,45 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
     });
   }
 
+  Future<Null> _refresh() {
+    print('Refresh Properties');
+    //showLoadingDialog(context, _keyLoader);
+    var _apiCall = repo.getSavedProperties('0', '100');
+
+    return _apiCall.then((value) {
+      print('Saved Prop DONE ${value.responseCode}');
+      //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (value.responseCode == globalSuccessGetResponseCode) {
+        print('Saved prop: ${value.data.length}');
+
+        for (int l = 0; l < value.data.length; l++) {
+          if (value.data[l].listingType != 'FOR RENT') {
+            saleList.add(value.data[l]);
+            // print('${saleList[l].listingType} Sales');
+          } else {
+            rentList.add(value.data[l]);
+            //print('${rentList[l].listingType} Rent');
+          }
+        }
+
+        setState(() => {
+              _propertyList = saleList,
+              _propertyRentList = rentList,
+              if (_propertyList.length < 1)
+                {
+                  sale = false,
+                  rent = true,
+                },
+
+              //print(_propertyRentList[0].price)
+            });
+      } else {
+        //showInSnackBar(value.message);
+        print('Failed to load properties');
+      }
+    });
+  }
+
   Future _getUserProfile() async {
     _prefUserFN = await _sharedPreferenceQS.getSharedPrefs(String, 'userFN');
     setState(() {
@@ -196,53 +236,58 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Container(
-          padding: EdgeInsets.all(15),
-          child: Column(
-            children: <Widget>[
-              Container(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'My Collections',
-                  style: TextStyle(
-                      color: appSecondaryColor,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold),
+      body: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: _refresh,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          scrollDirection: Axis.vertical,
+          child: Container(
+            padding: EdgeInsets.all(15),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'My Collections',
+                    style: TextStyle(
+                        color: appSecondaryColor,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              saleRentButton(),
-              (_propertyList != null)
-                  ? Container(
-                      height: 400,
-                      child: CustomScrollView(
-                        primary: false,
-                        slivers: <Widget>[
-                          SliverPadding(
-                            padding: const EdgeInsets.all(0),
-                            sliver: SliverGrid.count(
-                              crossAxisSpacing: 5,
-                              childAspectRatio: ((itemWidth) / (itemHeight)),
-                              mainAxisSpacing: 1,
-                              crossAxisCount: 2,
-                              children: (sale)
-                                  ? _propertyList
-                                      .map((e) => _propertItem(
-                                          _propertyList.indexOf(e)))
-                                      .toList()
-                                  : _propertyRentList
-                                      .map((e) => _propertItem(
-                                          _propertyRentList.indexOf(e)))
-                                      .toList(),
+                const SizedBox(height: 20),
+                saleRentButton(),
+                (_propertyList != null)
+                    ? Container(
+                        height: 400,
+                        child: CustomScrollView(
+                          primary: false,
+                          slivers: <Widget>[
+                            SliverPadding(
+                              padding: const EdgeInsets.all(0),
+                              sliver: SliverGrid.count(
+                                crossAxisSpacing: 5,
+                                childAspectRatio: ((itemWidth) / (itemHeight)),
+                                mainAxisSpacing: 1,
+                                crossAxisCount: 2,
+                                children: (sale)
+                                    ? _propertyList
+                                        .map((e) => _propertItem(
+                                            _propertyList.indexOf(e)))
+                                        .toList()
+                                    : _propertyRentList
+                                        .map((e) => _propertItem(
+                                            _propertyRentList.indexOf(e)))
+                                        .toList(),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Text('No Record Found'),
-            ],
+                          ],
+                        ),
+                      )
+                    : Text('No Record Found'),
+              ],
+            ),
           ),
         ),
       ),

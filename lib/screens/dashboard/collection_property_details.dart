@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/models/GetSavedProperties.dart';
+import 'package:quick_shelter/repository/quick_shelter_repo.dart';
 import 'package:quick_shelter/utils/commonFunctions.dart';
+import 'package:quick_shelter/widgets/commonUtils.dart';
+import 'package:quick_shelter/widgets/raised_button.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../../colors.dart';
+import '../../constants.dart';
 
 class CollPropertyDetails extends StatefulWidget {
   final propDetails;
@@ -15,6 +19,9 @@ class CollPropertyDetails extends StatefulWidget {
 }
 
 class _CollPropertyDetailsState extends State<CollPropertyDetails> {
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+   final QuickShelterRepository repo = QuickShelterRepository();
   bool rememberMe = false;
   Data _propertyDetails;
   List<Photos> propPhotos = List<Photos>();
@@ -45,6 +52,34 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
       }
       print('SetStateLater: $_currentPosition');
     });
+  }
+
+  _makePayment() {
+    showLoadingDialog(context, _keyLoader);
+    print(_propertyDetails.iD);
+      var _apiCall = repo.doPayment(_propertyDetails.iD);
+
+      _apiCall.then((value) async {
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        if (value.responseCode == globalSuccessGetResponseCode && value.data.status!=false) {          
+         print('Auth: ${value.data.data.reference}');
+         if(value.data.data.authorizationUrl != null){
+           Navigator.pushNamed(context, paymentWebviewRoute, arguments: value);
+         }
+         else{
+           snackBar('Payment cannot be completed', _scaffoldKey);
+         }
+           
+        } else {
+          //showInSnackBar(value.message);     
+          print('Payment failed');     
+          snackBar(value.responseMessage, _scaffoldKey);
+        }
+      }, onError: (e){
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        snackBar('Payment failed', _scaffoldKey);
+        print('Payment failed $e');
+      });
   }
 
   @override
@@ -389,74 +424,87 @@ class _CollPropertyDetailsState extends State<CollPropertyDetails> {
                         'Available date', formatDate(_propertyDetails.listingDate), Icons.date_range),
                     Divider(color: Colors.white38, thickness: 1.0),
                     const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2 - 50,
-                          margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                          child: OutlineButton(
-                            padding: EdgeInsets.all(10),
-                            color: Colors.white,
-                            highlightedBorderColor: Colors.white,
-                            borderSide: BorderSide(color: appTextColorPrimary2),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(15))),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
-                                  child: Text(
-                                    'Delete Property',
-                                    style: TextStyle(
-                                        color: appTextColorPrimary2,
-                                        fontSize: 15),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: <Widget>[
+                    //     Container(
+                    //       width: MediaQuery.of(context).size.width / 2 - 50,
+                    //       margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    //       child: OutlineButton(
+                    //         padding: EdgeInsets.all(10),
+                    //         color: Colors.white,
+                    //         highlightedBorderColor: Colors.white,
+                    //         borderSide: BorderSide(color: appTextColorPrimary2),
+                    //         shape: RoundedRectangleBorder(
+                    //             borderRadius: BorderRadius.only(
+                    //                 topRight: Radius.circular(15))),
+                    //         child: Row(
+                    //           mainAxisAlignment: MainAxisAlignment.center,
+                    //           children: <Widget>[
+                    //             Container(
+                    //               padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                    //               child: Text(
+                    //                 'Delete Property',
+                    //                 style: TextStyle(
+                    //                     color: appTextColorPrimary2,
+                    //                     fontSize: 15),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         onPressed: () {
+                    //           Navigator.pop(context);
+                    //         },
+                    //       ),
+                    //     ),
+                    //     Container(
+                    //       width: MediaQuery.of(context).size.width / 2 - 20,
+                    //       margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    //       child: RaisedButton(
+                    //         padding: EdgeInsets.all(10),
+                    //         highlightElevation: 5.0,
+                    //         elevation: 3.0,
+                    //         splashColor: Colors.orange[100],
+                    //         highlightColor: Colors.orange[100],
+                    //         color: appColorSecondary,
+                    //         shape: RoundedRectangleBorder(
+                    //             //borderRadius: new BorderRadius.circular(10.0),
+                    //             borderRadius: BorderRadius.only(
+                    //                 topRight: Radius.circular(20))),
+                    //         child: Row(
+                    //           mainAxisAlignment: MainAxisAlignment.center,
+                    //           children: <Widget>[
+                    //             Container(
+                    //               padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
+                    //               child: Text(
+                    //                 'Edit Property',
+                    //                 style: TextStyle(
+                    //                     color: appTextColorPrimary2,
+                    //                     fontSize: 15),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         onPressed: () {
+                    //           // _settingModalBottomSheet(context);
+                    //         },
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    (_propertyDetails.listingType == 'FOR SALE')
+                        ? RaisedButtonWidget(
+                            'pop',
+                            'Buy Property',
+                            true,
+                            action: _makePayment,
+                          )
+                        : RaisedButtonWidget(
+                            'pop',
+                            'Rent Property',
+                            true,
+                            action: _makePayment,
                           ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2 - 20,
-                          margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                          child: RaisedButton(
-                            padding: EdgeInsets.all(10),
-                            highlightElevation: 5.0,
-                            elevation: 3.0,
-                            splashColor: Colors.orange[100],
-                            highlightColor: Colors.orange[100],
-                            color: appColorSecondary,
-                            shape: RoundedRectangleBorder(
-                                //borderRadius: new BorderRadius.circular(10.0),
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(20))),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(10, 4, 4, 4),
-                                  child: Text(
-                                    'Edit Property',
-                                    style: TextStyle(
-                                        color: appTextColorPrimary2,
-                                        fontSize: 15),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            onPressed: () {
-                              // _settingModalBottomSheet(context);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
                     const SizedBox(height: 20),
                   ],
                 ),
