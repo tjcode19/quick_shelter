@@ -9,9 +9,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
-   String _versionName = 'V1.0';
-  final splashDelay = 5;
+  String _versionName = 'v1.0';
+  final splashDelay = 3;
 
   @override
   void initState() {
@@ -26,63 +25,55 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigationPage() {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => GetStarted()));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => GetStarted()));
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: InkWell(
-        child: Stack(
-          fit: StackFit.expand,
+      body: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Expanded(
-                  flex: 7,
-                  child: Container(
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image.asset(
-                        'assets/images/welcome1.png',
-                        height: 300,
-                        width: 300,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                      ),
-                    ],
-                  )),
+                Image.asset(
+                  'assets/images/logo.png',
                 ),
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      CircularProgressIndicator(),
-                      Container(
-                        height: 10,
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Spacer(),
-                            Text(_versionName),
-                            Spacer(
-                              flex: 4,
-                            ),
-                            Text('Quick Shelter'),
-                            Spacer(),
-                          ])
-                    ],
-                  ),
+                Text(
+                  'Quick Shelter',
+                  style: TextStyle(
+                      fontSize: 22, color: Color.fromRGBO(189, 167, 152, 1)),
                 ),
               ],
             ),
           ],
         ),
       ),
+
+      // Expanded(
+      //   child: Column(
+      //     children: <Widget>[
+      //       CircularProgressIndicator(),
+      //       Container(
+      //         height: 10,
+      //       ),
+      //       Row(
+      //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //           children: <Widget>[
+      //             Spacer(),
+      //             Text(_versionName),
+      //             Spacer(
+      //               flex: 4,
+      //             ),
+      //             Spacer(),
+      //           ])
+      //     ],
+      //   ),
+      // ),
     );
   }
 }

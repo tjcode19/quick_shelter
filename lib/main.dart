@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
         cursorColor: Color.fromRGBO(226, 208, 195, 1),
         disabledColor: Color.fromRGBO(226, 208, 195, 1),
         
+        
         textTheme: TextTheme(
           button: TextStyle(
             color: Colors.white,

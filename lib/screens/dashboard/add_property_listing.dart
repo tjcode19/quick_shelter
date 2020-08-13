@@ -70,7 +70,7 @@ class _AddPropListingState extends State<AddPropListing> {
           // Navigator.pushNamed(context, addPropertyStep2Route, arguments: {
           //   'propID': value.propertyID,
           // });
-          _settingModalBottomSheet(context,'Yay, Property Listing Added','You have successfully added listing to your property.');
+          _settingModalBottomSheet(context,'Property Listing Added','You have successfully added listing to your property.');
         } else {
           snackBar('Adding or property failed', _scaffoldKey);
         }
@@ -106,7 +106,7 @@ class _AddPropListingState extends State<AddPropListing> {
       (value) {
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
         if (value.responseCode == globalSuccessResponseCode) {
-          _settingModalBottomSheet(context, 'Yay, Property Listing Updated','You have successfully updated your property listing.');
+          _settingModalBottomSheet(context, 'Property Listing Updated','You have successfully updated your property listing.');
         } else {
           snackBar('Property Update Failed', _scaffoldKey);
         }
@@ -798,7 +798,7 @@ class _AddPropListingState extends State<AddPropListing> {
               Container(
                   margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
                   child: Text(
-                    'You have successfully updated your property details.',
+                    sBody,
                     style: TextStyle(fontSize: 14, color: Colors.white),
                     softWrap: true,
                     textAlign: TextAlign.center,

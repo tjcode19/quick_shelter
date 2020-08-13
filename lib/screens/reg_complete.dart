@@ -53,7 +53,7 @@ class _RegCompletedState extends State<RegCompleted> {
         snackBar(value.responseMessage, _scaffoldKey);
       }
     }, onError: (error) {
-      print('Sign up comp $error');
+      print('Sign up Login $error');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     });
   }

@@ -22,10 +22,10 @@ class _IdentityCardState extends State<IdentityCard> {
   bool _viewMore = false;
   File _image;
 
-   void _uploadFile(){
+  void _uploadFile() {
     print('File Upload');
 
-    if (_image==null) {
+    if (_image == null) {
       snackBar('Please select a file to upload', _scaffoldKey);
       return;
     }
@@ -33,21 +33,20 @@ class _IdentityCardState extends State<IdentityCard> {
 
     var _apiCall = repo.uploadId(_image, 'NationalID');
 
-    print(_apiCall);
-
     _apiCall.then((value) {
       print(value.responseCode);
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-     if (value.responseCode == globalSuccessResponseCode) {        
-      Navigator.pushNamed(context, regCompletedRoute);
-    
+      if (value.responseCode == globalSuccessResponseCode) {
+        Navigator.pushNamed(context, regCompletedRoute);
       } else {
-       // snackBar('Registration Failed \t ${value.responseMessage}', _scaffoldKey);
+        // snackBar('Registration Failed \t ${value.responseMessage}', _scaffoldKey);
         print('ID upload failed');
       }
       //snackBar(value.message, _scaffoldKey);
+    }
+    ,onError: (e){
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     });
-
   }
 
   @override
@@ -105,7 +104,6 @@ class _IdentityCardState extends State<IdentityCard> {
                                     fontWeight: FontWeight.bold),
                               ),
                               tapableText('I’ll do this later. Skip', () {
-                                print("object");
                                 Navigator.pushNamed(context, regCompletedRoute);
                               }),
                             ],
@@ -121,7 +119,11 @@ class _IdentityCardState extends State<IdentityCard> {
                       _setImageView(context),
                       const SizedBox(height: 30),
                       RaisedButtonWidget(
-                          regCompletedRoute, 'Complete Registraton', true, action: _uploadFile,),
+                        regCompletedRoute,
+                        'Complete Registraton',
+                        true,
+                        action: _uploadFile,
+                      ),
                       const SizedBox(height: 20),
                       InkWell(
                         splashColor: Colors.orange,
@@ -276,7 +278,6 @@ class _IdentityCardState extends State<IdentityCard> {
   }
 
   final picker = ImagePicker();
-  
 
   Future _openGallery(BuildContext context) async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -293,7 +294,7 @@ class _IdentityCardState extends State<IdentityCard> {
 
     setState(() {
       _image = File(pickedFile.path);
-      print(pickedFile.path);
+     // print(pickedFile.path);
     });
 
     Navigator.of(context).pop();
@@ -309,13 +310,11 @@ class _IdentityCardState extends State<IdentityCard> {
           width: double.infinity,
           //color: appPrimary,
           decoration: BoxDecoration(
-            image: DecorationImage(
-                    image: FileImage(_image),
-                    fit: BoxFit.cover),
+              image:
+                  DecorationImage(image: FileImage(_image), fit: BoxFit.cover),
               color: appPrimary,
               borderRadius: BorderRadius.all(Radius.circular(6)),
               border: Border.all(color: appTextColorPrimary2)),
-          
         ),
       );
     } else {
@@ -365,5 +364,4 @@ class _IdentityCardState extends State<IdentityCard> {
       );
     }
   }
-
 }

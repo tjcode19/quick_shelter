@@ -326,7 +326,7 @@ class _AddPropStep4State extends State<AddPropStep4> {
               Container(
                   margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
                   child: Text(
-                    'Yay! New property Added',
+                    'New property Added',
                     style: TextStyle(fontSize: 18, color: Colors.white),
                     softWrap: true,
                     textAlign: TextAlign.center,

@@ -11,7 +11,7 @@ class GetStarted extends StatefulWidget {
 
 class _GetStartedState extends State<GetStarted> {
   Future<bool> _onBackPressed() {
-     exit(0);
+    exit(0);
   }
 
   @override
@@ -28,31 +28,49 @@ class _GetStartedState extends State<GetStarted> {
           backgroundColor: Colors.transparent,
           body: Container(
             child: Transform.translate(
-              offset: Offset.fromDirection(0.0, 0.5,),
-              
-                          child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              offset: Offset.fromDirection(
+                0.0,
+                0.5,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Container(
-                      child: Text(
-                    'Get Started',
-                    style: TextStyle(color: Colors.white, fontSize: 40.0),
-                  )),
-                  const SizedBox(height: 20),
-                  Container(
-                    child: Text(
-                      'Now you can Buy, Rent and Sell properties from your mobile phone as quickly as possible.',
-                      style: Theme.of(context).textTheme.bodyText1,
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top:8.0),
+                      child: Image.asset(
+                        'assets/images/logoBlack.png',
+                        width: 100,
+                        height: 100,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  RaisedButtonWidget(loginRoute, 'Log In', false),
-                  const SizedBox(height: 20),
-                  RaisedButtonWidget(
-                    signUpRoute,
-                    'Sign Up',
-                    true,
+                  ]),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        child: Text(
+                          'Get Started',
+                          style: TextStyle(color: Colors.white, fontSize: 40.0),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        child: Text(
+                          'Now you can Buy, Rent and Sell properties from your mobile phone as quickly as possible.',
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      RaisedButtonWidget(loginRoute, 'Log In', false),
+                      const SizedBox(height: 20),
+                      RaisedButtonWidget(
+                        signUpRoute,
+                        'Sign Up',
+                        true,
+                      ),
+                    ],
                   ),
                 ],
               ),

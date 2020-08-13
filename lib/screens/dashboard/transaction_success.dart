@@ -17,10 +17,8 @@ class TransSuccess extends StatefulWidget {
 }
 
 class _TransSuccessState extends State<TransSuccess> {
-  SharedPreferenceQS _sharedPreferenceQS = SharedPreferenceQS();
   final QuickShelterRepository repo = QuickShelterRepository();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   String _transID = '', _transStatus = '', _msg = 'Transaction Completed';
   bool isPaid = false;
 
