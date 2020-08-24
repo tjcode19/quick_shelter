@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quick_shelter/utils/sharedPreference.dart';
 import 'package:quick_shelter/widgets/commonUtils.dart';
 import '../repository/quick_shelter_repo.dart';
 import '../widgets/input_field.dart';

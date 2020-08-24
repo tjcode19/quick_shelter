@@ -116,63 +116,64 @@ class _DashboardHomeState extends State<DashboardHome> {
     /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-        leading: Container(
-          padding: EdgeInsets.all(8),
-          child: ClipOval(
-            child: Material(
-              color: appTextColorPrimary2, // button color
-              child: InkWell(
-                splashColor: Colors.orange[100], // inkwell color
-                child: Image.asset(
-                  'assets/images/person.png',
-                  color: appSecondaryColor,
-                  height: 24.0,
-                  width: 24.0,
-                ),
-                onTap: () {
-                  Navigator.pushNamed(context, profileRoute);
-                },
+    final appBar = AppBar(
+      backgroundColor: Colors.white,
+      automaticallyImplyLeading: false,
+      leading: Container(
+        padding: EdgeInsets.all(8),
+        child: ClipOval(
+          child: Material(
+            color: appTextColorPrimary2, // button color
+            child: InkWell(
+              splashColor: Colors.orange[100], // inkwell color
+              child: Image.asset(
+                'assets/images/person.png',
+                color: appSecondaryColor,
+                height: 24.0,
+                width: 24.0,
               ),
+              onTap: () {
+                Navigator.pushNamed(context, profileRoute);
+              },
             ),
           ),
         ),
-        title: RichText(
-          text: TextSpan(
-            text: 'Hi, ',
-            style: TextStyle(fontSize: 16, color: appTextColorPrimary),
-            children: <TextSpan>[
-              TextSpan(
-                text: '$_prefUserFN',
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 16,
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: CircleAvatar(
-              backgroundColor: appTextColorPrimary,
-              child: IconButton(
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, searchPropRoute);
-                },
-              ),
-            ),
-          ),
-        ],
       ),
+      title: RichText(
+        text: TextSpan(
+          text: 'Hi, ',
+          style: TextStyle(fontSize: 16, color: appTextColorPrimary),
+          children: <TextSpan>[
+            TextSpan(
+              text: '$_prefUserFN',
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: CircleAvatar(
+            backgroundColor: appTextColorPrimary,
+            child: IconButton(
+              icon: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, searchPropRoute);
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+    return Scaffold(
+      appBar: appBar,
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: _refresh,
@@ -184,7 +185,7 @@ class _DashboardHomeState extends State<DashboardHome> {
             padding: EdgeInsets.all(5),
             child: Column(
               children: <Widget>[
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Container(
                     margin: EdgeInsets.only(left: 10),
                     alignment: Alignment.topLeft,
@@ -194,12 +195,14 @@ class _DashboardHomeState extends State<DashboardHome> {
                           TextStyle(color: appSecondaryColor, fontSize: 15.0),
                     )),
                 Container(
+
                   margin: EdgeInsets.symmetric(vertical: 10.0),
-                  height: 280.0,
+                  height: 260.0,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: _propertyList.length,
-                    itemBuilder: _buildItemsForListView,
+                    itemBuilder: _buildItemsForSponsored,
+                    
                   ),
                 ),
                 Container(
@@ -212,7 +215,9 @@ class _DashboardHomeState extends State<DashboardHome> {
                 ),
                 const SizedBox(height: 10),
                 Container(
-                  height: size.height,
+                  height: (MediaQuery.of(context).size.height -
+                          appBar.preferredSize.height) *
+                      0.6,
                   child: CustomScrollView(
                     scrollDirection: Axis.vertical,
                     physics: const AlwaysScrollableScrollPhysics(),
@@ -222,7 +227,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                         padding: const EdgeInsets.all(5),
                         sliver: SliverGrid.count(
                           crossAxisSpacing: 5,
-                          childAspectRatio: (itemWidth / itemHeight),
+                          childAspectRatio: (itemWidth / 300),
                           mainAxisSpacing: 1,
                           crossAxisCount: 2,
                           children: _propertyList
@@ -267,10 +272,6 @@ class _DashboardHomeState extends State<DashboardHome> {
     );
   }
 
-  Card _buildItemsForListView(BuildContext context, int index) {
-    return _propertItem(index);
-  }
-
   Widget _propertItem(int index) => Card(
         elevation: 2.0,
         child: InkWell(
@@ -310,7 +311,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 5),
                       // Text(
                       //   'NGN ${_formatMoney(_propertyList[index].price.toDouble()).withoutFractionDigits}',
                       //   style:
@@ -358,7 +359,7 @@ class _DashboardHomeState extends State<DashboardHome> {
 
                       const SizedBox(height: 5),
                       Container(
-                        height: 35.0,
+                        height: 30.0,
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
@@ -426,6 +427,167 @@ class _DashboardHomeState extends State<DashboardHome> {
                   ),
                 )
               ],
+            ),
+          ),
+        ),
+      );
+
+  Widget _buildItemsForSponsored(BuildContext context, int index) {
+    return _propertItemSponsored(index);
+  }
+
+  Widget _propertItemSponsored(int index) => Container(
+        child: Card(
+          elevation: 2.0,
+          child: InkWell(
+            splashColor: Colors.orange.withAlpha(30),
+            onTap: () {
+              print('Card tapped.');
+              Navigator.pushNamed(context, propDetailsRoute,
+                  arguments: _propertyList[index]);
+            },
+            child: Container(
+              margin: EdgeInsets.all(2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Stack(alignment: Alignment.center, children: [
+                    Container(child: CircularProgressIndicator()),
+                    FadeInImage.memoryNetwork(
+                      width: 175,
+                      height: 120,
+                      placeholder: kTransparentImage,
+                      image: (_propertyList[index].property.photos.isNotEmpty)
+                          ? _propertyList[index].property.photos[0].path
+                          : 'https://picsum.photos/250?image=9',
+                      fit: BoxFit.cover,
+                    ),
+                  ]),
+                  Container(
+                    width: 172,
+                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const SizedBox(height: 5),
+                        // Text(
+                        //   'NGN ${_formatMoney(_propertyList[index].price.toDouble()).withoutFractionDigits}',
+                        //   style:
+                        //       TextStyle(fontSize: 15, color: appTextColorPrimary),
+                        // ),
+                        RichText(
+                          text: TextSpan(
+                            text: '₦ ',
+                            style: TextStyle(
+                                fontSize: 13, color: appSecondaryColorLight),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: (_propertyList[index].price != null)
+                                    ? formatMoney(_propertyList[index]
+                                            .price
+                                            .toDouble())
+                                        .withoutFractionDigits
+                                    : '0',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: appTextColorPrimary,
+                                ),
+                              ),
+                              TextSpan(
+                                text: '.00',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 13,
+                                  color: appSecondaryColorLight,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          (_propertyList[index].property.title != null)
+                              ? (_propertyList[index].property.title.length >
+                                      30)
+                                  ? '${_propertyList[index].property.title.substring(0, 30)}...'
+                                  : _propertyList[index].property.title
+                              : 'NA',
+                          style: TextStyle(
+                              fontSize: 13, color: appTextColorPrimary),
+                        ),
+
+                        const SizedBox(height: 5),
+                        Container(
+                          // height: 30.0,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Container(
+                                margin: EdgeInsets.only(right: 2.0),
+                                child: Icon(
+                                  Icons.location_on,
+                                  size: 10,
+                                  color: Colors.orange,
+                                ),
+                              ),
+                              Container(
+                                child: Expanded(
+                                  child: Text(
+                                    _propertyList[index].property.location,
+                                    softWrap: true,
+                                    style: TextStyle(
+                                        fontSize: 10, color: Colors.black87),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        Row(
+                          children: <Widget>[
+                            SvgPicture.asset(
+                              'assets/icons/bed.svg',
+                              color: Colors.orange,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              ((_propertyList[index]
+                                              .property
+                                              .specifications
+                                              .nOOFBEDROOMS ==
+                                          null)
+                                      ? 'NA'
+                                      : '${_propertyList[index].property.specifications.nOOFBEDROOMS} Beds')
+                                  .toString(),
+                              style: TextStyle(
+                                  color: Colors.black87, fontSize: 12.0),
+                            ),
+                            const SizedBox(width: 15),
+                            SvgPicture.asset(
+                              'assets/icons/bath.svg',
+                              color: Colors.orange,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                                ((_propertyList[index]
+                                                .property
+                                                .specifications
+                                                .nOOFBATHROOMS ==
+                                            null)
+                                        ? 'NA'
+                                        : '${_propertyList[index].property.specifications.nOOFBATHROOMS} Baths')
+                                    .toString(),
+                                style: TextStyle(
+                                    color: Colors.black87, fontSize: 12.0)),
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

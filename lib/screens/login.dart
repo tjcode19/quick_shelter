@@ -95,14 +95,18 @@ class _LoginState extends State<Login> {
     await _loginRes.then((value) async {
       print('donnned ${value.responseCode}');
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-      if (value.responseCode == globalSuccessResponseCode && value.data.auth == true) {
-        _sharedPreferenceQS.setData('String', 'accessToken', value.data.accessToken);
-        _sharedPreferenceQS.setData('String', 'userFN', value.data.user.firstName);
+      if (value.responseCode == globalSuccessResponseCode &&
+          value.data.auth == true) {
+        _sharedPreferenceQS.setData(
+            'String', 'accessToken', value.data.accessToken);
+        _sharedPreferenceQS.setData(
+            'String', 'userFN', value.data.user.firstName);
         await _resetDetails().runtimeType;
         await _getUserProfile().runtimeType;
         Navigator.pushNamed(context, dashboardRoute);
       } else {
-        showInSnackBar('Login Failed: ${ (value.responseMessage!=null)?value.responseMessage:''}');
+        showInSnackBar(
+            'Login Failed: ${(value.responseMessage != null) ? value.responseMessage : ''}');
       }
     }, onError: (error) {
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
@@ -128,8 +132,10 @@ class _LoginState extends State<Login> {
       _sharedPreferenceQS.setData('String', 'userPN', value.data.phoneNumber);
       _sharedPreferenceQS.setData('String', 'userEm', value.data.email);
       //_sharedPreferenceQS.setData('String', 'nationalId', value.data.nationalID);
-      _sharedPreferenceQS.setData('bool', 'isEmailVerified', value.data.isEmailVerified);
-      _sharedPreferenceQS.setData('bool', 'isPhoneVerified', value.data.isPhoneVerified);
+      _sharedPreferenceQS.setData(
+          'bool', 'isEmailVerified', value.data.isEmailVerified);
+      _sharedPreferenceQS.setData(
+          'bool', 'isPhoneVerified', value.data.isPhoneVerified);
       _sharedPreferenceQS.setData('bool', 'detailsLoaded', true);
 
       print('User details set');
@@ -168,7 +174,8 @@ class _LoginState extends State<Login> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.fromLTRB(0, 35, 10, 10),
+                    margin:
+                        EdgeInsets.fromLTRB(0, screeSize.height * 0.07, 10, 10),
                     child: IconButton(
                       color: Theme.of(context).primaryColor,
                       iconSize: 30.0,
@@ -179,7 +186,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   Container(
-                    height: screeSize.height - 80,
+                    height: screeSize.height -80,
                     padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(129, 92, 67, 1),

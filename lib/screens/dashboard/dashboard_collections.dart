@@ -185,109 +185,97 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
     var size = MediaQuery.of(context).size;
 
     /*24 is for notification bar on Android*/
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
     final double itemWidth = size.width / 2;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-        leading: Container(
-          padding: EdgeInsets.all(8),
-          child: ClipOval(
-            child: Material(
-              color: appTextColorPrimary2, // button color
-              child: InkWell(
-                splashColor: Colors.orange[100], // inkwell color
-                child: Image.asset(
-                  'assets/images/person.png',
-                  color: appSecondaryColor,
-                  height: 24.0,
-                  width: 24.0,
-                ),
-                onTap: () {
-                  Navigator.pushNamed(context, profileRoute);
-                },
+    final appBar = AppBar(
+      backgroundColor: Colors.white,
+      automaticallyImplyLeading: false,
+      leading: Container(
+        padding: EdgeInsets.all(8),
+        child: ClipOval(
+          child: Material(
+            color: appTextColorPrimary2, // button color
+            child: InkWell(
+              splashColor: Colors.orange[100], // inkwell color
+              child: Image.asset(
+                'assets/images/person.png',
+                color: appSecondaryColor,
+                height: 24.0,
+                width: 24.0,
               ),
+              onTap: () {
+                Navigator.pushNamed(context, profileRoute);
+              },
             ),
-          ),
-        ),
-        actions: <Widget>[
-          // Container(
-          //     margin: EdgeInsets.symmetric(horizontal: 5),
-          //     alignment: Alignment.center,
-          //     child: Text(
-          //       'Edit',
-          //       style: TextStyle(color: appColorSecondary),
-          //     ))
-        ],
-        title: RichText(
-          text: TextSpan(
-            text: 'Hi, ',
-            style: TextStyle(fontSize: 16, color: appTextColorPrimary),
-            children: <TextSpan>[
-              TextSpan(
-                text: '$_prefUserFN',
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 16,
-                ),
-              ),
-            ],
           ),
         ),
       ),
+      title: RichText(
+        text: TextSpan(
+          text: 'Hi, ',
+          style: TextStyle(fontSize: 16, color: appTextColorPrimary),
+          children: <TextSpan>[
+            TextSpan(
+              text: '$_prefUserFN',
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    return Scaffold(
+      appBar: appBar,
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: _refresh,
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          scrollDirection: Axis.vertical,
-          child: Container(
-            padding: EdgeInsets.all(15),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'My Collections',
-                    style: TextStyle(
-                        color: appSecondaryColor,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold),
-                  ),
+        child: Container(
+          padding: EdgeInsets.all(15),
+          child: Column(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  'My Collections',
+                  style: TextStyle(
+                      color: appSecondaryColor,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 20),
-                saleRentButton(),
-                (_propertyList != null)
-                    ? Container(
-                        height: 400,
-                        child: CustomScrollView(
-                          primary: false,
-                          slivers: <Widget>[
-                            SliverPadding(
-                              padding: const EdgeInsets.all(0),
-                              sliver: SliverGrid.count(
-                                crossAxisSpacing: 5,
-                                childAspectRatio: ((itemWidth) / (itemHeight)),
-                                mainAxisSpacing: 1,
-                                crossAxisCount: 2,
-                                children: (sale)
-                                    ? _propertyList
-                                        .map((e) => _propertItem(
-                                            _propertyList.indexOf(e)))
-                                        .toList()
-                                    : _propertyRentList
-                                        .map((e) => _propertItem(
-                                            _propertyRentList.indexOf(e)))
-                                        .toList(),
-                              ),
+              ),
+              const SizedBox(height: 20),
+              saleRentButton(),
+              (_propertyList != null)
+                  ? Container(
+                      height: (size.height - appBar.preferredSize.height) * 0.62,
+                      child: CustomScrollView(
+                        primary: false,
+                        slivers: <Widget>[
+                          SliverPadding(
+                            padding: const EdgeInsets.all(0),
+                            sliver: SliverGrid.count(
+                              crossAxisSpacing: 5,
+                              childAspectRatio: (itemWidth / 270),
+                              mainAxisSpacing: 1,
+                              crossAxisCount: 2,
+                              children: (sale)
+                                  ? _propertyList
+                                      .map((e) => _propertItem(
+                                          _propertyList.indexOf(e)))
+                                      .toList()
+                                  : _propertyRentList
+                                      .map((e) => _propertItem(
+                                          _propertyRentList.indexOf(e)))
+                                      .toList(),
                             ),
-                          ],
-                        ),
-                      )
-                    : Text('No Record Found'),
-              ],
-            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Text('No Record Found'),
+            ],
           ),
         ),
       ),
@@ -316,7 +304,7 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
                       Container(child: CircularProgressIndicator()),
                       FadeInImage.memoryNetwork(
                         width: 175,
-                        height: 123,
+                        height: 120,
                         placeholder: kTransparentImage,
                         image: (_propertyList[index].property.photos.isNotEmpty)
                             ? _propertyList[index].property.photos[0].path
@@ -396,7 +384,7 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
                       style:
                           TextStyle(fontSize: 13, color: appTextColorPrimary),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -422,7 +410,7 @@ class _DashboardCollectionsState extends State<DashboardCollections> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 17),
                     Row(
                       children: <Widget>[
                         SvgPicture.asset(

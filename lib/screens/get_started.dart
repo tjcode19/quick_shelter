@@ -37,7 +37,7 @@ class _GetStartedState extends State<GetStarted> {
                 children: <Widget>[
                   Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                     Padding(
-                      padding: const EdgeInsets.only(top:8.0),
+                      padding: const EdgeInsets.only(top:12.0),
                       child: Image.asset(
                         'assets/images/logoBlack.png',
                         width: 100,

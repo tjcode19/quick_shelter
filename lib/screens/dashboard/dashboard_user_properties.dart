@@ -72,10 +72,7 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
         //showInSnackBar(value.message);
         print('Failed to load properties');
       }
-    },
-    onError: (e){
-
-    });
+    }, onError: (e) {});
   }
 
   Future _getUserProfile() async {
@@ -97,10 +94,9 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 2.5;
     final double itemWidth = size.width / 2;
-    return Scaffold(
-      appBar: AppBar(
+    final appBar = AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         leading: Container(
@@ -123,15 +119,6 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
             ),
           ),
         ),
-        actions: <Widget>[
-          // Container(
-          //     margin: EdgeInsets.symmetric(horizontal: 5),
-          //     alignment: Alignment.center,
-          //     child: Text(
-          //       'Edit',
-          //       style: TextStyle(color: appColorSecondary),
-          //     ))
-        ],
         title: RichText(
           text: TextSpan(
             text: 'Hi, ',
@@ -147,7 +134,9 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
             ],
           ),
         ),
-      ),
+      );
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         controller: _controller,
         scrollDirection: Axis.vertical,
@@ -165,10 +154,10 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
                       fontWeight: FontWeight.bold),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               // saleRentButton(),
               Container(
-                height: size.height,
+                height: (size.height - appBar.preferredSize.height) * 0.78,
                 child: (_propertyList.length > 0)
                     ? CustomScrollView(
                         primary: false,
@@ -178,7 +167,7 @@ class _DashboardUserPropertiesState extends State<DashboardUserProperties> {
                             padding: const EdgeInsets.all(0),
                             sliver: SliverGrid.count(
                               crossAxisSpacing: 5,
-                              childAspectRatio: ((itemWidth) / (itemHeight)),
+                              childAspectRatio: ((itemWidth) / 270),
                               mainAxisSpacing: 1,
                               crossAxisCount: 2,
                               children: _propertyList

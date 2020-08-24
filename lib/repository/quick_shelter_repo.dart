@@ -215,6 +215,11 @@ class QuickShelterRepository {
     return ValidatePhone.fromJson(response);
   }
 
+  Future<ValidatePhone> validateEmail(String phoneNum, String code) async {
+    final response = await _provider.get("validate-phone/$phoneNum/$code");
+    return ValidatePhone.fromJson(response);
+  }
+
   Future<AddPropertyResponse> deletePhoto(String propertyID) async {
     final response = await _provider.delete("property/photos/$propertyID");
     return AddPropertyResponse.fromJson(response);
