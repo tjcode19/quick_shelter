@@ -195,14 +195,12 @@ class _DashboardHomeState extends State<DashboardHome> {
                           TextStyle(color: appSecondaryColor, fontSize: 15.0),
                     )),
                 Container(
-
                   margin: EdgeInsets.symmetric(vertical: 10.0),
                   height: 260.0,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: _propertyList.length,
                     itemBuilder: _buildItemsForSponsored,
-                    
                   ),
                 ),
                 Container(
@@ -347,14 +345,17 @@ class _DashboardHomeState extends State<DashboardHome> {
                         ),
                       ),
                       const SizedBox(height: 5),
-                      Text(
-                        (_propertyList[index].property.title != null)
-                            ? (_propertyList[index].property.title.length > 30)
-                                ? '${_propertyList[index].property.title.substring(0, 30)}...'
-                                : _propertyList[index].property.title
-                            : 'NA',
-                        style:
-                            TextStyle(fontSize: 13, color: appTextColorPrimary),
+                      FittedBox(
+                        child: Text(
+                          (_propertyList[index].property.title != null)
+                              ? (_propertyList[index].property.title.length >
+                                      30)
+                                  ? '${_propertyList[index].property.title.substring(0, 30)}...'
+                                  : _propertyList[index].property.title
+                              : 'NA',
+                          style: TextStyle(
+                              fontSize: 13, color: appTextColorPrimary),
+                        ),
                       ),
 
                       const SizedBox(height: 5),
