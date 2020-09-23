@@ -19,6 +19,8 @@ import 'package:quick_shelter/screens/dashboard/property_listings.dart';
 import 'package:quick_shelter/screens/dashboard/search_result.dart';
 import 'package:quick_shelter/screens/dashboard/user_property_documents_edit.dart';
 import 'package:quick_shelter/screens/forgot_password.dart';
+import 'package:quick_shelter/screens/public/search_property.dart';
+import 'package:quick_shelter/screens/public/search_result.dart';
 import 'package:quick_shelter/screens/splashscreen.dart';
 import 'screens/dashboard/add_property_step_2.dart';
 import 'screens/dashboard/add_property_step_3.dart';
@@ -33,6 +35,7 @@ import 'screens/dashboard/transaction_details.dart';
 import 'screens/dashboard/user_prop_details_photos.dart';
 import 'screens/identity_card.dart';
 import 'screens/dashboard/dashboard.dart';
+import 'screens/public/property_details.dart';
 import 'screens/reg_complete.dart';
 import 'screens/verify_phone.dart';
 import 'screens/get_started.dart';
@@ -92,6 +95,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       var propertyDetails = settings.arguments;
       return MaterialPageRoute(
           builder: (context) => PropertyDetails(
+                propertyDetails: propertyDetails,
+              ));
+    case propDetailsPublicRoute:
+      var propertyDetails = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => PropertyDetailsP(
                 propertyDetails: propertyDetails,
               ));
     case transactionDetailsRoute:
@@ -158,15 +167,26 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case searchResultRoute:
       var propertyList = settings.arguments;
       return MaterialPageRoute(
-          builder: (context) => SearchResult(
-                propertyList: propertyList,
-              ));
+        builder: (context) => SearchResult(
+          propertyList: propertyList,
+        ),
+      );
+    case searchPropPubRoute:
+      return MaterialPageRoute(builder: (context) => SearchPropPub());
+    case searchResultPubRoute:
+      var propertyList = settings.arguments;
+      return MaterialPageRoute(
+        builder: (context) => SearchResultPub(
+          propertyList: propertyList,
+        ),
+      );
     case addPropertyListingRoute:
       var propertyList = settings.arguments;
       return MaterialPageRoute(
-          builder: (context) => AddPropListing(
-                propDetails: propertyList,
-              ));
+        builder: (context) => AddPropListing(
+          propDetails: propertyList,
+        ),
+      );
     case fileUploadRoute:
       return MaterialPageRoute(builder: (context) => FileUpload());
     case changePasswordRoute:

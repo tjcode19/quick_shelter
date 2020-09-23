@@ -9,6 +9,7 @@ import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/models/GetProfileResponse.dart';
 import 'package:quick_shelter/models/GetPropertyDocs.dart';
 import 'package:quick_shelter/models/GetPropertyListingReq.dart';
+import 'package:quick_shelter/models/GetPublicProperties.dart';
 import 'package:quick_shelter/models/GetSavedProperties.dart';
 import 'package:quick_shelter/models/GetSingleProperty.dart';
 import 'package:quick_shelter/models/GetSinglePropertyListing.dart';
@@ -264,6 +265,19 @@ class QuickShelterRepository {
     return GetAllProperties.fromJson(response);
   }
 
+  Future<GetPublicProperties> getAllPropLanding(
+      var page, var noPerPage, String startDate, String endDate) async {
+    final response = await _provider.put(
+      "public/search-listing/$page/$noPerPage",
+      <String, dynamic>{
+        "ListingDate": {"startDate": startDate, "endDate": endDate},
+        "IS_AVAILABLE": true
+      },
+    );
+    print(response);
+    return GetPublicProperties.fromJson(response);
+  }
+
   Future<GetAllProperties> searchProperty(
       var page,
       var noPerPage,
@@ -295,6 +309,38 @@ class QuickShelterRepository {
     );
     print(response);
     return GetAllProperties.fromJson(response);
+  }
+
+  Future<GetPublicProperties> searchPropertyPublic(
+      var page,
+      var noPerPage,
+      String startDate,
+      String endDate,
+      String minPrice,
+      String maxPrice,
+      noOfRoom,
+      apartmentType,
+      listingType,
+      state) async {
+    var price;
+    if (minPrice.isEmpty || maxPrice.isEmpty) {
+      price = {};
+    } else {
+      price = {"min": minPrice, "max": maxPrice};
+    }
+    final response = await _provider.put(
+      "public/search-listing/$page/$noPerPage",
+      <String, dynamic>{
+        "ListingDate": {"startDate": startDate, "endDate": endDate},
+        "Price": price,
+        "NO_OF_BEDROOMS": noOfRoom,
+        "PropertyType": apartmentType,
+        "ListingType": listingType,
+        "IS_AVAILABLE": true,
+        "State": state
+      },
+    );
+    return GetPublicProperties.fromJson(response);
   }
 
   Future<PaymentResponse> doPayment(int listingID) async {

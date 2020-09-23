@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:quick_shelter/screens/get_started.dart';
+import 'package:quick_shelter/screens/public/landing_page.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -25,8 +26,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigationPage() {
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (BuildContext context) => GetStarted()));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => LandingPage(),
+      ),
+    );
   }
 
   @override
