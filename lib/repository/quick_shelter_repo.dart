@@ -43,16 +43,13 @@ class QuickShelterRepository {
   }
 
   Future<LoginResponse> requestOtp(String email) async {
-    final response = await _provider.get(
-      "user/request-otp"
-    );
+    final response = await _provider.get("user/request-otp");
     return LoginResponse.fromJson(response);
   }
 
-  Future<TransactionStatusResponse> checkTransaction(String transactionID) async {
-    final response = await _provider.get(
-      "verify-transaction/$transactionID"
-    );
+  Future<TransactionStatusResponse> checkTransaction(
+      String transactionID) async {
+    final response = await _provider.get("verify-transaction/$transactionID");
     return TransactionStatusResponse.fromJson(response);
   }
 
@@ -226,7 +223,7 @@ class QuickShelterRepository {
     return AddPropertyResponse.fromJson(response);
   }
 
-   Future<AddPropertyResponse> deletePropListing(String listingID) async {
+  Future<AddPropertyResponse> deletePropListing(String listingID) async {
     final response = await _provider.delete("listing/$listingID");
     return AddPropertyResponse.fromJson(response);
   }
@@ -324,20 +321,26 @@ class QuickShelterRepository {
       state) async {
     var price;
     if (minPrice.isEmpty || maxPrice.isEmpty) {
-      price = null;
+      price = 0;
     } else {
-      price = {"min": minPrice, "max": maxPrice};
+      price = {"min": int.parse( minPrice), "max": int.parse(maxPrice) };
     }
+
+    if(noOfRoom==null){
+      noOfRoom = 0;
+    }
+    if(apartmentType.isEmpty){
+      apartmentType = 0;
+    }
+  
     final response = await _provider.put(
       "public/search-listing/$page/$noPerPage",
       <String, dynamic>{
-        "ListingDate": {"startDate": startDate, "endDate": endDate},
         "Price": price,
-        // "NO_OF_BEDROOMS": noOfRoom,
-        // "PropertyType": apartmentType,
-        // "ListingType": listingType,
-        // "IS_AVAILABLE": true,
-        // "State": state
+        "ListingType": listingType,
+        "ListingDate": {"startDate": startDate, "endDate": endDate},
+        "NO_OF_BEDROOMS": noOfRoom,
+        "PropertyType": apartmentType
       },
     );
     return GetPublicProperties.fromJson(response);

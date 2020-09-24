@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quick_shelter/models/GetAllProperties.dart';
 import 'package:quick_shelter/models/GetPublicProperties.dart';
 import 'package:quick_shelter/utils/commonFunctions.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../../colors.dart';
 import '../../constants.dart';
@@ -156,12 +157,24 @@ List<PropLandingData> searchedPropList;
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Image.asset(
-                'assets/images/prop.png',
-                width: 175,
-                height: 123,
-                fit: BoxFit.cover,
-              ),
+              // Image.asset(
+              //   'assets/images/prop.png',
+              //   width: 175,
+              //   height: 123,
+              //   fit: BoxFit.cover,
+              // ),
+              Stack(alignment: Alignment.center, children: [
+                  Container(child: CircularProgressIndicator()),
+                  FadeInImage.memoryNetwork(
+                    width: 175,
+                    height: 123,
+                    placeholder: kTransparentImage,
+                    image: (searchedPropList[index].property.photos.isNotEmpty)
+                        ? searchedPropList[index].property.photos[0].path
+                        : 'https://i.picsum.photos/id/164/1200/800.jpg?hmac=wkqGUkaeW3kiAsHq_VwxSWWossIMAwFV4eUfFzuDkew',
+                    fit: BoxFit.cover,
+                  ),
+                ]),
               Container(
                 width: 172,
                 padding: EdgeInsets.fromLTRB(10, 5, 10, 5),

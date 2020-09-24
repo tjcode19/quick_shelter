@@ -43,10 +43,16 @@ class _SearchPropPubState extends State<SearchPropPub> {
       snackBar('Please select either Rent or Sale', _scaffoldKey);
       return;
     }
+    // if (_propPriceRangeController.text.isEmpty) {
+    //   snackBar('Please enter price range', _scaffoldKey);
+    //   return;
+    // }
 
     var minPrice = _priceMinController.text;
     var maxPrice = _priceMaxController.text;
-    var noOfRm = _noOfBedroomsController.text;
+    var noOfRm = (_noOfBedroomsController.text  != "")
+        ? int.parse(_noOfBedroomsController.text)
+        : 0;
     var apType = _propTypeController.text;
     var _listingType = listingType;
     var propState = _propLocationController.text;
@@ -71,14 +77,17 @@ class _SearchPropPubState extends State<SearchPropPub> {
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       if (value.responseCode == globalSuccessGetResponseCode) {
         setState(() => {_propertyList = value.data});
-        Navigator.pushNamed(context, searchResultPubRoute,
-            arguments: {'dataLoad':_propertyList, 'listingType': _listingType});
+        Navigator.pushNamed(context, searchResultPubRoute, arguments: {
+          'dataLoad': _propertyList,
+          'listingType': _listingType
+        });
         //_isPropLoaded = true;
       } else {
         //showInSnackBar(value.message);
         print('Failed to load properties');
       }
     }, onError: (e) {
+      print(e);
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     });
   }
@@ -157,15 +166,15 @@ class _SearchPropPubState extends State<SearchPropPub> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              inputlabel('State', Icons.location_on),
-              const SizedBox(height: 8),
-              InputFieldWidget(
-                'ex. Lagos State',
-                TextInputType.text,
-                false,
-                controller: _propLocationController,
-              ),
+              // const SizedBox(height: 20),
+              // inputlabel('State', Icons.location_on),
+              // const SizedBox(height: 8),
+              // InputFieldWidget(
+              //   'ex. Lagos State',
+              //   TextInputType.text,
+              //   false,
+              //   controller: _propLocationController,
+              // ),
               const SizedBox(height: 20),
               inputlabel('Type', Icons.home),
               const SizedBox(height: 8),
