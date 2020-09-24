@@ -17,6 +17,7 @@ const String profileRoute = '/profile';
 const String propDetailsRoute = '/propertyDetails';
 const String propDetailsPublicRoute = '/propertyDetailsPublic';
 const String collPropDetailsRoute = '/collPropertyDetails';
+const String searchedPropDetailsRoute = '/searchedPropDetails';
 const String personalInfoRoute = '/personalInfo';
 const String searchPropRoute = '/searchProp';
 const String searchResultRoute = '/searchResult';

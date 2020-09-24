@@ -324,7 +324,7 @@ class QuickShelterRepository {
       state) async {
     var price;
     if (minPrice.isEmpty || maxPrice.isEmpty) {
-      price = {};
+      price = null;
     } else {
       price = {"min": minPrice, "max": maxPrice};
     }
@@ -333,11 +333,11 @@ class QuickShelterRepository {
       <String, dynamic>{
         "ListingDate": {"startDate": startDate, "endDate": endDate},
         "Price": price,
-        "NO_OF_BEDROOMS": noOfRoom,
-        "PropertyType": apartmentType,
-        "ListingType": listingType,
-        "IS_AVAILABLE": true,
-        "State": state
+        // "NO_OF_BEDROOMS": noOfRoom,
+        // "PropertyType": apartmentType,
+        // "ListingType": listingType,
+        // "IS_AVAILABLE": true,
+        // "State": state
       },
     );
     return GetPublicProperties.fromJson(response);

@@ -35,6 +35,7 @@ import 'screens/dashboard/transaction_details.dart';
 import 'screens/dashboard/user_prop_details_photos.dart';
 import 'screens/identity_card.dart';
 import 'screens/dashboard/dashboard.dart';
+import 'screens/public/collection_property_details_searched.dart';
 import 'screens/public/property_details.dart';
 import 'screens/reg_complete.dart';
 import 'screens/verify_phone.dart';
@@ -112,9 +113,17 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case collPropDetailsRoute:
       var propertyDetails = settings.arguments;
       return MaterialPageRoute(
-          builder: (context) => CollPropertyDetails(
-                propDetails: propertyDetails,
-              ));
+        builder: (context) => CollPropertyDetails(
+          propDetails: propertyDetails,
+        ),
+      );
+      case searchedPropDetailsRoute:
+      var propertyDetails = settings.arguments;
+      return MaterialPageRoute(
+        builder: (context) => CollPropertyDetailsSearched(
+          propDetails: propertyDetails,
+        ),
+      );
     case propertyListingsRoute:
       var propertyDetails = settings.arguments;
       return MaterialPageRoute(

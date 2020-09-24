@@ -115,7 +115,7 @@ List<PropLandingData> searchedPropList;
               ),
               const SizedBox(height: 10),
               Container(
-                height: size.height,
+                height: size.height * 0.72,
                 child: CustomScrollView(
                   primary: false,
                   slivers: <Widget>[
@@ -129,10 +129,6 @@ List<PropLandingData> searchedPropList;
                         children:
                           searchedPropList.map((e)=>
                               _propertItem(searchedPropList.indexOf(e), context)).toList(),
-
-                          
-                          //_propertItem(context),
-                          //_propertItem(context),
                         
                       ),
                     ),
@@ -153,7 +149,7 @@ List<PropLandingData> searchedPropList;
         splashColor: Colors.orange.withAlpha(30),
         onTap: () {
           print('Card tapped.');
-          Navigator.pushNamed(ctxt, collPropDetailsRoute);
+          Navigator.pushNamed(ctxt, searchedPropDetailsRoute, arguments: searchedPropList[index]);
         },
         child: Container(
           margin: EdgeInsets.all(2),
